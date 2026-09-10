@@ -1,13 +1,14 @@
 {
   "name": "gocreate-insight-studio",
-  "version": "1.0.0",
+  "version": "3.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "tsc --noEmit",
-    "prepare:data": "node scripts/prepare-data.mjs"
+    "prepare:data": "python3 scripts/prepare_data.py",
+    "check": "tsc --noEmit"
   },
   "dependencies": {
     "framer-motion": "^13.2.0",

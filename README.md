@@ -1,85 +1,53 @@
-# GoCreate Insight Studio
+# GoCreate Insights v3
 
-A full Next.js single-page analytics application built around the uploaded `gocreate-master-2026-09-09.csv` member dataset.
+A strictly light-mode, single-page Next.js analytics application for GoCreate membership intelligence. The project combines the master member export with the newer membership-detail workbook and uses the official supplied GoCreate brand assets.
 
-## What is included
+## What changed in v3
 
-- Next.js 16 App Router
-- React 19 + TypeScript
-- Tailwind CSS 4
-- Framer Motion 13
-- Recharts 3
-- One-page, responsive operations dashboard
-- Animated KPI and hero states
-- Global search and filter controls
-- Click-to-filter status and membership charts
-- Adjustable top-category count and chart density
-- Lifecycle trend with switchable members / visits / guests metrics
-- Interactive membership pie visualization
-- Animated affiliation bars
-- Member engagement scatter plot with click-through detail
-- Paginated member explorer
-- Animated member detail drawer
-- Filtered CSV export
-- Source-data preparation script
-- Server-side API routes that keep email/phone out of the initial dashboard payload
+- Strict light mode only; no dark theme, theme toggle, or automatic dark color scheme.
+- Official GoCreate horizontal blue/black/yellow logo in the header; supplied GoCreate/WSU/WuShock SVG variants are included under `public/brand/`.
+- Sticky horizontal navigation with full words and icons.
+- Every KPI and meaningful data affordance drills into a cohort, person, filter, or explanation.
+- Framer Motion is used for useful state communication: count changes, tab changes, drawers, list reflow, hover click affordances, application-history expansion, chart entry, and filter/result transitions.
+- The richer workbook adds application status/type, model release, signatures, assistance, age bands, home geography, completeness analysis, and reconciliation views.
+- Sensitive data is excluded from the client analytics payload and masked in public member detail by default.
 
-## Brand direction
+## Data included
 
-The visual direction uses a dark operational canvas with blue and yellow accents plus black/ink, matching the documented GoCreate color identity. The geometric mark in this prototype is an original interface mark inspired by the dimensional maker/assembly concept; replace it with the official production logo asset when available.
+- `data/source/gocreate-master-2026-09-09.csv`
+- `data/source/gocreate_membership_details.xlsx`
+- 2,383 master member records
+- 359 application/detail rows
+- 718 emergency-contact rows
 
-## Run locally
+Run `npm run prepare:data` whenever either source file changes.
+
+## Local setup
 
 ```bash
 npm install
+npm run prepare:data
 npm run dev
 ```
 
 Open `http://localhost:3000`.
 
-## Production build
+## Build
 
 ```bash
+npm run check
 npm run build
 npm start
 ```
 
-## Updating the dataset
+## PII mode
 
-Replace the CSV in `data/`, then run:
+Default detail responses are masked. For an authenticated internal deployment only:
 
 ```bash
-npm run prepare:data -- data/your-new-file.csv
+GOCREATE_PII_MODE=full
 ```
 
-That regenerates:
+Do not enable that flag on an unauthenticated public deployment.
 
-- `src/data/members-summary.json` — lightweight dashboard records
-- `src/data/member-details.json` — detail drawer records
-- `src/data/dataset-meta.json` — source metadata
-
-## Data/privacy note
-
-This project contains real member contact and operational data from the supplied CSV. The initial dashboard endpoint intentionally omits email and phone, but the member-detail API returns them when a row is opened. **Do not deploy this repository publicly without adding authentication, authorization, audit logging, and the data-governance controls appropriate for GoCreate.**
-
-For a public demo, remove the source CSV and replace the generated JSON with synthetic or de-identified data.
-
-## Architecture
-
-The visible product remains a single page at `/`. Internal API routes are used only for data delivery:
-
-- `GET /api/dashboard` — member summaries + source metadata
-- `GET /api/member/:id` — one detailed record
-
-All aggregation and cross-filter interaction happens client-side over the lightweight member summary collection, so chart response is immediate after initial load.
-
-## Suggested next production steps
-
-1. Add SSO/RBAC and protect both API routes.
-2. Replace static snapshot data with the canonical GoCreate database/API.
-3. Add date-range controls backed by real visit-event history.
-4. Add studio/tool utilization when those event streams are available.
-5. Persist dashboard views per staff member.
-6. Add anomaly alerts and scheduled operational reports.
-7. Add server-side export controls and an audit trail for PII access.
-# gocreateinsights
+See `AUDIT.md` for the product/audit rationale and `BUILD-BRIEF.md` for the extended implementation brief.

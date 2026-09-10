@@ -8,7 +8,7 @@ Transform GoCreate membership and visit data into a fast decision surface for st
 
 ## Design language
 
-Use a dark, cinematic operations canvas with **GoCreate blue, yellow, black/ink, and crisp white**. Avoid generic SaaS gradients and oversized decorative cards. Use tight typography, precise grid systems, subtle technical lines, luminous accents, purposeful depth, restrained blur, and motion that communicates state changes. Incorporate a dimensional maker/assembly motif into the interface identity. The dashboard must remain highly legible on large desktop displays while collapsing cleanly for tablet and mobile.
+Use a **strictly light interface** with crisp white surfaces, light neutral page backgrounds, GoCreate blue as the primary action/data color, yellow as a sparing attention color, and black/ink typography. Avoid generic AI-dashboard gradients, glassmorphism, oversized decorative cards, fake futuristic motifs, and dark-mode styling. Motion must communicate state, clickability, hierarchy, filtering, drill-down, or change—not merely decorate the page. Use the official supplied GoCreate logo assets. The dashboard must remain highly legible on large desktop displays while collapsing cleanly for tablet and mobile.
 
 ## Interaction model
 
@@ -33,3 +33,7 @@ Include CSV export of the current filtered population, reversible cross-filterin
 ## Production quality
 
 Keep components typed, avoid unsafe browser-only logic in Server Components, isolate the interactive dashboard behind `use client`, use API routes for detail retrieval, and make the project directly deployable after dependencies are installed. Include documentation that explicitly warns against publicly deploying the supplied member data without authentication and authorization.
+
+
+## v3 non-negotiable interaction rule
+Every visible metric, chart mark, legend item, cohort count, status badge, membership badge, completeness value, ranking row, and member row that implies underlying records must be interactive. Clicking it opens the corresponding cohort explorer, applies/focuses the relevant filter, opens the person detail drawer, or reveals contextual explanation.

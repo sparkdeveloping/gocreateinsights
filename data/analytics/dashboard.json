@@ -1,0 +1,856 @@
+{
+  "meta": {
+    "generatedAt": "2026-09-10T18:03:07+00:00",
+    "dataAsOf": "2026-09-10",
+    "masterFile": "gocreate-master-2026-09-09.csv",
+    "enrichmentFile": "gocreate_membership_details.xlsx",
+    "masterRows": 2383,
+    "knownPeople": 2392,
+    "applicationRows": 359,
+    "emergencyContactRows": 718,
+    "matchedApplications": 350,
+    "distinctEnrichedMembers": 345,
+    "unmatchedApplications": 9,
+    "enrichmentCoveragePercent": 97.5
+  },
+  "overview": {
+    "masterMembers": 2383,
+    "knownPeople": 2392,
+    "approvedMembers": 196,
+    "staffMembers": 2,
+    "engagedMembers": 79,
+    "observedVisits": 216,
+    "hostedGuests": 9,
+    "applicationDetails": 359,
+    "quarantinedRecords": 360,
+    "modelReleaseYes": 330,
+    "modelReleaseNo": 29,
+    "assistanceRequests": 1,
+    "signedApplications": 359
+  },
+  "membershipStatus": [
+    {
+      "name": "expired",
+      "value": 1452
+    },
+    {
+      "name": "unknown",
+      "value": 380
+    },
+    {
+      "name": "pending",
+      "value": 343
+    },
+    {
+      "name": "approved",
+      "value": 196
+    },
+    {
+      "name": "denied",
+      "value": 10
+    },
+    {
+      "name": "staff",
+      "value": 2
+    }
+  ],
+  "membershipType": [
+    {
+      "name": "WSU Student/WSU Tech Student",
+      "value": 1710
+    },
+    {
+      "name": "Unspecified",
+      "value": 382
+    },
+    {
+      "name": "Public/Regular",
+      "value": 126
+    },
+    {
+      "name": "Military (Active & Veteran) / Senior Citizen",
+      "value": 84
+    },
+    {
+      "name": "Student/Staff/Educator",
+      "value": 77
+    },
+    {
+      "name": "Corporate Membership",
+      "value": 4
+    }
+  ],
+  "studentAffiliation": [
+    {
+      "name": "WSU / WSU Tech (unspecified)",
+      "value": 1666
+    },
+    {
+      "name": "Unknown",
+      "value": 563
+    },
+    {
+      "name": "Other student",
+      "value": 67
+    },
+    {
+      "name": "Not a student",
+      "value": 44
+    },
+    {
+      "name": "Wichita State University",
+      "value": 41
+    },
+    {
+      "name": "WSU Tech",
+      "value": 2
+    }
+  ],
+  "applicationMembershipType": [
+    {
+      "name": "WSU Student/WSU Tech Student",
+      "value": 319
+    },
+    {
+      "name": "Student/Staff/Educator",
+      "value": 15
+    },
+    {
+      "name": "Public/Regular",
+      "value": 15
+    },
+    {
+      "name": "Military (Active & Veteran) / Senior Citizen",
+      "value": 6
+    },
+    {
+      "name": "Corporate Membership",
+      "value": 3
+    },
+    {
+      "name": "Membership Assistance",
+      "value": 1
+    }
+  ],
+  "applicationStatus": [
+    {
+      "name": "Pending",
+      "value": 358
+    },
+    {
+      "name": "Pending Approved",
+      "value": 1
+    }
+  ],
+  "ageBands": [
+    {
+      "name": "18–24",
+      "value": 228
+    },
+    {
+      "name": "25–34",
+      "value": 78
+    },
+    {
+      "name": "35–44",
+      "value": 26
+    },
+    {
+      "name": "45–54",
+      "value": 9
+    },
+    {
+      "name": "65+",
+      "value": 8
+    },
+    {
+      "name": "55–64",
+      "value": 7
+    },
+    {
+      "name": "Under 18",
+      "value": 3
+    }
+  ],
+  "homeStates": [
+    {
+      "name": "KS",
+      "value": 322
+    },
+    {
+      "name": "OK",
+      "value": 10
+    },
+    {
+      "name": "MO",
+      "value": 7
+    },
+    {
+      "name": "CO",
+      "value": 6
+    },
+    {
+      "name": "TX",
+      "value": 4
+    },
+    {
+      "name": "AR",
+      "value": 3
+    },
+    {
+      "name": "NJ",
+      "value": 2
+    },
+    {
+      "name": "FL",
+      "value": 1
+    },
+    {
+      "name": "NY",
+      "value": 1
+    },
+    {
+      "name": "MA",
+      "value": 1
+    },
+    {
+      "name": "IL",
+      "value": 1
+    },
+    {
+      "name": "PA",
+      "value": 1
+    }
+  ],
+  "homeCities": [
+    {
+      "name": "Wichita",
+      "value": 256
+    },
+    {
+      "name": "Derby",
+      "value": 9
+    },
+    {
+      "name": "Andover",
+      "value": 7
+    },
+    {
+      "name": "Bel Aire",
+      "value": 7
+    },
+    {
+      "name": "Liberal",
+      "value": 7
+    },
+    {
+      "name": "Salina",
+      "value": 3
+    },
+    {
+      "name": "Greeley",
+      "value": 3
+    },
+    {
+      "name": "Kansas City",
+      "value": 3
+    },
+    {
+      "name": "Keller",
+      "value": 2
+    },
+    {
+      "name": "Newton",
+      "value": 2
+    },
+    {
+      "name": "Topeka",
+      "value": 2
+    },
+    {
+      "name": "Maize",
+      "value": 2
+    },
+    {
+      "name": "Hutchinson",
+      "value": 2
+    },
+    {
+      "name": "Sedgwick",
+      "value": 2
+    },
+    {
+      "name": "Tulsa",
+      "value": 2
+    },
+    {
+      "name": "Edmond",
+      "value": 2
+    },
+    {
+      "name": "Siloam Springs",
+      "value": 2
+    },
+    {
+      "name": "Clearwater",
+      "value": 2
+    },
+    {
+      "name": "Rose Hill",
+      "value": 1
+    },
+    {
+      "name": "Norman",
+      "value": 1
+    },
+    {
+      "name": "Cassville",
+      "value": 1
+    },
+    {
+      "name": "Bel-Aire",
+      "value": 1
+    },
+    {
+      "name": "Hillsboro",
+      "value": 1
+    },
+    {
+      "name": "Augusta, Ks, 67010",
+      "value": 1
+    },
+    {
+      "name": "Bixby",
+      "value": 1
+    },
+    {
+      "name": "Cheney",
+      "value": 1
+    },
+    {
+      "name": "El Dorado",
+      "value": 1
+    },
+    {
+      "name": "Eudora",
+      "value": 1
+    },
+    {
+      "name": "Bonner Springs",
+      "value": 1
+    },
+    {
+      "name": "Buhler",
+      "value": 1
+    },
+    {
+      "name": "Oxford",
+      "value": 1
+    },
+    {
+      "name": "Wichita Ks",
+      "value": 1
+    },
+    {
+      "name": "Lavallette",
+      "value": 1
+    },
+    {
+      "name": "Haddonfield",
+      "value": 1
+    },
+    {
+      "name": "Orlando",
+      "value": 1
+    },
+    {
+      "name": "Hamilton",
+      "value": 1
+    },
+    {
+      "name": "Ottawa",
+      "value": 1
+    },
+    {
+      "name": "Excelsior Springs",
+      "value": 1
+    },
+    {
+      "name": "Halstead",
+      "value": 1
+    },
+    {
+      "name": "Lake Saint Louis",
+      "value": 1
+    },
+    {
+      "name": "Pleasanton",
+      "value": 1
+    },
+    {
+      "name": "Herington",
+      "value": 1
+    },
+    {
+      "name": "Blanchard",
+      "value": 1
+    },
+    {
+      "name": "Wichtia",
+      "value": 1
+    },
+    {
+      "name": "Andale",
+      "value": 1
+    },
+    {
+      "name": "Westminster",
+      "value": 1
+    },
+    {
+      "name": "Cushing",
+      "value": 1
+    },
+    {
+      "name": "Goddard",
+      "value": 1
+    },
+    {
+      "name": "Arlington",
+      "value": 1
+    },
+    {
+      "name": "Dooysaged",
+      "value": 1
+    },
+    {
+      "name": "Park City",
+      "value": 1
+    },
+    {
+      "name": "Delaware County",
+      "value": 1
+    },
+    {
+      "name": "Altamont",
+      "value": 1
+    },
+    {
+      "name": "Wellington",
+      "value": 1
+    },
+    {
+      "name": "Blue Springs",
+      "value": 1
+    },
+    {
+      "name": "Mulvane",
+      "value": 1
+    },
+    {
+      "name": "La Junta",
+      "value": 1
+    },
+    {
+      "name": "Rogers",
+      "value": 1
+    },
+    {
+      "name": "Jenks",
+      "value": 1
+    },
+    {
+      "name": "Forest Hill",
+      "value": 1
+    },
+    {
+      "name": "Tuttle",
+      "value": 1
+    },
+    {
+      "name": "Louisburg",
+      "value": 1
+    }
+  ],
+  "modelRelease": [
+    {
+      "name": "Granted",
+      "value": 330
+    },
+    {
+      "name": "Not granted",
+      "value": 29
+    }
+  ],
+  "visitFrequency": [
+    {
+      "name": "0 visits",
+      "value": 2304
+    },
+    {
+      "name": "1 visit",
+      "value": 36
+    },
+    {
+      "name": "2–4 visits",
+      "value": 31
+    },
+    {
+      "name": "5–9 visits",
+      "value": 9
+    },
+    {
+      "name": "10+ visits",
+      "value": 3
+    }
+  ],
+  "submissionTimeline": [
+    {
+      "month": "2024-02",
+      "label": "Feb 2024",
+      "value": 1
+    },
+    {
+      "month": "2024-03",
+      "label": "Mar 2024",
+      "value": 2
+    },
+    {
+      "month": "2024-04",
+      "label": "Apr 2024",
+      "value": 8
+    },
+    {
+      "month": "2024-05",
+      "label": "May 2024",
+      "value": 9
+    },
+    {
+      "month": "2024-06",
+      "label": "Jun 2024",
+      "value": 6
+    },
+    {
+      "month": "2024-07",
+      "label": "Jul 2024",
+      "value": 19
+    },
+    {
+      "month": "2024-08",
+      "label": "Aug 2024",
+      "value": 18
+    },
+    {
+      "month": "2024-09",
+      "label": "Sep 2024",
+      "value": 41
+    },
+    {
+      "month": "2024-10",
+      "label": "Oct 2024",
+      "value": 30
+    },
+    {
+      "month": "2024-11",
+      "label": "Nov 2024",
+      "value": 19
+    },
+    {
+      "month": "2024-12",
+      "label": "Dec 2024",
+      "value": 19
+    },
+    {
+      "month": "2025-01",
+      "label": "Jan 2025",
+      "value": 3
+    },
+    {
+      "month": "2025-02",
+      "label": "Feb 2025",
+      "value": 3
+    },
+    {
+      "month": "2025-03",
+      "label": "Mar 2025",
+      "value": 9
+    },
+    {
+      "month": "2025-04",
+      "label": "Apr 2025",
+      "value": 7
+    },
+    {
+      "month": "2025-05",
+      "label": "May 2025",
+      "value": 4
+    },
+    {
+      "month": "2025-06",
+      "label": "Jun 2025",
+      "value": 3
+    },
+    {
+      "month": "2025-07",
+      "label": "Jul 2025",
+      "value": 3
+    },
+    {
+      "month": "2025-08",
+      "label": "Aug 2025",
+      "value": 9
+    },
+    {
+      "month": "2025-09",
+      "label": "Sep 2025",
+      "value": 11
+    },
+    {
+      "month": "2025-10",
+      "label": "Oct 2025",
+      "value": 24
+    },
+    {
+      "month": "2025-11",
+      "label": "Nov 2025",
+      "value": 20
+    },
+    {
+      "month": "2025-12",
+      "label": "Dec 2025",
+      "value": 13
+    },
+    {
+      "month": "2026-01",
+      "label": "Jan 2026",
+      "value": 8
+    },
+    {
+      "month": "2026-02",
+      "label": "Feb 2026",
+      "value": 3
+    },
+    {
+      "month": "2026-03",
+      "label": "Mar 2026",
+      "value": 10
+    },
+    {
+      "month": "2026-04",
+      "label": "Apr 2026",
+      "value": 10
+    },
+    {
+      "month": "2026-05",
+      "label": "May 2026",
+      "value": 8
+    },
+    {
+      "month": "2026-06",
+      "label": "Jun 2026",
+      "value": 5
+    },
+    {
+      "month": "2026-07",
+      "label": "Jul 2026",
+      "value": 13
+    },
+    {
+      "month": "2026-08",
+      "label": "Aug 2026",
+      "value": 7
+    },
+    {
+      "month": "2026-09",
+      "label": "Sep 2026",
+      "value": 14
+    }
+  ],
+  "fieldCompleteness": [
+    {
+      "key": "member_name",
+      "label": "Member name",
+      "count": 359,
+      "missing": 0,
+      "total": 359,
+      "percent": 100.0,
+      "sensitivity": "identity",
+      "exploreSafe": true
+    },
+    {
+      "key": "email",
+      "label": "Email",
+      "count": 359,
+      "missing": 0,
+      "total": 359,
+      "percent": 100.0,
+      "sensitivity": "private",
+      "exploreSafe": true
+    },
+    {
+      "key": "primary_phone",
+      "label": "Primary phone",
+      "count": 359,
+      "missing": 0,
+      "total": 359,
+      "percent": 100.0,
+      "sensitivity": "private",
+      "exploreSafe": true
+    },
+    {
+      "key": "birthdate",
+      "label": "Birthdate",
+      "count": 359,
+      "missing": 0,
+      "total": 359,
+      "percent": 100.0,
+      "sensitivity": "sensitive",
+      "exploreSafe": true
+    },
+    {
+      "key": "home_city",
+      "label": "Home city",
+      "count": 359,
+      "missing": 0,
+      "total": 359,
+      "percent": 100.0,
+      "sensitivity": "aggregate-safe",
+      "exploreSafe": true
+    },
+    {
+      "key": "home_state",
+      "label": "Home state",
+      "count": 359,
+      "missing": 0,
+      "total": 359,
+      "percent": 100.0,
+      "sensitivity": "aggregate-safe",
+      "exploreSafe": true
+    },
+    {
+      "key": "membership_type_list",
+      "label": "Membership selection",
+      "count": 359,
+      "missing": 0,
+      "total": 359,
+      "percent": 100.0,
+      "sensitivity": "aggregate-safe",
+      "exploreSafe": true
+    },
+    {
+      "key": "model_release_list",
+      "label": "Model release",
+      "count": 359,
+      "missing": 0,
+      "total": 359,
+      "percent": 100.0,
+      "sensitivity": "aggregate-safe",
+      "exploreSafe": true
+    },
+    {
+      "key": "submitted_on",
+      "label": "Submission date",
+      "count": 359,
+      "missing": 0,
+      "total": 359,
+      "percent": 100.0,
+      "sensitivity": "aggregate-safe",
+      "exploreSafe": true
+    },
+    {
+      "key": "signature_present",
+      "label": "Signature present",
+      "count": 359,
+      "missing": 0,
+      "total": 359,
+      "percent": 100.0,
+      "sensitivity": "aggregate-safe",
+      "exploreSafe": true
+    },
+    {
+      "key": "badge_id",
+      "label": "Badge ID",
+      "count": 0,
+      "missing": 359,
+      "total": 359,
+      "percent": 0.0,
+      "sensitivity": "private",
+      "exploreSafe": true
+    },
+    {
+      "key": "medical_alerts",
+      "label": "Medical alert field",
+      "count": 0,
+      "missing": 359,
+      "total": 359,
+      "percent": 0.0,
+      "sensitivity": "sensitive",
+      "exploreSafe": false
+    }
+  ],
+  "unmatchedApplications": [
+    {
+      "id": "a_b253dbc4465c78",
+      "displayName": "Hedy Mendenhall",
+      "membershipType": "WSU Student/WSU Tech Student",
+      "homeCity": "Wichita",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_d81c891e0fa54a",
+      "displayName": "Lauren Coffman",
+      "membershipType": "WSU Student/WSU Tech Student",
+      "homeCity": "Wichtia",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_0f02b1ef1b66bf",
+      "displayName": "Christopher Fogle",
+      "membershipType": "Student/Staff/Educator",
+      "homeCity": "Bel Aire",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_74f9eda4078bc6",
+      "displayName": "Marcus Ang",
+      "membershipType": "WSU Student/WSU Tech Student",
+      "homeCity": "Wichita",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_410c2567789066",
+      "displayName": "Jason Felihkatubbe",
+      "membershipType": "WSU Student/WSU Tech Student",
+      "homeCity": "Bel Aire",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_8b1a00e7ca2532",
+      "displayName": "Leonardo Ortiz Reyes",
+      "membershipType": "WSU Student/WSU Tech Student",
+      "homeCity": "Wichita",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_d1fe743e92e892",
+      "displayName": "Preston Kraus",
+      "membershipType": "WSU Student/WSU Tech Student",
+      "homeCity": "Andale",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_81aa07866fd91b",
+      "displayName": "Cristian Avila",
+      "membershipType": "WSU Student/WSU Tech Student",
+      "homeCity": "Wichita",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_aceee80b4049b8",
+      "displayName": "Myka Winn",
+      "membershipType": "WSU Student/WSU Tech Student",
+      "homeCity": "Wichita",
+      "homeState": "KS"
+    }
+  ]
+}

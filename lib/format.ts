@@ -2,25 +2,41 @@ export function formatNumber(value: number) {
   return new Intl.NumberFormat("en-US").format(value);
 }
 
-export function formatPercent(value: number) {
-  return `${Math.round(value * 100)}%`;
+export function formatPercent(value: number, digits = 0) {
+  return `${(value * 100).toFixed(digits)}%`;
 }
 
-export function formatDate(value: string | null) {
+export function formatDate(value: string | null | undefined) {
   if (!value) return "—";
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return "—";
-  return new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric" }).format(date);
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) return value;
+  return new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric" }).format(parsed);
 }
 
-export function monthKey(value: string | null) {
-  if (!value) return null;
-  const d = new Date(value);
-  if (Number.isNaN(d.getTime())) return null;
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+export function formatDateTime(value: string | null | undefined) {
+  if (!value) return "—";
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) return value;
+  return new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  }).format(parsed);
 }
 
-export function monthLabel(key: string) {
-  const [year, month] = key.split("-").map(Number);
-  return new Intl.DateTimeFormat("en-US", { month: "short", year: "2-digit" }).format(new Date(year, month - 1, 1));
+export function formatMoney(value: number) {
+  return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(value);
+}
+
+export function humanize(value: string | null | undefined) {
+  if (!value) return "Unspecified";
+  return value
+    .replace(/[-_]+/g, " ")
+    .replace(/\b\w/g, (letter) => letter.toUpperCase());
+}
+
+export function pluralize(count: number, singular: string, plural = `${singular}s`) {
+  return count === 1 ? singular : plural;
 }

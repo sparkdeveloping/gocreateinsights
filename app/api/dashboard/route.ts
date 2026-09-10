@@ -1,17 +1,14 @@
 import { NextResponse } from "next/server";
-import members from "@/src/data/members-summary.json";
-import meta from "@/src/data/dataset-meta.json";
+import members from "@/data/analytics/members.json";
+import applications from "@/data/analytics/applications.json";
 
 export const runtime = "nodejs";
+export const dynamic = "force-static";
 
 export async function GET() {
-  return NextResponse.json({
-    members,
-    meta: {
-      sourceFile: meta.sourceFile,
-      generatedAt: meta.generatedAt,
-      rowCount: meta.rowCount,
-      columnCount: meta.columnCount,
+  return NextResponse.json({ members, applications }, {
+    headers: {
+      "Cache-Control": "public, max-age=300, s-maxage=3600, stale-while-revalidate=86400",
     },
   });
 }
