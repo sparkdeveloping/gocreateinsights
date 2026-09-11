@@ -77,7 +77,7 @@ const tabs: Array<{ id: DashboardTab; label: string; description: string; Icon: 
   { id: "applications", label: "Applications", description: "Application detail and history", Icon: ApplicationsIcon },
   { id: "people", label: "People", description: "Age, location and affiliation", Icon: PeopleIcon },
   { id: "report", label: "Koch report", description: "Leadership reporting and PDF export", Icon: ReportIcon },
-  { id: "modified-report", label: "Modified report", description: "Internal manual-adjustment reporting workspace", Icon: LockIcon },
+  { id: "modified-report", label: "Modified report", description: "Staff reporting workspace", Icon: LockIcon },
   { id: "quality", label: "Data quality", description: "Coverage and missing fields", Icon: QualityIcon },
   { id: "members", label: "Members", description: "Search every person", Icon: MembersIcon },
 ];
@@ -916,7 +916,7 @@ export default function Dashboard({ bootstrap, internalReportsEnabled = false }:
   }
 
   function printModifiedReport() {
-    printNamedReport(`GoCreate Internal Modified Report Sep 2025 to ${bootstrap.meta.dataAsOf}`);
+    printNamedReport(`GoCreate Modified Report Sep 2025 to ${bootstrap.meta.dataAsOf}`);
   }
 
   function showAllAssistance() {
@@ -933,7 +933,7 @@ export default function Dashboard({ bootstrap, internalReportsEnabled = false }:
     applications: <ApplicationsTab bootstrap={bootstrap} applications={scopedApplications} openExplore={openExplore} scoped={dateScopeActive || filterOnlyCount > 0} />,
     people: <PeopleTab bootstrap={bootstrap} members={filteredMembers} applications={scopedApplications} openExplore={openExplore} scoped={dateScopeActive || filterOnlyCount > 0} />,
     report: <KochReport bootstrap={bootstrap} members={filteredMembers} applications={scopedApplications} range={dateRange} openExplore={openExplore} onPrint={printKochReport} onShowAllAssistance={showAllAssistance} />,
-    "modified-report": internalReportsEnabled ? <ModifiedReport bootstrap={bootstrap} applications={applications} range={dateRange} onPrint={printModifiedReport} /> : null,
+    "modified-report": internalReportsEnabled ? <ModifiedReport bootstrap={bootstrap} members={members} applications={applications} manualVisits={manualVisits?.events ?? []} range={dateRange} openExplore={openExplore} onPrint={printModifiedReport} /> : null,
     quality: <QualityTab bootstrap={bootstrap} members={filteredMembers.filter((m) => m.isMasterMember)} applications={scopedApplications} manualEvents={drawerManualVisits} openExplore={openExplore} openMember={setMemberId} scoped={dateScopeActive || filterOnlyCount > 0} />,
     members: <MembersTab members={filteredMembers} openExplore={openExplore} openMember={setMemberId} />,
   } satisfies Record<DashboardTab, React.ReactNode>;

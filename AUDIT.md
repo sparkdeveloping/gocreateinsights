@@ -1,4 +1,4 @@
-# GoCreate Insights — v5.7 data and reporting audit
+# GoCreate Insights — v5.8 data and reporting audit
 
 ## Purpose
 
@@ -92,7 +92,7 @@ The Koch Report follows GoCreate’s established white-page, blue/yellow, chart-
 
 Raw source files and private detail JSON are included in the downloadable project for reproducibility and internal work. They are not public assets. Bulk analytics exclude exact birthdates, street addresses, emails, phones, emergency-contact values, medical-alert contents and Assistance questionnaire free text. Member detail remains masked unless `GOCREATE_PII_MODE=full` is explicitly enabled behind access control.
 
-## v5.7 internal Modified Report integrity rule
+## v5.8 Modified Report integrity rule
 
 The internal Modified Report defaults Membership Assistance to **84** and Small Businesses to **62**, and both defaults are defined specifically for **2025-09-01 through the project data-as-of date**. They must not be described as all-time values or as database-derived values. They do not write into source-derived analytics and cannot replace the standard Koch Report figures.
 
@@ -100,6 +100,13 @@ The UI compares those internal adjusted values only against the database-derived
 
 Historical figures shown for 2020–2025 were transcribed from the supplied screenshot and remain labeled legacy reported context. The current-period adjustments are no longer appended to the historical line as a 2026 annual data point. Missing historical cells remain blank. This keeps the internal presentation layer from contaminating the factual data pipeline.
 
-## v5.7 expired-status presentation rule
+## v5.8 expired-status presentation rule
 
 Expired records are **not deleted or recoded**. Their aggregate numbers are simply omitted from the normal presentation surfaces: Overview status distribution, Membership KPI/status charts, the default status selector, and the application portal-status chart. Each affected chart states that expired records are retained in the source but omitted from that presentation view. Raw/source data and person-level records remain unchanged so reconciliation and auditability are preserved.
+
+
+## v5.8 Modified Report presentation audit
+
+Repeated internal/manual-disclosure banners were removed from the report UI. Transparency is consolidated into one optional **Report details** control. The printed report remains visibly titled **Modified Report**, while the configured 84 Assistance and 62 Small Business values are labeled as report values for the fixed Sep. 1, 2025 → data-as-of period. They do not mutate imported data or source-derived analytics.
+
+The Modified Report now carries the same high-value source-derived context expected from the Koch Report: membership mix, demographics, Assistance questionnaire categories, enrollment-reference signals, application/matching coverage, city/affiliation distributions, tracker/manual attendance, guests, review queues and historical context. Expired aggregate counts are omitted from presentation.

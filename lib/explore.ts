@@ -22,7 +22,12 @@ export function memberMatchesExplore(member: MemberSummary, query: ExploreQuery)
     case "visit-frequency": return visitFrequency(member.combinedObservedVisitsMinimum) === value;
     case "application-details": return member.hasApplicationDetails;
     case "application-type": return member.applicationMembershipType === value;
-    case "application-status": return member.applicationStatus === value;
+    case "application-status": {
+      const status = (member.applicationStatus || "").toLowerCase();
+      if (value === "Approved") return status.includes("approved") && !status.includes("expired");
+      if (value === "Pending") return status.includes("pending") && !status.includes("expired");
+      return member.applicationStatus === value;
+    }
     case "model-release": return member.modelReleaseGranted === (query.value === true || value === "true");
     case "assistance": return member.assistanceRequested === true;
     case "signature": return member.signaturePresent === (query.value === true || value === "true");
@@ -53,7 +58,12 @@ export function applicationMatchesExplore(application: ApplicationSummary, query
     case "application-details": return true;
     case "application-only": return !application.isMatchedToMaster;
     case "application-type": return application.membershipType === value;
-    case "application-status": return application.applicationStatus === value;
+    case "application-status": {
+      const status = (application.applicationStatus || "").toLowerCase();
+      if (value === "Approved") return status.includes("approved") && !status.includes("expired");
+      if (value === "Pending") return status.includes("pending") && !status.includes("expired");
+      return application.applicationStatus === value;
+    }
     case "application-match": return application.isMatchedToMaster === (query.value === true || value === "true");
     case "application-month": return Boolean(application.submittedAt && application.submittedAt.slice(0, 7) === value);
     case "model-release": return application.modelReleaseGranted === (query.value === true || value === "true");

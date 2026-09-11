@@ -804,3 +804,36 @@ button:disabled { cursor: not-allowed; opacity: .46; }
 .date-preset.active:disabled { opacity: 1; }
 .date-inputs input:disabled { cursor: default; background: #f7fafb; color: #52616b; opacity: 1; }
 .date-scope-summary > svg { width: 14px; height: 14px; color: var(--brand-blue-dark); align-self: center; }
+
+/* v5.8 modified report expansion */
+.modified-report-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.modified-report-actions .secondary-button svg,
+.modified-report-actions .primary-button svg { width: 16px; height: 16px; }
+.modified-inline-link { width: fit-content; margin-top: 3px; padding: 0; border: 0; background: transparent; color: var(--brand-blue-dark); display: inline-flex; align-items: center; gap: 5px; font-size: 8px; font-weight: 850; }
+.modified-inline-link:hover { text-decoration: underline; text-underline-offset: 2px; }
+.modified-inline-link svg { width: 12px; height: 12px; }
+.modified-assistance-banner { margin-bottom: 2px; }
+.modified-signal-grid .report-signal-card { min-height: 265px; }
+.modified-context-stack { display: flex; flex-direction: column; gap: 8px; }
+.modified-context-stack .modified-context-card { width: 100%; margin-top: 0; text-align: left; transition: transform .15s ease, border-color .15s ease, background .15s ease; }
+button.modified-context-card:hover { transform: translateY(-1px); border-color: #cbdde6; background: #fff; }
+
+@media (max-width: 760px) {
+  .modified-report-actions { width: 100%; }
+  .modified-report-actions > button { flex: 1 1 auto; }
+}
+
+@media print {
+  .modified-report-page .report-metric { min-height: .94in; }
+  .modified-report-page .report-metric > strong { font-size: 20pt; }
+  .modified-report-page .report-chart-card { padding: 10px; }
+  .modified-report-page .report-donut-chart { height: 2.05in; }
+  .modified-report-page .report-age-bars { min-height: 2.05in; gap: 4px; }
+  .modified-report-page .report-age-bars.compact { min-height: 1.95in; }
+  .modified-report-page .report-signal-card { min-height: 2.1in; }
+  .modified-report-page .report-reason-list { min-height: 1.9in; gap: 4px; }
+  .modified-report-page .report-reason-list button { min-height: 31px; }
+  .modified-report-page .modified-line-chart { height: 2.25in; }
+  .modified-report-page .assistance-banner > div,
+  .modified-report-page .assistance-banner > button { min-height: .72in; padding: 9px; }
+}

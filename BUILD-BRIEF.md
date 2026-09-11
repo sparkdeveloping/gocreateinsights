@@ -1,4 +1,4 @@
-# GoCreate Insights v5.7 — implementation brief
+# GoCreate Insights v5.8 — implementation brief
 
 Build a strictly light-mode, single-page operational intelligence application for GoCreate using Next.js App Router, React, TypeScript, Tailwind CSS, Framer Motion and Recharts. It must feel like a precise staff reporting tool rather than a generic AI dashboard. Use the supplied official GoCreate assets and restrained blue/yellow/ink colors.
 
@@ -68,10 +68,15 @@ Use motion heavily only when it teaches the interface: count changes after filte
 
 ## Internal Modified Report
 
-Maintain a separate staff-only presentation workspace named **Modified report**. It may accept manual presentation overrides, but manual values must never mutate imports, analytics JSON, member/application records, source-derived Koch Report metrics, or CSV exports. Manual figures must remain visibly identifiable as manually adjusted, including in printed output.
+Maintain a separate staff-only presentation workspace named **Modified report**. It may accept manual presentation overrides, but manual values must never mutate imports, analytics JSON, member/application records, source-derived Koch Report metrics, or CSV exports. Do not repeat warning banners throughout the report. Keep provenance available through a single unobtrusive Report details control, keep the document titled Modified Report, and never mutate imported/source-derived analytics.
 
 The current defaults are **84 Membership Assistance** and **62 Small Businesses**, and both are defined for the fixed **Sep. 1, 2025 → data-as-of** reporting window. They are not all-time values. When Modified report opens, force the global date state to that range and lock the date controls while the workspace is active. Compare manual figures only with database-derived counts from the same period; do not compare them with all-time counts. Keep the legacy 2020–2025 report history as a separate contextual series rather than appending the current manual adjustments as a 2026 annual point.
 
 For presentation, do not surface aggregate expired-status numbers in the normal Overview, Membership or Application status visuals. Keep expired source records intact, do not alter exports or underlying records, and state in chart copy that expired records are retained but omitted from the presentation view.
 
 Production visibility is gated by `GOCREATE_INTERNAL_REPORTS=enabled`; use it only behind an internal/authenticated deployment.
+
+
+## v5.8 Modified Report content parity
+
+Treat Modified Report as a full leadership report rather than a two-number adjustment sheet. It should include WSU/WSU Tech, Retail, membership mix, age demographics, Assistance reason/age detail, business/nonprofit/reduced-rate signals, application coverage, match/signature/model-release detail, non-expired application statuses, top cities, affiliation mix, tracker/manual attendance, guests, reconciliation review, source coverage, timeline and historical context. Every source-derived metric or category that implies underlying records should remain clickable into Explorer.
