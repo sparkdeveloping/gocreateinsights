@@ -110,8 +110,11 @@ export default function MemberDetailDrawer({ memberId, onClose }: Props) {
                 <div className="detail-grid">
                   <DetailItem label="Status" value={humanize(detail.membershipStatus)} />
                   <DetailItem label="Type" value={detail.membershipType} />
-                  <DetailItem label="Visits in range" value={detail.visitsInRange.toLocaleString()} />
-                  <DetailItem label="Hosted guests" value={detail.hostedGuestsInRange.toLocaleString()} />
+                  <DetailItem label="Tracker visits" value={detail.trackerVisits.toLocaleString()} />
+                  <DetailItem label="Matched manual visits" value={detail.manualVisits.toLocaleString()} />
+                  <DetailItem label="Observed minimum" value={detail.combinedObservedVisitsMinimum.toLocaleString()} />
+                  <DetailItem label="Hosted guests (tracker)" value={detail.hostedGuestsInRange.toLocaleString()} />
+                  <DetailItem label="Last manual visit" value={formatDateTime(detail.manualVisitLastAt)} />
                   <DetailItem label="Student affiliation" value={detail.studentAffiliation} />
                   <DetailItem label="Data quality" value={humanize(detail.dataQualityStatus)} />
                 </div>
@@ -138,7 +141,8 @@ export default function MemberDetailDrawer({ memberId, onClose }: Props) {
                     <DetailItem label="Model release" value={detail.modelReleaseGranted === null ? "Unknown" : detail.modelReleaseGranted ? "Granted" : "Not granted"} />
                     <DetailItem label="Signature" value={detail.application.signaturePresent ? <span className="inline-good"><CheckIcon /> Present</span> : "Not recorded"} />
                     <DetailItem label="Assistance" value={detail.assistanceRequested ? "Requested" : "Not requested"} />
-                    {detail.assistanceReason && <DetailItem label="Assistance reason" value={detail.assistanceReason} />}
+                    {detail.assistanceQuestionnaireAvailable && <DetailItem label="Assistance questionnaire" value={`${detail.assistanceResponseCount} captured response${detail.assistanceResponseCount === 1 ? "" : "s"}`} />}
+                    {detail.assistanceReason && <DetailItem label="Assistance reason category" value={detail.assistanceReason} />}
                     {detail.smallBusinessReference && <DetailItem label="Business signal" value={detail.smallBusinessLabels.join(", ") || "Detected"} />}
                     {detail.nonprofitReference && <DetailItem label="Nonprofit / org signal" value={detail.nonprofitLabels.join(", ") || "Detected"} />}
                     {detail.reducedRateReference && <DetailItem label="Reduced-rate signal" value={detail.reducedRateLabels.join(", ") || "Detected"} />}

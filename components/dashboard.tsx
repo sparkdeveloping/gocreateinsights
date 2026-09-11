@@ -19,7 +19,7 @@ import {
 } from "recharts";
 import { useEffect, useMemo, useState } from "react";
 import CountUp from "@/components/count-up";
-import ExplorerDrawer from "@/components/explorer-drawer";
+import ExplorerDrawer, { type ExploreMode } from "@/components/explorer-drawer";
 import GoCreateMark from "@/components/gocreate-mark";
 import {
   AlertIcon,
@@ -56,6 +56,8 @@ import type {
   DistributionPoint,
   ExploreQuery,
   FieldCompleteness,
+  ManualVisitEvent,
+  ManualVisitPayload,
   MemberSummary,
 } from "@/lib/types";
 
@@ -79,8 +81,6 @@ const tabs: Array<{ id: DashboardTab; label: string; description: string; Icon: 
 ];
 
 type Props = { bootstrap: DashboardBootstrap };
-type ExploreMode = "members" | "applications";
-
 type FilterState = {
   search: string;
   status: string;
@@ -276,6 +276,7 @@ function EmptyData({ children }: { children: React.ReactNode }) {
 function useRows(bootstrap: DashboardBootstrap) {
   const [members, setMembers] = useState<MemberSummary[]>([]);
   const [applications, setApplications] = useState<ApplicationSummary[]>([]);
+  const [manualVisits, setManualVisits] = useState<ManualVisitPayload | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -289,6 +290,7 @@ function useRows(bootstrap: DashboardBootstrap) {
       .then((payload) => {
         setMembers(payload.members);
         setApplications(payload.applications);
+        setManualVisits(payload.manualVisits);
       })
       .catch((reason) => {
         if (reason?.name !== "AbortError") setError(reason?.message || "Underlying records could not be loaded.");
@@ -297,7 +299,7 @@ function useRows(bootstrap: DashboardBootstrap) {
     return () => controller.abort();
   }, [bootstrap.meta.generatedAt]);
 
-  return { members, applications, loading, error };
+  return { members, applications, manualVisits, loading, error };
 }
 
 function DashboardFilters({
@@ -411,11 +413,11 @@ function OverviewTab({
 }) {
   const useRows = scoped || members.length > 0;
   const approved = useRows ? members.filter((m) => m.membershipStatus === "approved").length : bootstrap.overview.approvedMembers;
-  const engaged = useRows ? members.filter((m) => m.visitsInRange > 0).length : bootstrap.overview.engagedMembers;
+  const engaged = useRows ? members.filter((m) => m.trackerVisits > 0).length : bootstrap.overview.engagedMembers;
   const applicationPeople = useRows ? new Set(applications.map((a) => a.memberId || a.id)).size : bootstrap.meta.distinctEnrichedMembers + bootstrap.meta.unmatchedApplications;
   const applicationRows = useRows ? applications.length : bootstrap.meta.applicationRows;
   const unmatchedApplications = useRows ? applications.filter((a) => !a.isMatchedToMaster).length : bootstrap.meta.unmatchedApplications;
-  const observedVisits = useRows ? members.reduce((sum, member) => sum + member.visitsInRange, 0) : bootstrap.overview.observedVisits;
+  const observedVisits = useRows ? members.reduce((sum, member) => sum + member.trackerVisits, 0) : bootstrap.overview.trackerVisits;
   const quarantined = useRows ? members.filter((m) => m.dataQualityStatus === "quarantined").length : bootstrap.overview.quarantinedRecords;
   const master = useRows ? members.filter((m) => m.isMasterMember).length : bootstrap.meta.masterRows;
 
@@ -425,7 +427,7 @@ function OverviewTab({
       <div className="metric-grid six">
         <MetricCard label="Master members" value={master} detail="Current member records in the master source" onClick={() => openExplore(q("master", "Master members", "All people represented by the master membership source."))} tone="ink" helper="Open all records" />
         <MetricCard label="Approved members" value={approved} detail="Approved status in the current master source" onClick={() => openExplore(q("membership-status", "Approved members", "People whose master membership status is approved.", "approved"))} helper="See exactly who" />
-        <MetricCard label="Members with visits" value={engaged} detail={`${formatNumber(observedVisits)} observed visits in the source window`} onClick={() => openExplore(q("engaged", "Members with observed visits", "People with at least one visit in the current source window."))} tone="yellow" helper="Inspect activity" />
+        <MetricCard label="Tracker-active members" value={engaged} detail={`${formatNumber(observedVisits)} tracker visits in the tracker source window`} onClick={() => openExplore(q("engaged", "Members with observed activity", "People with tracker and/or confidently matched manual activity. Open Engagement for source-aware attendance."))} tone="yellow" helper="Open merged activity" />
         <MetricCard label="Application rows" value={applicationRows} detail={`${formatNumber(applicationPeople)} distinct people represented`} onClick={() => openExplore(q("application-details", "Application records", "Every enriched application row in the uploaded workbook."), "applications")} helper="Open application rows" />
         <MetricCard label="People with app detail" value={applicationPeople} detail="Distinct people with at least one attached application" onClick={() => openExplore(q("application-details", "People with application detail", "Distinct people with an application record attached to their profile."))} tone="ink" helper="Open people" />
         <MetricCard label="Quality attention" value={quarantined} detail="Master records marked quarantined" onClick={() => openExplore(q("data-quality", "Records needing data-quality attention", "Master records currently marked quarantined.", "quarantined"))} tone="red" helper="Review queue" />
@@ -451,7 +453,7 @@ function OverviewTab({
   );
 }
 
-function MembershipTab({ members, applications, statusData, typeData, openExplore }: { members: MemberSummary[]; applications: ApplicationSummary[]; statusData: DistributionPoint[]; typeData: DistributionPoint[]; openExplore: (query: ExploreQuery, mode?: ExploreMode) => void }) {
+function MembershipTab({ bootstrap, members, applications, statusData, typeData, openExplore, scoped }: { bootstrap: DashboardBootstrap; members: MemberSummary[]; applications: ApplicationSummary[]; statusData: DistributionPoint[]; typeData: DistributionPoint[]; openExplore: (query: ExploreQuery, mode?: ExploreMode) => void; scoped: boolean }) {
   const pending = statusData.find((d) => d.name === "pending")?.value ?? 0;
   const expired = statusData.find((d) => d.name === "expired")?.value ?? 0;
   const approved = statusData.find((d) => d.name === "approved")?.value ?? 0;
@@ -469,8 +471,8 @@ function MembershipTab({ members, applications, statusData, typeData, openExplor
         <MetricCard label="Staff" value={staff} detail="Staff status in the master source" onClick={() => openExplore(q("staff", "Staff records", "People marked as staff or employee in the available source."))} tone="ink" />
       </div>
       <div className="membership-overlay-strip">
-        <button onClick={() => openExplore(q("assistance", "Membership assistance", "Membership-assistance applications inside the selected reporting range."), "applications")}><span className="overlay-dot yellow" /><div><span>Membership assistance</span><strong>{formatNumber(assistancePeople)} people · {formatNumber(assistanceApps.length)} application {pluralize(assistanceApps.length, "row")}</strong></div><ChevronRightIcon /></button>
-        <button onClick={() => openExplore(q("reduced-rate-reference", "Quilters / reduced-rate references", "Application rows with explicit quilter or reduced-rate wording."), "applications")}><span className="overlay-dot blue" /><div><span>Quilters / reduced-rate</span><strong>{formatNumber(reducedRateRefs)} explicit {pluralize(reducedRateRefs, "reference")}</strong></div><ChevronRightIcon /></button>
+        <button onClick={() => openExplore(q("assistance", "Membership assistance", "Membership-assistance applications inside the selected reporting range."), "applications")}><span className="overlay-dot yellow" /><div><span>Membership assistance</span><strong>{formatNumber(assistancePeople)} people · {formatNumber(assistanceApps.length)} {scoped ? `in range · ${formatNumber(bootstrap.overview.assistanceRequests)} all-time` : `application ${pluralize(assistanceApps.length, "row")}`}</strong></div><ChevronRightIcon /></button>
+        <button onClick={() => openExplore(q("reduced-rate-reference", "Quilters / reduced-rate references", "Application rows with explicit quilter or reduced-rate wording."), "applications")}><span className="overlay-dot blue" /><div><span>Quilters / reduced-rate</span><strong>{formatNumber(reducedRateRefs)} in range{scoped ? ` · ${formatNumber(bootstrap.overview.reducedRateReferences)} all-time` : ""}</strong></div><ChevronRightIcon /></button>
         <div className="overlay-explain"><InfoIcon /><span>These application pathways are denoted alongside membership rather than treated as a separate database.</span></div>
       </div>
       <div className="two-column">
@@ -488,46 +490,110 @@ function MembershipTab({ members, applications, statusData, typeData, openExplor
   );
 }
 
-function EngagementTab({ bootstrap, members, openExplore, openMember, scoped }: { bootstrap: DashboardBootstrap; members: MemberSummary[]; openExplore: (query: ExploreQuery, mode?: ExploreMode) => void; openMember: (id: string) => void; scoped: boolean }) {
-  const visitData = countBy(members, (m) => visitFrequency(m.visitsInRange));
+function EngagementTab({ bootstrap, members, manualEvents, dateRange, dateScopeActive, openExplore, openMember, scoped }: { bootstrap: DashboardBootstrap; members: MemberSummary[]; manualEvents: ManualVisitEvent[]; dateRange: DateRange; dateScopeActive: boolean; openExplore: (query: ExploreQuery, mode?: ExploreMode) => void; openMember: (id: string) => void; scoped: boolean }) {
+  const memberIds = useMemo(() => new Set(members.map((member) => member.id)), [members]);
+  const trackerStart = bootstrap.meta.trackerCoverageStart;
+  const trackerEnd = bootstrap.meta.trackerCoverageEnd;
+  const rangeContainsTracker = !dateScopeActive || Boolean(trackerStart && trackerEnd && dateRange.from <= trackerStart && dateRange.to >= trackerEnd);
+  const rangeOutsideTracker = Boolean(dateScopeActive && trackerStart && trackerEnd && (dateRange.to < trackerStart || dateRange.from > trackerEnd));
+  const trackerDivisible = rangeContainsTracker || rangeOutsideTracker;
+
+  const scopedManual = useMemo(() => manualEvents.filter((event) => {
+    if (dateScopeActive && !inDateRange(event.visitDate, dateRange)) return false;
+    if (event.classification === "member" && event.memberId && !memberIds.has(event.memberId)) return false;
+    return true;
+  }), [dateRange, dateScopeActive, manualEvents, memberIds]);
+
+  const trackerVisits = rangeOutsideTracker ? 0 : members.reduce((sum, member) => sum + member.trackerVisits, 0);
+  const manualMemberVisits = scopedManual.filter((event) => event.classification === "member").length;
+  const manualGuests = scopedManual.filter((event) => event.classification === "guest").length;
+  const reviewRows = scopedManual.filter((event) => event.classification === "review").length;
+  const unreadableRows = scopedManual.filter((event) => event.classification === "unreadable").length;
+  const unknownDateRows = dateScopeActive ? manualEvents.filter((event) => !event.visitDate).length : scopedManual.filter((event) => !event.visitDate).length;
+  const possibleExactDuplicates = scopedManual.filter((event) => event.classification === "member" && event.possibleExactTrackerDuplicate).length;
+  const combinedMinimum = trackerDivisible ? Math.max(0, trackerVisits + manualMemberVisits - possibleExactDuplicates) : manualMemberVisits;
+
+  const memberManualCounts = useMemo(() => {
+    const map = new Map<string, { visits: number; possibleDuplicates: number }>();
+    scopedManual.forEach((event) => {
+      if (event.classification !== "member" || !event.memberId) return;
+      const current = map.get(event.memberId) ?? { visits: 0, possibleDuplicates: 0 };
+      current.visits += 1;
+      if (event.possibleExactTrackerDuplicate) current.possibleDuplicates += 1;
+      map.set(event.memberId, current);
+    });
+    return map;
+  }, [scopedManual]);
+
+  const memberRows = useMemo(() => members.map((member) => {
+    if (!dateScopeActive) return { member, manual: member.manualVisits, tracker: member.trackerVisits, combined: member.combinedObservedVisitsMinimum };
+    const manualInfo = memberManualCounts.get(member.id) ?? { visits: 0, possibleDuplicates: 0 };
+    const tracker = rangeOutsideTracker ? 0 : rangeContainsTracker ? member.trackerVisits : 0;
+    return { member, manual: manualInfo.visits, tracker, combined: Math.max(0, manualInfo.visits + tracker - manualInfo.possibleDuplicates) };
+  }), [dateScopeActive, memberManualCounts, members, rangeContainsTracker, rangeOutsideTracker]);
+
+  const engaged = memberRows.filter((row) => row.combined > 0);
+  const visitData = countBy(memberRows, (row) => visitFrequency(row.combined));
   const orderedBuckets = ["0 visits", "1 visit", "2–4 visits", "5–9 visits", "10+ visits"].map((name) => visitData.find((item) => item.name === name) ?? { name, value: 0 });
-  const engaged = members.filter((m) => m.visitsInRange > 0);
-  const visits = engaged.reduce((sum, member) => sum + member.visitsInRange, 0);
-  const guests = members.reduce((sum, member) => sum + member.hostedGuestsInRange, 0);
-  const average = engaged.length ? visits / engaged.length : 0;
-  const top = [...engaged].sort((a, b) => b.visitsInRange - a.visitsInRange).slice(0, 10);
-  const scatter = engaged.map((m) => ({ id: m.id, name: m.displayName, visits: m.visitsInRange, guests: m.hostedGuestsInRange })).slice(0, 180);
+  const top = [...engaged].sort((a, b) => b.combined - a.combined).slice(0, 10);
+  const datedManual = scopedManual.filter((event) => event.visitDate);
+  const byDateMap = new Map<string, { date: string; total: number; members: number; guests: number }>();
+  datedManual.forEach((event) => {
+    const date = event.visitDate as string;
+    const row = byDateMap.get(date) ?? { date, total: 0, members: 0, guests: 0 };
+    row.total += 1;
+    if (event.classification === "member") row.members += 1;
+    if (event.classification === "guest") row.guests += 1;
+    byDateMap.set(date, row);
+  });
+  const timeline = [...byDateMap.values()].sort((a, b) => a.date.localeCompare(b.date));
+
+  const trackerDetail = trackerDivisible
+    ? `${formatNumber(trackerVisits)} tracker visits ${rangeOutsideTracker ? "(selected dates are outside tracker coverage)" : `across ${formatDate(trackerStart)}–${formatDate(trackerEnd)}`}`
+    : `Tracker has ${formatNumber(trackerVisits)} source-window visits, but the selected range cuts through ${formatDate(trackerStart)}–${formatDate(trackerEnd)} and cannot be split exactly`;
+
   return (
     <div className="tab-stack">
-      <PageIntro eyebrow="Engagement" title="Observed activity without overstating the data" copy="The source currently records a limited activity window. The interface separates members with activity from total visit events so the counts stay interpretable." />
-      <div className="metric-grid four">
-        <MetricCard label="Members with visits" value={scoped ? engaged.length : (engaged.length || bootstrap.overview.engagedMembers)} detail="At least one observed visit" onClick={() => openExplore(q("engaged", "Members with observed visits", "People with at least one visit in the available activity window."))} />
-        <MetricCard label="Observed visits" value={scoped ? visits : (visits || bootstrap.overview.observedVisits)} detail="Visit events across the current people scope" onClick={() => openExplore(q("engaged", "People behind observed visits", "Members who account for the observed visit events."))} tone="yellow" helper="Opens contributing members" />
-        <MetricCard label="Hosted guests" value={scoped ? guests : (guests || bootstrap.overview.hostedGuests)} detail="Guest activity recorded in the current source" onClick={() => openExplore(q("engaged", "Members with activity", "Members in the current activity population; guest counts are shown on each record."))} tone="ink" />
-        <MetricCard label="Visits per engaged member" value={average} formatter={(value) => value.toFixed(1)} detail="Average among people with at least one visit" onClick={() => openExplore(q("engaged", "Engaged members", "The population used to calculate average visits per engaged member."))} tone="ink" />
+      <PageIntro eyebrow="Engagement" title="One attendance picture from tracker + manual sign-ins" copy="Manual sign-in sheets now fill the period before and around tracker adoption. High-confidence name matches are attached to members; clear nonmatches are guests; uncertain handwriting remains in a review queue instead of being guessed." />
+
+      <div className="source-truth-banner">
+        <InfoIcon />
+        <div><strong>{trackerDivisible ? "This range can be totaled without inventing tracker dates." : "This range partially overlaps the tracker aggregate."}</strong><span>{trackerDetail}. {dateScopeActive ? `${formatNumber(unknownDateRows)} manual rows have no trustworthy date and are excluded from this custom range.` : `${formatNumber(unknownDateRows)} manual rows have no trustworthy date but remain visible in all-time totals.`}</span></div>
       </div>
+
+      <div className="metric-grid six">
+        <MetricCard label="Manual sign-ins" value={scopedManual.length} detail={`${formatNumber(datedManual.length)} dated rows in this view`} onClick={() => openExplore(q("manual-all", "Manual sign-in rows", "Detected rows from the scanned paper sign-in sheets in the current date scope."), "manual")} />
+        <MetricCard label="Matched member sign-ins" value={manualMemberVisits} detail="High-confidence manual name matches" onClick={() => openExplore(q("manual-member", "Matched manual member visits", "Manual sign-ins confidently matched to an existing member."), "manual")} tone="blue" />
+        <MetricCard label="Guest sign-ins" value={manualGuests} detail="Clear nonmember / nonmatched sign-ins" onClick={() => openExplore(q("manual-guest", "Guest sign-ins", "Manual sign-ins not matched to a current member. Guest handwriting stays private in the browser view."), "manual")} tone="ink" />
+        <MetricCard label="Needs review" value={reviewRows + unreadableRows} detail={`${reviewRows} possible matches · ${unreadableRows} unreadable`} onClick={() => openExplore(q("manual-review", "Manual sign-ins needing review", "Rows with a plausible member suggestion that were not auto-linked."), "manual")} tone="yellow" />
+        <MetricCard label={trackerDivisible ? "Tracker visits" : "Tracker source-window visits"} value={trackerVisits} detail={trackerDivisible ? "Tracker aggregate contribution for this range" : "Shown for context only; not safely divisible inside this partial tracker window"} onClick={() => openExplore(q("engaged", "Members with tracker/manual activity", "Members contributing observed activity across the available sources."))} tone="ink" />
+        <MetricCard label={trackerDivisible ? "Combined member minimum" : "Manual member visits in-range"} value={combinedMinimum} detail={trackerDivisible ? "Tracker + confidently matched manual visits; conservative minimum" : "Tracker portion withheld from the exact in-range total"} onClick={() => openExplore(q("engaged", "Members with observed activity", "Members with tracker and/or confidently matched manual activity."))} tone="yellow" />
+      </div>
+
       <div className="two-column wide-left">
-        <ChartPanel eyebrow="Frequency" title="How often people visited" note="Zero visits is included so the participation gap stays visible.">
-          <DistributionBar data={orderedBuckets} horizontal={false} height={320} onClick={(point) => openExplore(q("visit-frequency", point.name, `Members with ${point.name} in the activity window.`, point.name))} />
-        </ChartPanel>
-        <ChartPanel eyebrow="Activity" title="Visits vs hosted guests" note="Each point is a person. Select a point to open that member directly.">
+        <ChartPanel eyebrow="Manual timeline" title="Dated paper sign-ins" note="Click any point to open the scanned rows from that date. Unknown-date rows are intentionally not plotted.">
           <div className="chart-wrap" style={{ height: 320 }}>
-            <ResponsiveContainer width="100%" height="100%">
-              <ScatterChart margin={{ top: 12, right: 18, left: 0, bottom: 8 }}>
-                <CartesianGrid stroke="#edf0f3" />
-                <XAxis type="number" dataKey="visits" name="Visits" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "#76818d" }} />
-                <YAxis type="number" dataKey="guests" name="Guests" allowDecimals={false} axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "#76818d" }} />
-                <Tooltip cursor={{ strokeDasharray: "4 4" }} content={<LightTooltip />} />
-                <Scatter data={scatter} fill={BLUE} onClick={(point: any) => point?.id && openMember(point.id)} cursor="pointer" animationDuration={520} />
-              </ScatterChart>
-            </ResponsiveContainer>
+            {timeline.length ? <ResponsiveContainer width="100%" height="100%"><LineChart data={timeline} margin={{ top: 12, right: 16, left: -12, bottom: 8 }}><CartesianGrid stroke="#edf0f3" vertical={false} /><XAxis dataKey="date" tickFormatter={(value) => new Date(`${value}T12:00:00`).toLocaleDateString("en-US", { month: "short", day: "numeric" })} axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "#76818d" }} /><YAxis allowDecimals={false} axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "#76818d" }} /><Tooltip content={<LightTooltip />} /><Line type="monotone" dataKey="total" name="Sign-ins" stroke={BLUE} strokeWidth={3} dot={{ r: 3 }} activeDot={{ r: 6, onClick: (_: any, payload: any) => payload?.payload?.date && openExplore(q("manual-date", `Manual sign-ins · ${formatDate(payload.payload.date)}`, "Manual sign-in rows detected on this date.", payload.payload.date), "manual") }} animationDuration={650} /></LineChart></ResponsiveContainer> : <EmptyData>No dated manual sign-ins fall inside this range.</EmptyData>}
+          </div>
+        </ChartPanel>
+        <ChartPanel eyebrow="Reconciliation" title="What happened to each paper row" note="Nothing ambiguous is silently assigned to a member.">
+          <div className="insight-list">
+            <InsightRow title="Matched to a member" copy="Conservative, high-confidence first/last-name reconciliation." count={formatNumber(manualMemberVisits)} onClick={() => openExplore(q("manual-member", "Matched manual member visits", "High-confidence manual-to-member matches."), "manual")} />
+            <InsightRow title="Counted as guests" copy="No sufficiently strong current-member match." count={formatNumber(manualGuests)} onClick={() => openExplore(q("manual-guest", "Guest sign-ins", "Manual sign-ins classified as guests."), "manual")} tone="ink" />
+            <InsightRow title="Possible member matches" copy="Suggested match exists, but confidence was not high enough to auto-link." count={formatNumber(reviewRows)} onClick={() => openExplore(q("manual-review", "Possible member matches", "Ambiguous rows held for staff review."), "manual")} tone="yellow" />
+            <InsightRow title="Unreadable handwriting" copy="Kept in the source count without inventing a person." count={formatNumber(unreadableRows)} onClick={() => openExplore(q("manual-unreadable", "Unreadable manual rows", "Rows where handwriting could not be reliably interpreted."), "manual")} tone="red" />
           </div>
         </ChartPanel>
       </div>
-      <ChartPanel eyebrow="People" title="Most active members in the observed window" note="Select any row for full member detail." actionLabel="Open all active members" onAction={() => openExplore(q("engaged", "Members with observed visits", "Every person with at least one observed visit."))}>
+
+      <ChartPanel eyebrow="Frequency" title={trackerDivisible ? "Observed member activity minimum" : "Manual member activity in this exact range"} note={trackerDivisible ? "Tracker aggregate plus high-confidence manual matches. Because tracker events are not individually timestamped, this is deliberately labeled as a minimum." : "The tracker aggregate cannot be split across a partial overlap, so this chart uses only dated manual member visits for the exact range."}>
+        <DistributionBar data={orderedBuckets} horizontal={false} height={320} onClick={(point) => openExplore(q("visit-frequency", point.name, `Members with ${point.name} across the safely countable activity sources.`, point.name))} />
+      </ChartPanel>
+
+      <ChartPanel eyebrow="People" title="Most active members across countable sources" note="Tracker and manual contributions are shown separately. Select any row for full member detail." actionLabel="Open active members" onAction={() => openExplore(q("engaged", "Members with observed activity", "Every member with tracker or confidently matched manual activity."))}>
         <div className="rank-list">
-          {top.map((member, index) => <motion.button key={member.id} className="rank-row" onClick={() => openMember(member.id)} whileHover={{ x: 3 }}><span className="rank-number">{index + 1}</span><div><strong>{member.displayName}</strong><span>{member.membershipType}</span></div><b>{member.visitsInRange} {pluralize(member.visitsInRange, "visit")}</b><ChevronRightIcon /></motion.button>)}
-          {!top.length && <EmptyData>No visit records match the current filters.</EmptyData>}
+          {top.map(({ member, manual, tracker, combined }, index) => <motion.button key={member.id} className="rank-row" onClick={() => openMember(member.id)} whileHover={{ x: 3 }}><span className="rank-number">{index + 1}</span><div><strong>{member.displayName}</strong><span>{formatNumber(tracker)} tracker · {formatNumber(manual)} manual</span></div><b>{combined} observed min.</b><ChevronRightIcon /></motion.button>)}
+          {!top.length && <EmptyData>No member activity can be counted exactly in the current range.</EmptyData>}
         </div>
       </ChartPanel>
     </div>
@@ -567,7 +633,7 @@ function ApplicationsTab({ bootstrap, applications, openExplore, scoped }: { boo
         <MetricCard label="Unmatched rows" value={(useRows ? applications.filter((a) => !a.isMatchedToMaster).length : bootstrap.meta.unmatchedApplications)} detail="Reconciliation queue" onClick={() => openExplore(q("application-match", "Unmatched application rows", "Application rows that currently have no exact master-member match.", false), "applications")} tone="yellow" />
         <MetricCard label="Model release granted" value={model.find((m) => m.name === "Granted")?.value ?? 0} detail="Consent field in application rows" onClick={() => openExplore(q("model-release", "Model release granted", "Application rows where model-release permission is granted.", true), "applications")} />
         <MetricCard label="Signed applications" value={signed} detail="Signature-present flag is recorded" onClick={() => openExplore(q("signature", "Signed application rows", "Application rows with a signature-present flag.", true), "applications")} tone="ink" />
-        <MetricCard label="Assistance requests" value={assistance} detail="Membership-assistance pathway" onClick={() => openExplore(q("assistance", "Membership assistance requests", "Application rows that use the membership-assistance pathway."), "applications")} tone="yellow" />
+        <MetricCard label="Assistance requests" value={assistance} detail={scoped ? `${formatNumber(bootstrap.overview.assistanceRequests)} all-time · questionnaire captured for ${formatNumber(bootstrap.meta.assistanceQuestionnaireApplications)}` : `${formatNumber(bootstrap.meta.assistanceQuestionnaireApplications)} with questionnaire detail`} onClick={() => openExplore(q("assistance", "Membership assistance requests", "Application rows that use the membership-assistance pathway."), "applications")} tone="yellow" />
       </div>
 
       <div className="two-column wide-left">
@@ -655,13 +721,16 @@ function CompletenessRow({ item, openExplore }: { item: FieldCompleteness; openE
   );
 }
 
-function QualityTab({ bootstrap, members, applications, openExplore, openMember, scoped }: { bootstrap: DashboardBootstrap; members: MemberSummary[]; applications: ApplicationSummary[]; openExplore: (query: ExploreQuery, mode?: ExploreMode) => void; openMember: (id: string) => void; scoped: boolean }) {
+function QualityTab({ bootstrap, members, applications, manualEvents, openExplore, openMember, scoped }: { bootstrap: DashboardBootstrap; members: MemberSummary[]; applications: ApplicationSummary[]; manualEvents: ManualVisitEvent[]; openExplore: (query: ExploreQuery, mode?: ExploreMode) => void; openMember: (id: string) => void; scoped: boolean }) {
   const useRows = scoped || members.length > 0;
   const reportable = useRows ? members.filter((m) => m.dataQualityStatus === "reportable").length : bootstrap.meta.masterRows - bootstrap.overview.quarantinedRecords;
   const quarantined = useRows ? members.filter((m) => m.dataQualityStatus === "quarantined").length : bootstrap.overview.quarantinedRecords;
   const useApplications = scoped || applications.length > 0;
   const matchedApplications = useApplications ? applications.filter((a) => a.isMatchedToMaster).length : bootstrap.meta.matchedApplications;
   const unmatchedApplications = useApplications ? applications.filter((a) => !a.isMatchedToMaster).length : bootstrap.meta.unmatchedApplications;
+  const scopedManualRows = manualEvents.length;
+  const scopedManualReview = manualEvents.filter((event) => event.classification === "review").length;
+  const scopedAssistanceQuestionnaire = applications.filter((application) => application.assistanceQuestionnaireAvailable).length;
   const completeness = scoped ? bootstrap.fieldCompleteness.filter((item) => item.key !== "medical_alerts").map((item) => {
     const fieldKey = item.key as keyof ApplicationSummary["fields"];
     const count = applications.filter((application) => Boolean(application.fields?.[fieldKey])).length;
@@ -677,6 +746,13 @@ function QualityTab({ bootstrap, members, applications, openExplore, openMember,
         <MetricCard label="Matched application rows" value={matchedApplications} detail={useApplications && applications.length ? `${Math.round((matchedApplications / applications.length) * 1000) / 10}% of in-range applications` : `${bootstrap.meta.enrichmentCoveragePercent}% of uploaded applications`} onClick={() => openExplore(q("application-match", "Matched application rows", "Application rows that matched a master member.", true), "applications")} tone="ink" />
         <MetricCard label="Unmatched application rows" value={unmatchedApplications} detail="Application-to-master reconciliation queue" onClick={() => openExplore(q("application-match", "Unmatched application rows", "Application rows that have no exact master match.", false), "applications")} tone="yellow" />
       </div>
+      <ChartPanel eyebrow="Source reconciliation" title="What is feeding these numbers" note="Each source keeps its own provenance. Select a source to inspect the records or reconciliation queue behind it.">
+        <div className="insight-list">
+          <InsightRow title="Manual sign-in archive" copy={`${formatNumber(bootstrap.meta.manualScanPages)} unique source pages · ${scoped ? "Date-scoped" : "All-time"} manual attendance rows`} count={formatNumber(scopedManualRows)} onClick={() => openExplore(q("manual-all", "Manual sign-in archive", "Safely exposed rows extracted from the scanned sign-in archive in the current reporting range."), "manual")} />
+          <InsightRow title="Manual match review" copy="Possible member matches are held for review instead of being silently assigned." count={formatNumber(scopedManualReview)} onClick={() => openExplore(q("manual-review", "Manual sign-ins needing match review", "Handwritten sign-ins with a plausible member match that was not strong enough to auto-attach."), "manual")} tone="yellow" />
+          <InsightRow title="Assistance questionnaire" copy={`${formatNumber(bootstrap.meta.assistanceQuestionnaireResponses)} raw questionnaire responses are retained server-side across ${formatNumber(bootstrap.meta.assistanceQuestionnaireApplications)} all-time assistance applications`} count={formatNumber(scopedAssistanceQuestionnaire)} onClick={() => openExplore(q("assistance", "Membership assistance questionnaire records", "Membership Assistance applications in the current dashboard scope; questionnaire free text stays private."), "applications")} tone="ink" />
+        </div>
+      </ChartPanel>
       <ChartPanel eyebrow="Workbook completeness" title={`Field coverage across ${formatNumber(scoped ? applications.length : bootstrap.meta.applicationRows)} application rows`} note={scoped ? "Private field values are not loaded here. Medical-alert presence is omitted from date-scoped completeness because that sensitive field remains aggregate-only." : "Private field values are not loaded into this screen; only presence/missing flags are available for safe drill-down."}>
         <div className="completeness-list">
           {completeness.map((item) => <CompletenessRow key={item.key} item={item} openExplore={openExplore} />)}
@@ -705,7 +781,7 @@ function MembersTab({ members, openExplore, openMember }: { members: MemberSumma
   const [page, setPage] = useState(0);
   const [sort, setSort] = useState<"name" | "visits" | "status">("name");
   const pageSize = 25;
-  const sorted = useMemo(() => [...members].sort((a, b) => sort === "visits" ? b.visitsInRange - a.visitsInRange : sort === "status" ? a.membershipStatus.localeCompare(b.membershipStatus) : a.displayName.localeCompare(b.displayName)), [members, sort]);
+  const sorted = useMemo(() => [...members].sort((a, b) => sort === "visits" ? b.combinedObservedVisitsMinimum - a.combinedObservedVisitsMinimum : sort === "status" ? a.membershipStatus.localeCompare(b.membershipStatus) : a.displayName.localeCompare(b.displayName)), [members, sort]);
   const pages = Math.max(1, Math.ceil(sorted.length / pageSize));
   const visible = sorted.slice(page * pageSize, page * pageSize + pageSize);
   useEffect(() => setPage(0), [members.length, sort]);
@@ -724,7 +800,7 @@ function MembersTab({ members, openExplore, openMember }: { members: MemberSumma
               <button className="table-member" onClick={() => openMember(member.id)}><div className="member-avatar">{member.displayName.split(/\s+/).slice(0, 2).map((p) => p[0]).join("")}</div><div><strong>{member.displayName}</strong><span>{member.studentAffiliation}</span></div></button>
               <button className="table-badge" style={{ borderColor: `${statusColor(member.membershipStatus)}55` }} onClick={() => openExplore(q("membership-status", `${humanize(member.membershipStatus)} members`, `Members with ${humanize(member.membershipStatus).toLowerCase()} status.`, member.membershipStatus))}>{humanize(member.membershipStatus)}</button>
               <button className="table-link" onClick={() => openExplore(q("membership-type", member.membershipType, `Members with ${member.membershipType}.`, member.membershipType))}>{member.membershipType}<ChevronRightIcon /></button>
-              <button className="activity-cell" onClick={() => member.visitsInRange > 0 ? openExplore(q("visit-frequency", visitFrequency(member.visitsInRange), `Members with ${visitFrequency(member.visitsInRange)}.`, visitFrequency(member.visitsInRange))) : openMember(member.id)}><strong>{member.visitsInRange}</strong><span>visits</span></button>
+              <button className="activity-cell" onClick={() => member.combinedObservedVisitsMinimum > 0 ? openExplore(q("visit-frequency", visitFrequency(member.combinedObservedVisitsMinimum), `Members with ${visitFrequency(member.combinedObservedVisitsMinimum)} across the countable attendance sources.`, visitFrequency(member.combinedObservedVisitsMinimum))) : openMember(member.id)}><strong>{member.combinedObservedVisitsMinimum}</strong><span>observed min.</span></button>
               {member.hasApplicationDetails ? <button className={cn("app-badge", member.assistanceRequested && "assistance")} onClick={() => member.assistanceRequested ? openExplore(q("assistance", "Membership assistance", "People with a membership-assistance application in the current scope.")) : openExplore(q("application-details", "People with application detail", "People with at least one attached application."))}>{member.assistanceRequested && <span className="assistance-mini-dot" aria-hidden="true" />}{member.assistanceRequested ? "Assistance" : `${member.applicationCount} app${member.applicationCount === 1 ? "" : "s"}`}<ChevronRightIcon /></button> : <button className="quiet-badge" onClick={() => openMember(member.id)}>No app detail</button>}
               <button className="row-open" onClick={() => openMember(member.id)} aria-label={`Open ${member.displayName}`}><ChevronRightIcon /></button>
             </motion.div>
@@ -739,7 +815,7 @@ function MembersTab({ members, openExplore, openMember }: { members: MemberSumma
 
 export default function Dashboard({ bootstrap }: Props) {
   const reduced = useReducedMotion();
-  const { members, applications, loading, error } = useRows(bootstrap);
+  const { members, applications, manualVisits, loading, error } = useRows(bootstrap);
   const [tab, setTab] = useState<DashboardTab>("overview");
   const [filters, setFilters] = useState<FilterState>(EMPTY_FILTERS);
   const [dateRange, setDateRange] = useState<DateRange>(() => defaultAllRange(bootstrap));
@@ -776,13 +852,16 @@ export default function Dashboard({ bootstrap }: Props) {
     return baseFilteredApplications.filter((application) => inDateRange(application.submittedAt, dateRange));
   }, [baseFilteredApplications, dateRange, dateScopeActive]);
 
-  // Individual visit history is not present in this export. For a custom range, engagement is
-  // therefore scoped by last observed visit date; the per-person visit count remains the source-window total.
-  const activityMembers = useMemo(() => {
-    const masterRows = baseFilteredMembers.filter((member) => member.isMasterMember);
-    if (!dateScopeActive) return masterRows;
-    return masterRows.filter((member) => inDateRange(member.lastVisitAt, dateRange));
-  }, [baseFilteredMembers, dateRange, dateScopeActive]);
+  // Engagement uses attendance dates when available. Membership-submission dates must not
+  // remove someone who actually visited inside the selected period. Tracker rows remain an
+  // aggregate source window and are handled explicitly inside EngagementTab.
+  const activityMembers = useMemo(() => baseFilteredMembers.filter((member) => member.isMasterMember), [baseFilteredMembers]);
+
+  const drawerManualVisits = useMemo(() => {
+    const events = manualVisits?.events ?? [];
+    if (!dateScopeActive) return events;
+    return events.filter((event) => inDateRange(event.visitDate, dateRange));
+  }, [dateRange, dateScopeActive, manualVisits]);
 
   const statusData = useMemo(() => members.length ? countBy(filteredMembers.filter((m) => m.isMasterMember), (m) => m.membershipStatus) : bootstrap.membershipStatus, [bootstrap.membershipStatus, filteredMembers, members.length]);
   const typeData = useMemo(() => members.length ? countBy(filteredMembers.filter((m) => m.isMasterMember), (m) => m.membershipType) : bootstrap.membershipType, [bootstrap.membershipType, filteredMembers, members.length]);
@@ -804,12 +883,12 @@ export default function Dashboard({ bootstrap }: Props) {
   function exportCurrentScope() {
     const rows = filteredMembers.length || dateScopeActive || filterOnlyCount ? filteredMembers : members;
     if (!rows.length) return;
-    const headers = ["name", "membership_status", "membership_type", "membership_submitted", "application_submitted", "visits", "guests", "student_affiliation", "membership_assistance", "small_business_reference", "nonprofit_reference", "reduced_rate_reference", "data_quality"];
+    const headers = ["name", "membership_status", "membership_type", "membership_submitted", "application_submitted", "tracker_visits", "matched_manual_visits", "combined_observed_minimum", "hosted_guests_tracker", "student_affiliation", "membership_assistance", "small_business_reference", "nonprofit_reference", "reduced_rate_reference", "data_quality"];
     const escape = (value: unknown) => {
       const raw = String(value ?? "");
       return /[",\n]/.test(raw) ? `"${raw.replace(/"/g, '""')}"` : raw;
     };
-    const csv = [headers.join(","), ...rows.map((m) => [m.displayName, m.membershipStatus, m.membershipType, m.membershipSubmittedAt, m.applicationSubmittedAt, m.visitsInRange, m.hostedGuestsInRange, m.studentAffiliation, m.assistanceRequested ? "yes" : "no", m.smallBusinessReference ? "yes" : "no", m.nonprofitReference ? "yes" : "no", m.reducedRateReference ? "yes" : "no", m.dataQualityStatus].map(escape).join(","))].join("\n");
+    const csv = [headers.join(","), ...rows.map((m) => [m.displayName, m.membershipStatus, m.membershipType, m.membershipSubmittedAt, m.applicationSubmittedAt, m.trackerVisits, m.manualVisits, m.combinedObservedVisitsMinimum, m.hostedGuestsInRange, m.studentAffiliation, m.assistanceRequested ? "yes" : "no", m.smallBusinessReference ? "yes" : "no", m.nonprofitReference ? "yes" : "no", m.reducedRateReference ? "yes" : "no", m.dataQualityStatus].map(escape).join(","))].join("\n");
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement("a");
@@ -835,12 +914,12 @@ export default function Dashboard({ bootstrap }: Props) {
   const scopedApplications = applications.length ? filteredApplications : [];
   const tabContent = {
     overview: <OverviewTab bootstrap={bootstrap} members={filteredMembers} applications={scopedApplications} statusData={statusData} typeData={typeData} openExplore={openExplore} loading={loading} scoped={dateScopeActive || filterOnlyCount > 0} />,
-    membership: <MembershipTab members={filteredMembers.filter((m) => m.isMasterMember)} applications={scopedApplications} statusData={statusData} typeData={typeData} openExplore={openExplore} />,
-    engagement: <EngagementTab bootstrap={bootstrap} members={activityMembers} openExplore={openExplore} openMember={setMemberId} scoped={dateScopeActive || filterOnlyCount > 0} />,
+    membership: <MembershipTab bootstrap={bootstrap} members={filteredMembers.filter((m) => m.isMasterMember)} applications={scopedApplications} statusData={statusData} typeData={typeData} openExplore={openExplore} scoped={dateScopeActive || filterOnlyCount > 0} />,
+    engagement: <EngagementTab bootstrap={bootstrap} members={activityMembers} manualEvents={manualVisits?.events ?? []} dateRange={dateRange} dateScopeActive={dateScopeActive} openExplore={openExplore} openMember={setMemberId} scoped={dateScopeActive || filterOnlyCount > 0} />,
     applications: <ApplicationsTab bootstrap={bootstrap} applications={scopedApplications} openExplore={openExplore} scoped={dateScopeActive || filterOnlyCount > 0} />,
     people: <PeopleTab bootstrap={bootstrap} members={filteredMembers} applications={scopedApplications} openExplore={openExplore} scoped={dateScopeActive || filterOnlyCount > 0} />,
     report: <KochReport bootstrap={bootstrap} members={filteredMembers} applications={scopedApplications} range={dateRange} openExplore={openExplore} onPrint={printKochReport} onShowAllAssistance={showAllAssistance} />,
-    quality: <QualityTab bootstrap={bootstrap} members={filteredMembers.filter((m) => m.isMasterMember)} applications={scopedApplications} openExplore={openExplore} openMember={setMemberId} scoped={dateScopeActive || filterOnlyCount > 0} />,
+    quality: <QualityTab bootstrap={bootstrap} members={filteredMembers.filter((m) => m.isMasterMember)} applications={scopedApplications} manualEvents={drawerManualVisits} openExplore={openExplore} openMember={setMemberId} scoped={dateScopeActive || filterOnlyCount > 0} />,
     members: <MembersTab members={filteredMembers} openExplore={openExplore} openMember={setMemberId} />,
   } satisfies Record<DashboardTab, React.ReactNode>;
 
@@ -875,7 +954,6 @@ export default function Dashboard({ bootstrap }: Props) {
         <DateRangeBar bootstrap={bootstrap} range={dateRange} setRange={setDateRange} memberCount={filteredMembers.length} applicationCount={filteredApplications.length} />
         <DashboardFilters filters={filters} setFilters={setFilters} members={members} resultCount={scopeCount} onExplore={() => openExplore(q("all", "Current people scope", `Every person matching the current dashboard filters and reporting range (${rangeLabel(dateRange)}).`))} />
 
-        {dateScopeActive && tab === "engagement" && <div className="range-data-caveat"><InfoIcon /><span><strong>Engagement range behavior:</strong> individual historical visit events are not included in the uploaded master file. This tab filters people by their last observed visit date; each displayed visit total is still the source-window total for that person.</span></div>}
 
         <AnimatePresence initial={false} mode="wait">
           <motion.div key={tab} className="tab-content" initial={{ opacity: 0, y: reduced ? 0 : 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: reduced ? 0 : -6 }} transition={{ duration: reduced ? 0.01 : 0.22 }}>
@@ -889,6 +967,7 @@ export default function Dashboard({ bootstrap }: Props) {
         mode={explore?.mode ?? "members"}
         members={filteredMembers}
         applications={filteredApplications}
+        manualVisits={drawerManualVisits}
         loading={loading}
         contextLabel={scopeLabel}
         onClose={() => setExplore(null)}

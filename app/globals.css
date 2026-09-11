@@ -464,7 +464,7 @@ button:disabled { cursor: not-allowed; opacity: .46; }
 .member-table-row:hover { background: #fbfdfe; box-shadow: inset 3px 0 0 var(--brand-blue); }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
 
-/* v4 reporting range + leadership report */
+/* v5 reporting range + leadership report */
 .date-range-bar {
   position: relative;
   z-index: 22;

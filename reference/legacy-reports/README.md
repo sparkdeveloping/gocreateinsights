@@ -1,7 +1,5 @@
-# Legacy report visual references
+# Legacy GoCreate report references
 
-These photographs were supplied as visual references for GoCreate's existing printed reporting style.
+These user-supplied photographs are retained only as visual/reporting references for GoCreate's historical membership-utilization output. v5 borrows the recognizable white-page, official-brand, blue/yellow accent and chart-led reporting language; it does **not** import the pictured historical utilization numbers into the live dashboard because those printed values are not the current source database.
 
-v4 borrows the recognizable white-page, GoCreate-brand, blue/yellow accent and chart-led reporting language. It does **not** import the historical studio-utilization values into the live dashboard, because the current source files do not contain complete studio-level historical access data.
-
-The Membership Assistance reference also shows four historical reason categories. The v4 data pipeline is ready to categorize those reasons when the final membership workbook includes the underlying assistance-reason questionnaire field; the current workbook does not.
+The legacy Membership Assistance page shows the kind of reason-level reporting leadership expects. The latest detail workbook now contains the underlying Membership Assistance questionnaire controls. v5 classifies those responses into broad report-safe reason categories while keeping the raw free text private.

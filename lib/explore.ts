@@ -1,4 +1,4 @@
-import type { ApplicationSummary, ExploreQuery, MemberSummary } from "@/lib/types";
+import type { ApplicationSummary, ExploreQuery, ManualVisitEvent, MemberSummary } from "@/lib/types";
 
 export function visitFrequency(value: number) {
   if (value <= 0) return "0 visits";
@@ -18,8 +18,8 @@ export function memberMatchesExplore(member: MemberSummary, query: ExploreQuery)
     case "membership-type": return member.membershipType === value;
     case "student-affiliation": return member.studentAffiliation === value;
     case "data-quality": return member.dataQualityStatus === value;
-    case "engaged": return member.visitsInRange > 0;
-    case "visit-frequency": return visitFrequency(member.visitsInRange) === value;
+    case "engaged": return member.combinedObservedVisitsMinimum > 0;
+    case "visit-frequency": return visitFrequency(member.combinedObservedVisitsMinimum) === value;
     case "application-details": return member.hasApplicationDetails;
     case "application-type": return member.applicationMembershipType === value;
     case "application-status": return member.applicationStatus === value;
@@ -85,4 +85,20 @@ export function q(kind: ExploreQuery["kind"], title: string, description: string
     value,
     ...extras,
   };
+}
+
+
+export function manualVisitMatchesExplore(event: ManualVisitEvent, query: ExploreQuery) {
+  const value = String(query.value ?? "");
+  switch (query.kind) {
+    case "manual-all": return true;
+    case "manual-member": return event.classification === "member";
+    case "manual-guest": return event.classification === "guest";
+    case "manual-review": return event.classification === "review";
+    case "manual-unreadable": return event.classification === "unreadable";
+    case "manual-undated": return !event.visitDate;
+    case "manual-date": return event.visitDate === value;
+    case "tracker-overlap": return event.trackerCoverageOverlap;
+    default: return true;
+  }
 }

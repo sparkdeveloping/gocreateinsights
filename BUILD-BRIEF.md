@@ -1,43 +1,67 @@
-# GoCreate Insights v4 — implementation brief
+# GoCreate Insights v5 — implementation brief
 
-Build a strictly light-mode, single-page operational intelligence application for GoCreate using Next.js App Router, React, TypeScript, Tailwind CSS, Framer Motion and Recharts. It should feel like a precise staff reporting tool, not a generic “AI dashboard.” Use the official supplied GoCreate brand assets and restrained GoCreate blue/yellow/ink colors.
+Build a strictly light-mode, single-page operational intelligence application for GoCreate using Next.js App Router, React, TypeScript, Tailwind CSS, Framer Motion and Recharts. It must feel like a precise staff reporting tool rather than a generic AI dashboard. Use the supplied official GoCreate assets and restrained blue/yellow/ink colors.
 
 ## Non-negotiable interaction rule
 
-Every visible metric, chart mark, legend item, cohort count, status badge, membership badge, application badge, completeness value, ranking row, report statistic and member row that implies underlying records must be interactive. Clicking it must open the matching cohort, apply/focus the corresponding filter, open member detail, or reveal a clear data-method explanation.
+Every visible metric, chart mark, legend item, cohort count, status/membership/application badge, activity figure, completeness value, ranking row, report statistic and member row that implies underlying records must be interactive. A click must open the matching cohort, apply/focus the relevant filter, open member detail, open a reconciliation queue, or explain the data limitation.
+
+## Source-aware model
+
+Keep source provenance visible:
+
+- master membership source,
+- latest application/detail workbook,
+- tracker aggregate attendance source,
+- manual handwritten sign-in archive.
+
+Never convert uncertain source information into false precision. Manual high-confidence matches become member visits; clear nonmatches become guests; ambiguous handwriting remains review; unreadable rows remain unresolved. Tracker aggregates must not be fabricated into daily events.
 
 ## Global reporting range
 
-Place a persistent reporting-range control above global filters. Provide All time, Sep 2025 → now, current-year YTD, Last 90 days, and exact From/To inputs. Range changes should animate values and charts so the user understands that the scope changed. Preserve custom ranges across tabs. If the user enters Koch Report while still on All time, switch to Sep. 1, 2025 → data-as-of as the leadership default.
+Provide All time, Sep 2025 → now, current-year YTD, Last 90 days, and exact From/To. Range changes should animate counts/charts so users understand that scope changed. Preserve custom ranges across tabs. If entering Koch Report from All time, switch to Sep. 1, 2025 → data-as-of.
 
-Date semantics must remain honest: membership counts use membership submission dates; application/demographic/reference analytics use application submission dates. Do not fabricate historical visit events. If complete visit history is unavailable, explain the engagement limitation beside that view.
+Date semantics:
+
+- membership counts use membership submission date,
+- application/demographic/Assistance/reference analytics use application submission date,
+- manual attendance uses event date only where trustworthy,
+- tracker totals are only date-divisible when the selected window safely includes/excludes the known tracker source window.
 
 ## Membership Assistance
 
-Membership Assistance is a pathway within membership/application reporting, not a separate database. Denote it directly on the Membership tab, in application analytics, record explorer rows and member detail. Make assistance counts clickable. Add applicant ages, reason categories when the source provides them, and an explicit note when an assistance record lies outside the chosen range.
+Membership Assistance is a pathway within membership/application reporting, not a separate database. Denote it in Membership, Applications, Members, member detail and Koch Report. Current source truth: 50 Assistance application rows across 49 people, 250 questionnaire responses, submitted 2024-01-31 through 2025-04-07.
+
+When the selected range is Sep. 2025-current, showing zero is correct but a bare zero is not sufficient. Display `0 in range · 50 all-time`, explain the latest Assistance date, and make the notice clickable to reveal all-time Assistance records.
+
+Questionnaire-derived reason/business/nonprofit/reduced-rate categories may be used for reporting, but raw free text must stay private.
+
+## Engagement
+
+Show tracker, matched manual members, guests, review queue, unreadable/undated limitations, combined minimum activity, manual timeline, frequency and most-active members. Clicking every source metric opens its records. Keep source-level totals separate as well as a conservative combined figure.
 
 ## Koch Report
 
-Add a top-level horizontal **Koch report** tab designed for leadership self-service. It must answer:
+Top-level horizontal tab answering:
 
-- WSU / WSU Tech members
-- Retail members (`Public/Regular` unless the source supplies a more explicit retail field)
-- Quilters / reduced rate
-- Membership Assistance
-- Small-business references in enrollment information
-- Nonprofit/organization references including examples such as Victory in the Valley, 4-H, clubs, churches and organizations
-- Age demographics
+- WSU / WSU Tech members,
+- Retail / Public-Regular members,
+- Quilters / reduced-rate references,
+- Membership Assistance,
+- small-business references,
+- nonprofit/organization references,
+- age demographics.
 
-Each total is clickable. Include membership mix and demographic charts. Use conservative source-text classifiers for business/nonprofit/reduced-rate references; never infer a reference from email addresses, phone/address fields, URLs or contact records.
+Every number drills down. Show selected-range and all-time context when a category exists outside the selected range. Include membership mix, age views, Assistance reason/age views and reference signal summaries.
 
-## Print/PDF output
+## Print/PDF
 
-The report must have a clean, branded screen layout and a dedicated print stylesheet that exports to US Letter through the browser's native print/Save-as-PDF flow. Hide app chrome, filters and drawers during print. Keep charts, GoCreate logo, section titles, date range, data caveats and footers. Use page breaks deliberately and preserve print colors.
+Provide a branded, clean, multi-page US Letter print layout through the native browser print/Save-as-PDF flow. Hide app chrome/filters/drawers during print. Preserve official logo, report date range, charts, caveats and page footers.
 
 ## Privacy
 
-Bulk analytics must not expose exact birthdate, street address, phone, email, emergency-contact values, or medical-alert contents. Member details should be masked by default. Full PII may only be enabled explicitly on an authenticated internal deployment.
+Bulk analytics must not expose exact birthdate, street address, email, phone, emergency-contact values, medical-alert contents, raw Assistance questionnaire text, or raw guest handwritten names. Member details are masked by default. Full PII requires explicit environment configuration on an authenticated internal deployment.
 
 ## Motion
 
-Use motion aggressively only when it teaches the interface: count transitions after range/filter changes, shared tab indicator, drawer transitions, chart entry, layout reflow, progressive bars, hover affordances on clickable regions, row insertion/reordering, and collapsible detail history. Respect `prefers-reduced-motion`.
+Use motion heavily only when it teaches the interface: count changes after filter/range changes, shared tab indicator, drawers, chart entry, hover affordances on clickable regions, list reflow, progress/completeness, collapsible detail and selection feedback. Respect `prefers-reduced-motion`.

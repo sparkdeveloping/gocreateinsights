@@ -1,39 +1,67 @@
 {
   "meta": {
-    "generatedAt": "2026-09-11T15:59:53+00:00",
+    "generatedAt": "2026-09-11T17:51:46+00:00",
     "dataAsOf": "2026-09-11",
     "masterFile": "gocreate-master-2026-09-09.csv",
     "enrichmentFile": "gocreate_membership_details.xlsx",
     "masterRows": 2383,
-    "knownPeople": 2392,
-    "applicationRows": 359,
-    "emergencyContactRows": 718,
-    "matchedApplications": 350,
-    "distinctEnrichedMembers": 345,
-    "unmatchedApplications": 9,
-    "enrichmentCoveragePercent": 97.5,
+    "knownPeople": 2432,
+    "applicationRows": 408,
+    "emergencyContactRows": 816,
+    "matchedApplications": 359,
+    "distinctEnrichedMembers": 352,
+    "unmatchedApplications": 49,
+    "enrichmentCoveragePercent": 88.0,
     "masterSubmissionMin": "2024-01-16",
     "masterSubmissionMax": "2026-09-05",
-    "applicationSubmissionMin": "2024-02-20",
+    "applicationSubmissionMin": "2024-01-31",
     "applicationSubmissionMax": "2026-09-09",
     "visitObservationMin": "2026-08-03",
     "visitObservationMax": "2026-09-09",
-    "assistanceReasonRows": 0
+    "assistanceReasonRows": 50,
+    "rawControlRows": 19406,
+    "assistanceQuestionnaireApplications": 50,
+    "assistanceQuestionnaireResponses": 250,
+    "assistanceSubmissionMin": "2024-01-31",
+    "assistanceSubmissionMax": "2025-04-07",
+    "manualScanPages": 82,
+    "duplicateManualScansIgnored": 2,
+    "manualSignInRows": 513,
+    "manualDatedRows": 186,
+    "manualUnknownDateRows": 327,
+    "manualDateMin": "2026-01-19",
+    "manualDateMax": "2026-09-04",
+    "trackerCoverageStart": "2026-08-03",
+    "trackerCoverageEnd": "2026-09-09",
+    "manualRowsInsideTrackerCoverage": 21,
+    "manualRowsBeforeTrackerCoverage": 165,
+    "manualPossibleExactTrackerDuplicates": 0
   },
   "overview": {
     "masterMembers": 2383,
-    "knownPeople": 2392,
+    "knownPeople": 2432,
     "approvedMembers": 196,
     "staffMembers": 2,
     "engagedMembers": 79,
     "observedVisits": 216,
     "hostedGuests": 9,
-    "applicationDetails": 359,
+    "applicationDetails": 408,
     "quarantinedRecords": 360,
-    "modelReleaseYes": 330,
-    "modelReleaseNo": 29,
-    "assistanceRequests": 1,
-    "signedApplications": 359
+    "modelReleaseYes": 374,
+    "modelReleaseNo": 34,
+    "assistanceRequests": 50,
+    "assistancePeople": 49,
+    "smallBusinessReferences": 9,
+    "nonprofitReferences": 15,
+    "reducedRateReferences": 7,
+    "signedApplications": 408,
+    "trackerVisits": 216,
+    "manualMemberVisits": 14,
+    "manualGuestVisits": 390,
+    "manualReviewRows": 27,
+    "manualUnreadableRows": 82,
+    "manualAttendanceRows": 513,
+    "combinedMemberVisitsMinimum": 230
   },
   "membershipStatus": [
     {
@@ -119,6 +147,10 @@
       "value": 319
     },
     {
+      "name": "Membership Assistance",
+      "value": 50
+    },
+    {
       "name": "Student/Staff/Educator",
       "value": 15
     },
@@ -133,10 +165,6 @@
     {
       "name": "Corporate Membership",
       "value": 3
-    },
-    {
-      "name": "Membership Assistance",
-      "value": 1
     }
   ],
   "applicationStatus": [
@@ -145,34 +173,42 @@
       "value": 358
     },
     {
+      "name": "Pending Pending",
+      "value": 46
+    },
+    {
       "name": "Pending Approved",
-      "value": 1
+      "value": 2
+    },
+    {
+      "name": "Pending Denied",
+      "value": 2
     }
   ],
   "ageBands": [
     {
       "name": "18–24",
-      "value": 228
+      "value": 239
     },
     {
       "name": "25–34",
-      "value": 78
+      "value": 85
     },
     {
       "name": "35–44",
-      "value": 26
+      "value": 37
     },
     {
       "name": "45–54",
-      "value": 9
-    },
-    {
-      "name": "65+",
-      "value": 8
+      "value": 16
     },
     {
       "name": "55–64",
-      "value": 7
+      "value": 15
+    },
+    {
+      "name": "65+",
+      "value": 13
     },
     {
       "name": "Under 18",
@@ -182,7 +218,7 @@
   "homeStates": [
     {
       "name": "KS",
-      "value": 322
+      "value": 371
     },
     {
       "name": "OK",
@@ -232,23 +268,27 @@
   "homeCities": [
     {
       "name": "Wichita",
-      "value": 256
+      "value": 295
     },
     {
       "name": "Derby",
-      "value": 9
-    },
-    {
-      "name": "Andover",
-      "value": 7
+      "value": 12
     },
     {
       "name": "Bel Aire",
-      "value": 7
+      "value": 8
+    },
+    {
+      "name": "Andover",
+      "value": 8
     },
     {
       "name": "Liberal",
       "value": 7
+    },
+    {
+      "name": "Clearwater",
+      "value": 3
     },
     {
       "name": "Salina",
@@ -261,6 +301,10 @@
     {
       "name": "Kansas City",
       "value": 3
+    },
+    {
+      "name": "Oxford",
+      "value": 2
     },
     {
       "name": "Keller",
@@ -299,8 +343,16 @@
       "value": 2
     },
     {
-      "name": "Clearwater",
-      "value": 2
+      "name": "Kechi",
+      "value": 1
+    },
+    {
+      "name": "Benton",
+      "value": 1
+    },
+    {
+      "name": "Colwich",
+      "value": 1
     },
     {
       "name": "Rose Hill",
@@ -348,10 +400,6 @@
     },
     {
       "name": "Buhler",
-      "value": 1
-    },
-    {
-      "name": "Oxford",
       "value": 1
     },
     {
@@ -482,11 +530,11 @@
   "modelRelease": [
     {
       "name": "Granted",
-      "value": 330
+      "value": 374
     },
     {
       "name": "Not granted",
-      "value": 29
+      "value": 34
     }
   ],
   "visitFrequency": [
@@ -513,19 +561,24 @@
   ],
   "submissionTimeline": [
     {
+      "month": "2024-01",
+      "label": "Jan 2024",
+      "value": 1
+    },
+    {
       "month": "2024-02",
       "label": "Feb 2024",
-      "value": 1
+      "value": 2
     },
     {
       "month": "2024-03",
       "label": "Mar 2024",
-      "value": 2
+      "value": 8
     },
     {
       "month": "2024-04",
       "label": "Apr 2024",
-      "value": 8
+      "value": 11
     },
     {
       "month": "2024-05",
@@ -535,57 +588,57 @@
     {
       "month": "2024-06",
       "label": "Jun 2024",
-      "value": 6
+      "value": 7
     },
     {
       "month": "2024-07",
       "label": "Jul 2024",
-      "value": 19
+      "value": 24
     },
     {
       "month": "2024-08",
       "label": "Aug 2024",
-      "value": 18
+      "value": 20
     },
     {
       "month": "2024-09",
       "label": "Sep 2024",
-      "value": 41
+      "value": 46
     },
     {
       "month": "2024-10",
       "label": "Oct 2024",
-      "value": 30
+      "value": 34
     },
     {
       "month": "2024-11",
       "label": "Nov 2024",
-      "value": 19
+      "value": 22
     },
     {
       "month": "2024-12",
       "label": "Dec 2024",
-      "value": 19
+      "value": 23
     },
     {
       "month": "2025-01",
       "label": "Jan 2025",
-      "value": 3
+      "value": 6
     },
     {
       "month": "2025-02",
       "label": "Feb 2025",
-      "value": 3
+      "value": 8
     },
     {
       "month": "2025-03",
       "label": "Mar 2025",
-      "value": 9
+      "value": 13
     },
     {
       "month": "2025-04",
       "label": "Apr 2025",
-      "value": 7
+      "value": 9
     },
     {
       "month": "2025-05",
@@ -677,9 +730,9 @@
     {
       "key": "member_name",
       "label": "Member name",
-      "count": 359,
+      "count": 408,
       "missing": 0,
-      "total": 359,
+      "total": 408,
       "percent": 100.0,
       "sensitivity": "identity",
       "exploreSafe": true
@@ -687,9 +740,9 @@
     {
       "key": "email",
       "label": "Email",
-      "count": 359,
+      "count": 408,
       "missing": 0,
-      "total": 359,
+      "total": 408,
       "percent": 100.0,
       "sensitivity": "private",
       "exploreSafe": true
@@ -697,9 +750,9 @@
     {
       "key": "primary_phone",
       "label": "Primary phone",
-      "count": 359,
+      "count": 408,
       "missing": 0,
-      "total": 359,
+      "total": 408,
       "percent": 100.0,
       "sensitivity": "private",
       "exploreSafe": true
@@ -707,9 +760,9 @@
     {
       "key": "birthdate",
       "label": "Birthdate",
-      "count": 359,
+      "count": 408,
       "missing": 0,
-      "total": 359,
+      "total": 408,
       "percent": 100.0,
       "sensitivity": "sensitive",
       "exploreSafe": true
@@ -717,9 +770,9 @@
     {
       "key": "home_city",
       "label": "Home city",
-      "count": 359,
+      "count": 408,
       "missing": 0,
-      "total": 359,
+      "total": 408,
       "percent": 100.0,
       "sensitivity": "aggregate-safe",
       "exploreSafe": true
@@ -727,9 +780,9 @@
     {
       "key": "home_state",
       "label": "Home state",
-      "count": 359,
+      "count": 408,
       "missing": 0,
-      "total": 359,
+      "total": 408,
       "percent": 100.0,
       "sensitivity": "aggregate-safe",
       "exploreSafe": true
@@ -737,9 +790,9 @@
     {
       "key": "membership_type_list",
       "label": "Membership selection",
-      "count": 359,
+      "count": 408,
       "missing": 0,
-      "total": 359,
+      "total": 408,
       "percent": 100.0,
       "sensitivity": "aggregate-safe",
       "exploreSafe": true
@@ -747,9 +800,9 @@
     {
       "key": "model_release_list",
       "label": "Model release",
-      "count": 359,
+      "count": 408,
       "missing": 0,
-      "total": 359,
+      "total": 408,
       "percent": 100.0,
       "sensitivity": "aggregate-safe",
       "exploreSafe": true
@@ -757,9 +810,9 @@
     {
       "key": "submitted_on",
       "label": "Submission date",
-      "count": 359,
+      "count": 408,
       "missing": 0,
-      "total": 359,
+      "total": 408,
       "percent": 100.0,
       "sensitivity": "aggregate-safe",
       "exploreSafe": true
@@ -767,9 +820,9 @@
     {
       "key": "signature_present",
       "label": "Signature present",
-      "count": 359,
+      "count": 408,
       "missing": 0,
-      "total": 359,
+      "total": 408,
       "percent": 100.0,
       "sensitivity": "aggregate-safe",
       "exploreSafe": true
@@ -778,8 +831,8 @@
       "key": "badge_id",
       "label": "Badge ID",
       "count": 0,
-      "missing": 359,
-      "total": 359,
+      "missing": 408,
+      "total": 408,
       "percent": 0.0,
       "sensitivity": "private",
       "exploreSafe": true
@@ -788,14 +841,294 @@
       "key": "medical_alerts",
       "label": "Medical alert field",
       "count": 0,
-      "missing": 359,
-      "total": 359,
+      "missing": 408,
+      "total": 408,
       "percent": 0.0,
       "sensitivity": "sensitive",
       "exploreSafe": false
     }
   ],
   "unmatchedApplications": [
+    {
+      "id": "a_c0bf8275043d7e",
+      "displayName": "Marge Croninger",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Wichita",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_618aee116686cd",
+      "displayName": "Trashaun Jones",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Wichita",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_09a416ad2870ed",
+      "displayName": "JESSICA BENSON",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Derby",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_fed7f92cd5d92a",
+      "displayName": "Erin Rolfe",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Wichita",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_92eff5a88140f2",
+      "displayName": "Megan Husseyq",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Wichita",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_f4221cb94d4c19",
+      "displayName": "Stacy Crundwell",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Wichita",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_f0f95d4b0435a8",
+      "displayName": "Barbara Lewis",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Wichita",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_04847e8534c0bf",
+      "displayName": "Stacy Crundwell",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Wichita",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_de93bc805df0bb",
+      "displayName": "Brian Held",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Wichita",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_77e3261023a71e",
+      "displayName": "Prautus Samuel",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Wichita",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_765e32c8abe29f",
+      "displayName": "JACOB HAEN",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Derby",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_3213451de00d07",
+      "displayName": "Lea Soucy",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Wichita",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_5a8d58798ad00b",
+      "displayName": "Lilo Hartfield",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Wichita",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_ddad9bfe0952f1",
+      "displayName": "Vince Macias",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Wichita",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_6270bf68b5028f",
+      "displayName": "Jason Hildreth",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Derby",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_6eef9c6e34d303",
+      "displayName": "Shannon Vontress",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Wichita",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_24bf068357baa8",
+      "displayName": "Kisha Hines",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Wichita",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_089b2f8c09ca97",
+      "displayName": "Carla Jackson-Patton",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Wichita",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_b628bf3d28d830",
+      "displayName": "Cathleen Conroy-Brokaw",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Bel Aire",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_cf56450c04af87",
+      "displayName": "Valerie White",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Wichita",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_37a94587ba7d22",
+      "displayName": "Anastasia-Ekaterina (Ana) Ryan",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Wichita",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_0d8d978047ac67",
+      "displayName": "Karla Valdez-Castillo",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Wichita",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_47d30e5cbacc4f",
+      "displayName": "Daniel Limones",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Wichita",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_b9e014de64d2a2",
+      "displayName": "Helen Reicher",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Wichita",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_aa586e1ed1472c",
+      "displayName": "Laszlo Stumpfhauser",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Benton",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_d5f3378759c8a0",
+      "displayName": "Robert Williams",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Wichita",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_0a9a17068868fe",
+      "displayName": "Ashutosh Kumar Jaiswal",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Wichita",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_962daf1ef74955",
+      "displayName": "Lamera Marcellus",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Wichita",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_296265717e56a8",
+      "displayName": "Lamera Marcellus",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Wichita",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_ef5ec6406dbf7d",
+      "displayName": "Lamera Marcellus",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Wichita",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_99ebeda4a95013",
+      "displayName": "Mia Lee",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Wichita",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_4cda98a65d33b5",
+      "displayName": "Paul Leeker",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Wichita",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_8a27842651bb54",
+      "displayName": "Brynn Thompson",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Andover",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_2e7307f9fccfa0",
+      "displayName": "Debbie Gruenbacher",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Colwich",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_4dafd233655e7c",
+      "displayName": "Dylan Cossaart",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Wichita",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_03c2cc6e1acc93",
+      "displayName": "David Christiansen",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Clearwater",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_47003a638dc2eb",
+      "displayName": "Sam Smith",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Wichita",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_afbe96706f8d1b",
+      "displayName": "Alli Sauer",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Wichita",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_ed8ff08166888b",
+      "displayName": "Blanca Moncada",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Wichita",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_ce4c8aafb4bced",
+      "displayName": "Sandip Southekal",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Wichita",
+      "homeState": "KS"
+    },
     {
       "id": "a_b253dbc4465c78",
       "displayName": "Hedy Mendenhall",
@@ -858,6 +1191,28 @@
       "membershipType": "WSU Student/WSU Tech Student",
       "homeCity": "Wichita",
       "homeState": "KS"
+    }
+  ],
+  "combinedVisitFrequency": [
+    {
+      "name": "0 visits",
+      "value": 2295
+    },
+    {
+      "name": "1 visit",
+      "value": 42
+    },
+    {
+      "name": "2–4 visits",
+      "value": 33
+    },
+    {
+      "name": "5–9 visits",
+      "value": 10
+    },
+    {
+      "name": "10+ visits",
+      "value": 3
     }
   ]
 }

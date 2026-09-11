@@ -92,11 +92,52 @@ def parse_minimal_xlsx_sheet(zf: ZipFile, name: str) -> list[dict[str, str]]:
     ]
 
 
-def parse_xlsx(path: Path) -> tuple[list[dict[str, str]], list[dict[str, str]]]:
+def parse_xlsx(path: Path) -> tuple[list[dict[str, str]], list[dict[str, str]], list[dict[str, str]]]:
+    # The scraper workbook uses inline strings and keeps stable sheet order:
+    # Applications, EmergencyContacts, FamilyMembers, Parking, RawControls, Errors.
+    # RawControls contains the membership-assistance questionnaire responses that are
+    # not flattened into the Applications sheet. Only aggregate classifications derived
+    # from those responses are emitted into browser-safe analytics.
     with ZipFile(path) as zf:
         applications = parse_minimal_xlsx_sheet(zf, "xl/worksheets/sheet1.xml")
         contacts = parse_minimal_xlsx_sheet(zf, "xl/worksheets/sheet2.xml")
-    return applications, contacts
+        raw_controls = parse_minimal_xlsx_sheet(zf, "xl/worksheets/sheet5.xml")
+    return applications, contacts, raw_controls
+
+
+def enrich_applications_with_raw_controls(applications: list[dict[str, str]], raw_controls: list[dict[str, str]]) -> None:
+    """Attach only analysis-safe questionnaire helpers to in-memory application rows.
+
+    The raw free-text responses are never copied into analytics JSON. They are used only
+    during generation to derive broad report categories. This is intentionally narrower
+    than serializing RawControls, which also contains contact/emergency/application PII.
+    """
+    by_source: dict[str, dict[str, str]] = defaultdict(dict)
+    signal_text: dict[str, list[str]] = defaultdict(list)
+    response_count: Counter[str] = Counter()
+
+    for control in raw_controls:
+        source_key = text(control.get("source_key"))
+        if not source_key:
+            continue
+        ident = " ".join([text(control.get("id")), text(control.get("name")), text(control.get("label"))])
+        match = re.search(r"MembershipAssistanceQ([1-5])", ident, flags=re.IGNORECASE)
+        if not match:
+            continue
+        value = text(control.get("value"))
+        if not value:
+            continue
+        q_key = f"_assist_q{match.group(1)}"
+        by_source[source_key][q_key] = value
+        signal_text[source_key].append(value)
+        response_count[source_key] += 1
+
+    for app in applications:
+        source_key = text(app.get("source_key"))
+        if source_key in by_source:
+            app.update(by_source[source_key])
+            app["_report_signal_text"] = "\n".join(signal_text[source_key])
+            app["_assistance_response_count"] = str(response_count[source_key])
 
 
 def parse_master(path: Path) -> list[dict[str, str]]:
@@ -214,7 +255,7 @@ def application_field_flags(app: dict[str, str] | None) -> dict[str, bool] | Non
 def report_text(app: dict[str, str]) -> str:
     selected: list[str] = []
     explicit = {
-        "application_notes", "employer_name", "selected_employer", "employment_type", "raw_row_text",
+        "application_notes", "employer_name", "selected_employer", "employment_type", "_report_signal_text",
     }
     useful_header_terms = (
         "reason", "assist", "business", "organization", "nonprofit", "non_profit", "project",
@@ -274,24 +315,34 @@ REDUCED_RATE_RULES = [
 
 
 def assistance_reason(app: dict[str, str]) -> str | None:
-    raw = ""
-    for key, value in app.items():
-        key_norm = norm(key).replace(" ", "_")
-        if text(value) and "reason" in key_norm and ("assist" in key_norm or "membership" in key_norm):
-            raw = text(value)
-            break
+    # Q1 is the free-form "what would you use GoCreate for / why assistance" response
+    # in the current scraper workbook. Older exports may instead expose a named reason field.
+    raw = text(app.get("_assist_q1"))
+    if not raw:
+        for key, value in app.items():
+            key_norm = norm(key).replace(" ", "_")
+            if text(value) and "reason" in key_norm and ("assist" in key_norm or "membership" in key_norm):
+                raw = text(value)
+                break
     if not raw:
         return None
+
     n = norm(raw)
-    if re.search(r"\btime[- ]?sensitive\b|\bimmediate\s+access\b", n):
-        return "Immediate access for a time-sensitive project"
-    if re.search(r"\bprototype\b", n):
-        return "Build a prototype for a potential new business"
-    if re.search(r"\bstart(?:ing)?\s+(?:a|my|new)\s+business\b|\bconsidering\s+starting\b|\bentrepreneur\w*\b", n):
-        return "Considering starting a business"
-    if re.search(r"\bexperience\s+gocreate\b|\bgocreate\s+and\s+opportunit", n):
-        return "Experience GoCreate and its opportunities"
-    return "Other / uncategorized reason"
+    if re.search(r"\btime[- ]?sensitive\b|\bimmediate\s+access\b|\burgent\b|\bdeadline\b", n):
+        return "Immediate / time-sensitive project"
+    if re.search(r"\bprototype\b|\binvent(?:ion|or|ing)?\b|\bmanufacturer\b|\bproduct\s+development\b|shopping cart", n):
+        return "Prototype / invention / product development"
+    if re.search(r"\bbusiness\b|\bentrepreneur\w*\b|\bstart[- ]?up\b|\bretail\b|\bshop\b|\bsell(?:ing)?\b|clothing line", n):
+        return "Start or grow a business"
+    if re.search(r"\bquilt\w*\b|\bsew(?:ing)?\b|\btextile\w*\b|\bembroid\w*\b|longarm", n):
+        return "Quilting / textiles / sewing"
+    if re.search(r"\bvolunteer\w*\b|\bcharit\w*\b|\bnon[- ]?profit\b|\bchurch\b|\bcommunity\b|\bfundrais\w*\b|homeless", n):
+        return "Community / nonprofit / volunteer project"
+    if re.search(r"\bstudent\w*\b|\bteacher\w*\b|\bschool\b|\bclass\b|\bengineering\b|\beducat\w*\b", n):
+        return "Education / student project"
+    if re.search(r"\blearn\w*\b|\bskill\w*\b|\bequipment\b|\bexperience\b|\bgocreate\b|\bopportunit\w*\b|\bpersonal\b|\bproject\b|\bcreate\w*\b|\bmake\w*\b", n):
+        return "Learn, create, or experience GoCreate"
+    return "Other / mixed use"
 
 
 def classify_application(app: dict[str, str]) -> dict[str, Any]:
@@ -301,6 +352,8 @@ def classify_application(app: dict[str, str]) -> dict[str, Any]:
     reduced = matched_labels(blob, REDUCED_RATE_RULES)
     return {
         "assistanceReason": assistance_reason(app),
+        "assistanceResponseCount": int_num(app.get("_assistance_response_count")),
+        "assistanceQuestionnaireAvailable": int_num(app.get("_assistance_response_count")) > 0,
         "smallBusinessReference": bool(business),
         "smallBusinessLabels": business,
         "nonprofitReference": bool(nonprofit),
@@ -348,7 +401,8 @@ def student_affiliation_from_app(app: dict[str, str]) -> str:
 
 def main() -> None:
     master = parse_master(MASTER_PATH)
-    applications, contacts = parse_xlsx(DETAILS_PATH)
+    applications, contacts, raw_controls = parse_xlsx(DETAILS_PATH)
+    enrich_applications_with_raw_controls(applications, raw_controls)
     app_classification = {text(app.get("source_key")): classify_application(app) for app in applications}
 
     contacts_by_source: dict[str, list[dict[str, str]]] = defaultdict(list)
@@ -388,6 +442,8 @@ def main() -> None:
         reduced_labels = merge_labels([c.get("reducedRateLabels", []) for c in classifications])
         return {
             "assistanceReason": assistance_reasons[-1] if assistance_reasons else None,
+            "assistanceResponseCount": sum(int(c.get("assistanceResponseCount") or 0) for c in classifications),
+            "assistanceQuestionnaireAvailable": any(bool(c.get("assistanceQuestionnaireAvailable")) for c in classifications),
             "smallBusinessReference": bool(business_labels),
             "smallBusinessLabels": business_labels,
             "nonprofitReference": bool(nonprofit_labels),
@@ -626,6 +682,7 @@ def main() -> None:
             "homeState": canonical_state(app.get("home_state", "")),
             "isMatchedToMaster": source_key in matched_source_keys,
             "fields": application_field_flags(app),
+            "activitySources": [],
             **classification,
         })
 
@@ -686,9 +743,15 @@ def main() -> None:
     model_no = sum(model_release_granted(app) is False for app in applications)
     assistance = sum(is_assistance(app) for app in applications)
     signed = sum(truthy(app.get("signature_present")) for app in applications)
+    assistance_apps = [app for app in applications if is_assistance(app)]
+    assistance_source_keys = {text(app.get("source_key")) for app in assistance_apps}
+    assistance_people = len({source_to_member_id.get(key, key) for key in assistance_source_keys if key})
+    assistance_questionnaire_apps = sum(bool(app_classification.get(text(app.get("source_key")), {}).get("assistanceQuestionnaireAvailable")) for app in assistance_apps)
+    assistance_questionnaire_responses = sum(int(app_classification.get(text(app.get("source_key")), {}).get("assistanceResponseCount") or 0) for app in assistance_apps)
 
     master_min, master_max = iso_range(parse_iso(row.get("membershipSubmittedAt", "")) for row in master)
     app_min, app_max = iso_range(parse_submission(app.get("submitted_on", "")) for app in applications)
+    assistance_min, assistance_max = iso_range(parse_submission(app.get("submitted_on", "")) for app in assistance_apps)
     visit_min, visit_max = iso_range(parse_iso(row.get("lastVisitAt", "")) for row in master)
 
     dashboard = {
@@ -712,6 +775,11 @@ def main() -> None:
             "visitObservationMin": visit_min,
             "visitObservationMax": visit_max,
             "assistanceReasonRows": sum(bool(c.get("assistanceReason")) for c in app_classification.values()),
+            "rawControlRows": len(raw_controls),
+            "assistanceQuestionnaireApplications": assistance_questionnaire_apps,
+            "assistanceQuestionnaireResponses": assistance_questionnaire_responses,
+            "assistanceSubmissionMin": assistance_min,
+            "assistanceSubmissionMax": assistance_max,
         },
         "overview": {
             "masterMembers": len(master_summaries),
@@ -726,6 +794,10 @@ def main() -> None:
             "modelReleaseYes": model_yes,
             "modelReleaseNo": model_no,
             "assistanceRequests": assistance,
+            "assistancePeople": assistance_people,
+            "smallBusinessReferences": sum(bool(a["smallBusinessReference"]) for a in safe_applications),
+            "nonprofitReferences": sum(bool(a["nonprofitReference"]) for a in safe_applications),
+            "reducedRateReferences": sum(bool(a["reducedRateReference"]) for a in safe_applications),
             "signedApplications": signed,
         },
         "membershipStatus": distribution(master_summaries, "membershipStatus"),

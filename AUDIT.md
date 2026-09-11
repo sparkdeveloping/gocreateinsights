@@ -1,59 +1,91 @@
-# GoCreate Insights — v4 reporting/data audit
+# GoCreate Insights — v5 data and reporting audit
 
-## Why v4 exists
+## Purpose
 
-Leadership's reporting request was not a request for more generic charts. It asked for a reusable way to answer a specific reporting question over a selectable date window: WSU/WSU Tech, Retail, Quilters/reduced rate, Membership Assistance, small-business references, nonprofit/organization references, and ages/demographics. v4 turns that workflow into a first-class report while keeping the same drill-down system used by the rest of the dashboard.
+v5 merges three different operational realities without flattening them into misleading totals:
+
+1. the master membership export,
+2. the latest membership/application detail workbook, and
+3. historical handwritten sign-in sheets from before/alongside the tracker.
+
+The dashboard keeps provenance visible so staff can answer leadership questions while still knowing which source supports each number.
+
+## Latest enrichment workbook
+
+The current detail workbook contains:
+
+- 408 application rows,
+- 816 emergency-contact rows,
+- 19,406 RawControls rows,
+- 359 application rows matched to the master source,
+- 352 distinct enriched master members,
+- 49 application-only people.
+
+### Membership Assistance
+
+The workbook contains 50 Membership Assistance application rows across 49 people. Assistance submissions run from 2024-01-31 through 2025-04-07. Each of the 50 Assistance applications has five captured questionnaire responses, producing 250 raw responses.
+
+This explains the apparent “zero” in the Sep. 2025-current Koch report: there are genuinely **0 Assistance submissions in that selected date range**, not a failed import. v5 shows the selected-range value and the all-time context together, e.g. `0 in range · 50 all-time`, and provides a direct transition to all-time Assistance records.
+
+Questionnaire text is used server-side during data preparation to derive aggregate-safe reason/reference categories. The raw free text is not sent in the client analytics payload.
+
+## Reporting signal definitions
+
+Reference classification is deliberately conservative.
+
+- **Membership Assistance:** explicit Assistance pathway/tab in the application source.
+- **Assistance reason:** categorized primarily from the Assistance Q1 response into time-sensitive project, prototype/product development, start/grow a business, quilting/textiles/sewing, community/nonprofit/volunteer, education/student project, learn/create/experience GoCreate, or other/mixed.
+- **Small-business reference:** explicit business/startup/entrepreneur/prototype/business-project language in selected enrollment/questionnaire text.
+- **Nonprofit/organization reference:** explicit nonprofit, organization, church/ministry, club, volunteer, 4-H, community/foundation/association or similar language.
+- **Quilter/reduced-rate reference:** explicit quilting/textile/sewing or reduced/discount/scholarship-type language in the reportable application/questionnaire fields.
+- **Age demographics:** age bands derived from birthdate; exact birthdates remain private.
+
+The all-time current workbook yields 9 business-reference applications, 15 nonprofit/organization-reference applications, and 7 reduced-rate/quilter reference applications.
 
 ## Date-range contract
 
-The range control is global and intentionally explicit about which source date each module uses:
+The global reporting range does not pretend every source has the same date model:
 
 - **Membership / Overview / Koch membership counts:** master `membershipSubmittedAt`.
-- **Applications / age / home geography / assistance / business/nonprofit/reduced-rate signals:** application `submittedAt`.
-- **Application-only people:** application submission date.
-- **Engagement:** the uploaded master export does not contain a full history of individual visit events. When a custom range is active, engagement is therefore scoped by each person's `lastVisitAt`; the displayed `visitsInRange` count remains the source-window aggregate. The UI states this limitation instead of presenting a false time-series.
-- **All time:** includes undated master records. A custom date range necessarily excludes rows without a reporting date.
+- **Applications / demographics / Assistance / reference signals:** application `submittedAt`.
+- **Manual attendance:** event date when the handwritten sheet provides a trustworthy date. Unknown-date manual rows are excluded from a bounded date range rather than assigned a fabricated date.
+- **Tracker attendance:** the master export supplies aggregate `visitsInRange` by member plus last-visit/source-window context, not the individual visit-event ledger. The observed tracker source window is about 2026-08-03 → 2026-09-09. The dashboard can safely include the tracker total when the selected range fully contains that window, safely exclude it when the range is completely outside the window, and labels partial overlap as not exactly divisible by date.
+- **All time:** includes undated records where the source supports them.
 
-## Corrected source mapping
+## Manual sign-in reconciliation
 
-The prior generator used several legacy field names that were not present in the actual CSV. v4 maps the real source columns:
+The scanned archive contains 84 PDFs, of which 2 are exact duplicate scans, leaving 82 unique pages. The current extraction/review layer contains 513 detected rows:
 
-- `membershipSubmittedAt`
-- `membershipExpiresAt`
-- `lastVisitAt`
-- `isEmployee`
-- `doorAccessDesired`
+- 14 high-confidence member sign-ins,
+- 390 guest sign-ins,
+- 27 possible member matches requiring staff review,
+- 82 unreadable rows,
+- 186 dated rows,
+- 327 rows with unknown/unreliable date.
 
-After correction, the dataset contains 2,001 master membership-submission timestamps and 79 last-visit timestamps. This correction is material to any date-range report.
+Matching is intentionally conservative. A high-confidence normalized first/last-name match can be attached to a member. A clear nonmatch remains a guest. Ambiguous handwriting never silently becomes a member visit; it remains in the review queue. Unreadable text remains unresolved.
 
-## Leadership/Koch report mapping
+The browser-safe manual payload does not expose raw guest handwriting/names. It keeps source page/row provenance, classification, confidence, and safe matched/suggested member information. The review CSV/source scans are retained in the project for internal reconciliation.
 
-- **WSU / WSU Tech:** master membership type or student-affiliation text indicating WSU/Wichita State.
-- **Retail:** `Public/Regular` master membership type. The report labels this interpretation directly.
-- **Membership Assistance:** explicit assistance pathway from the enrichment workbook. Distinct people and application-row counts are shown separately.
-- **Quilters / reduced rate:** explicit quilting, reduced-rate, discounted-rate, or scholarship wording in application/enrollment fields.
-- **Small business:** explicit small-business, business-owner, entrepreneur/startup, starting-a-business, prototype/product-development, LLC, or business-project wording.
-- **Nonprofit / organizations:** explicit Victory in the Valley, 4-H, church/ministry, nonprofit, club, foundation, association/community organization, volunteer, scouts/youth-group wording.
-- **Ages:** derived age bands from application birthdate; exact birthdates remain private.
+## Combined activity contract
 
-Contact fields, addresses, phone numbers, emails, URLs/source keys and emergency-contact values are excluded from the reference classifier to prevent accidental keyword matches.
+- `trackerVisits` = source tracker aggregate.
+- `manualVisits` = high-confidence paper sign-ins attached to that member.
+- `combinedObservedVisitsMinimum` = conservative minimum across countable sources, subtracting a possible exact overlap only when the pipeline can identify one.
+- Guest sign-ins remain guest activity; they are not converted into member visits merely because a similar name exists.
 
-## Current-data limitations
-
-The current enrichment workbook has 359 application rows but does not contain the questionnaire fields visible in the older printed reports for “Reason for Membership Assistance Request,” small-business use, nonprofits/clubs/churches, or quilting/reduced-rate reason detail. It has one explicit Membership Assistance row, submitted 2024-07-08.
-
-Therefore, the Sep. 2025-current leadership range legitimately contains zero assistance applications. The report simultaneously surfaces the one older assistance row outside the report scope. Business/nonprofit/quilter zeroes are labeled **not detected in this extract**, not asserted as true population zeroes.
-
-The generator is future-ready: when those questionnaire columns appear in the final workbook, the source scanner classifies them and the UI/report populate automatically.
+The current snapshot contains 216 tracker visits plus 14 matched manual member sign-ins, yielding a conservative combined member-visit minimum of 230.
 
 ## Interaction contract
 
-Anything visually presented as actionable must perform a useful action. KPI cards, report metrics, chart marks, donut slices, legends, assistance/reduced-rate indicators, table badges, completeness meters and rows open their underlying cohort, filter context, person detail, or limitation explanation. Decorative motion is avoided; motion communicates state change, drill-down, progress, selection, or clickability.
+Anything presented as an actionable metric must perform a useful action. KPI cards, report metrics, chart marks, legends, Assistance/reduced-rate indicators, source reconciliation cards, rows, badges, completeness meters and ranked items open the underlying cohort, member detail, reconciliation queue or data-method explanation.
+
+Motion is used to explain state change: count transitions, tab/range transitions, drawer entry, chart growth, selected states, list reflow and hover affordances. `prefers-reduced-motion` remains respected.
 
 ## PDF/report design
 
-The Koch Report borrows the recognizable structure of GoCreate's prior printed reports—official GoCreate branding, clean white page, blue/yellow accents, chart-led storytelling—but avoids copying their limitations. It is generated from the selected live dashboard scope, is drillable on screen, and prints as a multi-page US Letter report through the browser's native PDF pipeline.
+The Koch Report follows GoCreate’s established white-page, blue/yellow, chart-led reporting language while remaining live and drillable on screen. It prints to US Letter using the browser’s native print/PDF pipeline, with app chrome omitted.
 
 ## Security boundary
 
-The source files and private detail JSON are included in this downloadable project for reproducibility. They should not be treated as public assets. Exact contact/address/birthdate/emergency/medical values are excluded from the bulk analytics API; member detail remains masked unless `GOCREATE_PII_MODE=full` is explicitly enabled. For production with real member names, place the site behind access control.
+Raw source files and private detail JSON are included in the downloadable project for reproducibility and internal work. They are not public assets. Bulk analytics exclude exact birthdates, street addresses, emails, phones, emergency-contact values, medical-alert contents and Assistance questionnaire free text. Member detail remains masked unless `GOCREATE_PII_MODE=full` is explicitly enabled behind access control.

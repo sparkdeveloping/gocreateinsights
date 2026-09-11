@@ -1,76 +1,101 @@
-# GoCreate Insights v4
+# GoCreate Insights v5
 
-A strictly light-mode, single-page Next.js operational intelligence application for GoCreate. v4 combines the master membership export with the membership-detail workbook and adds organization-wide reporting ranges, membership-assistance analytics, and a print/PDF-ready **Koch Report** built around the questions leadership actually asks.
+GoCreate Insights v5 is a strictly light-mode, single-page Next.js operational intelligence application for GoCreate. It combines the master membership export, the latest membership-detail workbook, and the historical paper sign-in archive into one source-aware analytics system without pretending that unlike data sources have the same precision.
 
-## v4 highlights
+## What v5 adds
 
-- **Global reporting range** above the dashboard. Presets: All time, Sep 2025 → now, current-year YTD, Last 90 days, plus exact From/To dates.
-- The range recalculates membership enrollment, application, demographic, assistance, data-quality and report views. Engagement includes an explicit caveat because the source does not contain complete historical visit-event rows.
-- **Koch Report** top-level tab with the requested leadership categories:
-  - WSU / WSU Tech members
-  - Retail (`Public/Regular`) members
-  - Quilters / reduced-rate references
-  - Membership Assistance
-  - Small-business references
-  - Nonprofit / organization references
-  - Age demographics
-- Entering Koch Report from an all-time dashboard automatically selects **Sep. 1, 2025 → current data-as-of date**. A custom range is preserved if the user already chose one.
-- **Print / Export PDF** produces a letter-sized multi-page report using the official GoCreate logo and blue/yellow report styling. In the browser print dialog choose **Save as PDF**.
-- Membership Assistance is **denoted inside Membership and Applications**, not hidden in a separate silo. Assistance records, applicant ages and reason categories are drillable in the report.
-- The current workbook contains one Membership Assistance row outside the Sep-2025-current window; the report calls this out and the notice expands to all dates and opens the underlying record.
-- Business/nonprofit/reduced-rate classification is conservative. It only marks explicit source wording and does not scan contact fields, source URLs, or private notes that could cause false positives.
-- If the final workbook later gains questionnaire columns for assistance reasons, business/nonprofit references, quilting/reduced-rate responses, etc., the data preparation script scans them automatically and the existing UI populates without a redesign.
-- Every meaningful metric, chart mark, legend item, badge, table row and report number drills into records, filters a cohort, opens a member, or explains a limitation.
-- Strict light mode; official supplied GoCreate/WSU/WuShock brand assets are included.
+- **Latest detail database merged:** `data/source/gocreate_membership_details.xlsx` is the supplied current workbook with 408 application rows, 816 emergency-contact rows and 19,406 raw control rows.
+- **Membership Assistance is first-class reporting data:** 50 assistance application rows across 49 people are available all-time. All 50 have five captured questionnaire responses (250 responses total), enabling reason, small-business, nonprofit/organization and quilting/reduced-rate analytics without exposing raw questionnaire text to the client.
+- **Honest date behavior:** the default Koch reporting window is Sep. 1, 2025 → data-as-of. There are no Membership Assistance submissions in that window because the latest assistance submission in this workbook is Apr. 7, 2025. The interface therefore shows **0 in range · 50 all-time** and provides a one-click jump to all-time Assistance records.
+- **Historical paper attendance welded into Engagement:** manual sign-ins are kept as a separate source and conservatively reconciled with the master member list. High-confidence matches count as member visits, clear nonmatches count as guest sign-ins, uncertain matches stay in a review queue, and unreadable rows remain unresolved.
+- **Source-aware combined activity:** tracker totals and matched manual member visits are shown separately plus a conservative observed-minimum figure. Possible exact duplicates can be subtracted when identifiable.
+- **Global reporting range:** All time, Sep 2025 → now, current-year YTD, Last 90 days, and exact From/To controls.
+- **Koch Report:** printable/PDF-ready leadership report for WSU/WSU Tech, Retail, Quilters/reduced rate, Membership Assistance, small-business references, nonprofit/organization references and age demographics.
+- **Everything meaningful drills down:** KPI cards, report metrics, bars, donut slices, legends, source queues, badges, table rows and completeness metrics open their underlying records or an explanation.
+- **Strict light mode only** with the supplied GoCreate brand assets.
 
-## Current data snapshot
+## Current generated snapshot
 
-Generated from:
+Generated with data-as-of **2026-09-11** from:
 
 - `data/source/gocreate-master-2026-09-09.csv`
 - `data/source/gocreate_membership_details.xlsx`
+- `data/source/manual-signins/scans.zip`
+- preprocessed/manual reconciliation data under `data/analytics/`
+
+Current totals:
+
 - 2,383 master member records
-- 359 application/detail rows
-- 718 emergency-contact rows
-- 350/359 application rows matched to the master source, covering 345 distinct master members
-- 9 application-only people
+- 2,432 known people after application-only records are included
+- 408 application rows
+- 816 emergency-contact rows
+- 359/408 application rows matched to the master source (88.0%)
+- 352 distinct master members enriched by application detail
+- 49 application-only people
+- 50 Membership Assistance application rows across 49 people
+- 250 Membership Assistance questionnaire responses across 50 applications
+- Assistance submission range: 2024-01-31 through 2025-04-07
+- 9 all-time small-business reference applications
+- 15 all-time nonprofit/organization reference applications
+- 7 all-time quilting/reduced-rate reference applications
 
-With the leadership range **2025-09-01 through 2026-09-11**, the current files produce:
+### Assistance reason categories (all time)
 
-- 543 master membership submissions
-- 457 WSU / WSU Tech memberships
-- 38 Public/Regular (Retail) memberships
-- 146 application rows
-- 0 in-range Membership Assistance rows, with 1 older assistance row in the workbook
-- Age distribution from latest in-range application per person: 18–24: 86; 25–34: 34; 35–44: 10; 45–54: 7; 55–64: 3; 65+: 3; Under 18: 3
+The private questionnaire free text is classified into aggregate/reportable categories:
 
-The current workbook does **not** contain the questionnaire fields needed to reliably identify most small-business, nonprofit, quilter/reduced-rate, or assistance-reason responses. The dashboard therefore says **“not detected in this extract”** rather than incorrectly claiming those populations do not exist.
+- Other / mixed use: 13
+- Quilting / textiles / sewing: 12
+- Learn, create, or experience GoCreate: 8
+- Start or grow a business: 7
+- Education / student project: 7
+- Prototype / invention / product development: 2
+- Community / nonprofit / volunteer project: 1
+
+Raw questionnaire text is not emitted in the browser-safe analytics payload.
+
+## Attendance reconciliation
+
+The uploaded historical sign-in archive currently contributes:
+
+- 82 unique scanned sign-in pages
+- 2 exact duplicate scans ignored
+- 513 detected sign-in rows
+- 186 rows with a trustworthy date
+- 327 rows with unknown/unreliable date
+- 14 high-confidence matched member sign-ins across 10 members
+- 390 guest sign-ins
+- 27 possible member matches held for review
+- 82 unreadable rows
+- 216 tracker-source visits across 79 members
+- 230 conservative combined member visits minimum before any future review promotions
+
+The tracker export is an **aggregate per-member source**, not a complete event ledger. Its observed source window is approximately 2026-08-03 through 2026-09-09. v5 does not fabricate per-day tracker events for custom date ranges. A partial overlap with the tracker window is explicitly labeled as not exactly divisible by date.
+
+## Leadership / Koch range
+
+The Koch Report defaults to **2025-09-01 → data-as-of** when entered from All time. In the current workbook there are 146 application rows in that period and **0 Membership Assistance rows** because all current Assistance records predate Sep. 2025. The screen still shows the all-time Assistance context and can switch to all-time records in one click.
+
+Business/nonprofit/quilter signals are also date-scoped. If a selected period contains none, the report shows the all-time count where useful instead of implying the category never existed.
 
 ## Local setup
 
 ```bash
 npm install
-npm run prepare:data
+GOCREATE_AS_OF=2026-09-11 npm run prepare:data
 npm run dev
 ```
 
 Open `http://localhost:3000`.
 
-## Updating source data
+`npm run prepare:data` rebuilds the master/application analytics and merges the already-processed manual attendance source. It does **not** rerun OCR.
 
-Replace either source file under `data/source/`, then run:
-
-```bash
-npm run prepare:data
-```
-
-The Python generator is intentionally dependency-free. The uploaded membership workbook is a minimal XLSX package, so the script reads its worksheet XML directly rather than requiring a spreadsheet library.
-
-By default, `dataAsOf` is the date the generator is run. To reproduce a historical snapshot:
+To reprocess the paper scans from scratch:
 
 ```bash
-GOCREATE_AS_OF=2026-09-11 npm run prepare:data
+npm run prepare:manual
 ```
+
+That optional workflow requires local OCR/image tooling used by `scripts/prepare_manual_visits.py` (Tesseract, Poppler and the Python imaging/fuzzy-match dependencies referenced by that script). Keep the review CSV; it is the audit trail for uncertain handwriting.
 
 ## Build
 
@@ -80,22 +105,22 @@ npm run build
 npm start
 ```
 
+The project source is designed for Vercel/Next.js App Router. In the packaging environment used to produce this ZIP, npm registry access timed out, so dependencies could not be installed for a full `next build`. The Python pipelines, generated JSON, TS/TSX syntax and archive integrity were validated independently.
+
 ## PDF export
 
-Open **Koch report**, select the desired reporting range, then choose **Export / print PDF**. The print stylesheet hides the application shell and formats three letter-sized pages. In Chrome/Edge/Safari choose **Save as PDF** in the print destination.
-
-No third-party PDF package is required, which keeps the report faithful to the browser-rendered charts and avoids client-side rasterization.
+Open **Koch report**, select the reporting range, then choose **Export / print PDF**. The print stylesheet hides application chrome and formats the leadership report for US Letter. Select **Save as PDF** in the browser print dialog.
 
 ## Privacy / PII
 
-The bulk analytics payload intentionally excludes exact birthdates, emails, phone numbers, street addresses, emergency-contact values, and medical-alert contents. Member-detail responses are masked by default.
+Bulk analytics intentionally exclude exact birthdates, email addresses, phone numbers, street addresses, emergency-contact values, medical-alert contents and raw Assistance questionnaire responses. The manual-sign-in browser payload also excludes guest handwriting/name text; uncertain rows expose only safe scan coordinates and member match suggestions.
 
-For an authenticated internal deployment only:
+Member detail is masked by default. For an authenticated internal deployment only:
 
 ```bash
 GOCREATE_PII_MODE=full
 ```
 
-Do **not** enable full PII on an unauthenticated public deployment. Also note that names and operational membership classifications are still present in the analytics payload because the record explorer needs them; production should therefore be access-controlled if those names are not intended for public disclosure.
+Do not enable full PII on an unauthenticated public deployment. The project includes private source files for reproducibility, so the deployed app itself should be access-controlled if member names or source artifacts are not intended to be public.
 
-See `AUDIT.md` for data/reporting decisions and `BUILD-BRIEF.md` for the product rules.
+See `AUDIT.md` for source/date semantics and `BUILD-BRIEF.md` for the product interaction contract.

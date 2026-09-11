@@ -47,12 +47,21 @@ export type MemberSummary = {
   applicationSubmittedAt: string | null;
   applicationFields: ApplicationFieldFlags | null;
   assistanceReason: string | null;
+  assistanceResponseCount: number;
+  assistanceQuestionnaireAvailable: boolean;
   smallBusinessReference: boolean;
   smallBusinessLabels: string[];
   nonprofitReference: boolean;
   nonprofitLabels: string[];
   reducedRateReference: boolean;
   reducedRateLabels: string[];
+  trackerVisits: number;
+  manualVisits: number;
+  manualDatedVisits: number;
+  manualVisitLastAt: string | null;
+  manualTrackerOverlapRows: number;
+  combinedObservedVisitsMinimum: number;
+  activitySources: string[];
 };
 
 export type FieldCompleteness = {
@@ -87,6 +96,23 @@ export type DashboardBootstrap = {
     visitObservationMin: string | null;
     visitObservationMax: string | null;
     assistanceReasonRows: number;
+    rawControlRows: number;
+    assistanceQuestionnaireApplications: number;
+    assistanceQuestionnaireResponses: number;
+    assistanceSubmissionMin: string | null;
+    assistanceSubmissionMax: string | null;
+    manualScanPages: number;
+    duplicateManualScansIgnored: number;
+    manualSignInRows: number;
+    manualDatedRows: number;
+    manualUnknownDateRows: number;
+    manualDateMin: string | null;
+    manualDateMax: string | null;
+    trackerCoverageStart: string | null;
+    trackerCoverageEnd: string | null;
+    manualRowsInsideTrackerCoverage: number;
+    manualRowsBeforeTrackerCoverage: number;
+    manualPossibleExactTrackerDuplicates: number;
   };
   overview: {
     masterMembers: number;
@@ -101,7 +127,18 @@ export type DashboardBootstrap = {
     modelReleaseYes: number;
     modelReleaseNo: number;
     assistanceRequests: number;
+    assistancePeople: number;
+    smallBusinessReferences: number;
+    nonprofitReferences: number;
+    reducedRateReferences: number;
     signedApplications: number;
+    trackerVisits: number;
+    manualMemberVisits: number;
+    manualGuestVisits: number;
+    manualReviewRows: number;
+    manualUnreadableRows: number;
+    manualAttendanceRows: number;
+    combinedMemberVisitsMinimum: number;
   };
   membershipStatus: DistributionPoint[];
   membershipType: DistributionPoint[];
@@ -113,6 +150,7 @@ export type DashboardBootstrap = {
   homeCities: DistributionPoint[];
   modelRelease: DistributionPoint[];
   visitFrequency: DistributionPoint[];
+  combinedVisitFrequency: DistributionPoint[];
   submissionTimeline: Array<{ month: string; label: string; value: number }>;
   fieldCompleteness: FieldCompleteness[];
   unmatchedApplications: Array<{
@@ -191,15 +229,65 @@ export type ApplicationSummary = {
   isMatchedToMaster: boolean;
   fields: ApplicationFieldFlags;
   assistanceReason: string | null;
+  assistanceResponseCount: number;
+  assistanceQuestionnaireAvailable: boolean;
   smallBusinessReference: boolean;
   smallBusinessLabels: string[];
   nonprofitReference: boolean;
   nonprofitLabels: string[];
   reducedRateReference: boolean;
   reducedRateLabels: string[];
+  activitySources: string[];
 };
 
-export type DashboardPayload = { members: MemberSummary[]; applications: ApplicationSummary[] };
+
+export type ManualVisitClassification = "member" | "guest" | "review" | "unreadable";
+
+export type ManualVisitEvent = {
+  id: string;
+  sourceFile: string;
+  sourcePage: number;
+  sourceRow: number;
+  visitDate: string | null;
+  dateInherited: boolean;
+  yearInferred: boolean;
+  classification: ManualVisitClassification;
+  matchConfidence: number;
+  memberId: string | null;
+  memberDisplayName: string | null;
+  suggestedMemberId: string | null;
+  suggestedMemberName: string | null;
+  trackerCoverageOverlap: boolean;
+  possibleExactTrackerDuplicate: boolean;
+  scanLayout: "full" | "cropped";
+};
+
+export type ManualVisitPayload = {
+  meta: {
+    uniqueScanPages: number;
+    duplicateScansIgnored: number;
+    signInRowsDetected: number;
+    datedRows: number;
+    unknownDateRows: number;
+    matchedMemberVisits: number;
+    matchedMemberPeople: number;
+    guestVisits: number;
+    reviewRows: number;
+    unreadableRows: number;
+    trackerCoverageStart: string | null;
+    trackerCoverageEnd: string | null;
+    manualRowsInsideTrackerCoverage: number;
+    manualRowsBeforeTrackerCoverage: number;
+    possibleExactTrackerDuplicates: number;
+    manualDateMin: string | null;
+    manualDateMax: string | null;
+  };
+  events: ManualVisitEvent[];
+  byDate: Array<{ date: string; total: number; members: number; guests: number; review: number; unreadable: number }>;
+  matchedMembers: Array<{ memberId: string; displayName: string; visits: number; datedVisits: number; lastVisitDate: string | null }>;
+};
+
+export type DashboardPayload = { members: MemberSummary[]; applications: ApplicationSummary[]; manualVisits: ManualVisitPayload };
 
 export type ExploreKind =
   | "all"
@@ -234,7 +322,15 @@ export type ExploreKind =
   | "reduced-rate-reference"
   | "reduced-rate-reference-label"
   | "assistance-reason"
-  | "koch-wsu";
+  | "koch-wsu"
+  | "manual-all"
+  | "manual-member"
+  | "manual-guest"
+  | "manual-review"
+  | "manual-unreadable"
+  | "manual-undated"
+  | "manual-date"
+  | "tracker-overlap";
 
 export type ExploreQuery = {
   id: string;
