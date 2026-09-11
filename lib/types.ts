@@ -350,4 +350,5 @@ export type DashboardTab =
   | "people"
   | "quality"
   | "report"
+  | "modified-report"
   | "members";

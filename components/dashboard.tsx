@@ -45,6 +45,7 @@ import {
 } from "@/components/icons";
 import MemberDetailDrawer from "@/components/member-detail-drawer";
 import KochReport from "@/components/koch-report";
+import ModifiedReport from "@/components/modified-report";
 import { q, visitFrequency } from "@/lib/explore";
 import { defaultAllRange, inDateRange, kochRange, last90DaysRange, memberReportingDate, rangeLabel, yearRange, type DateRange } from "@/lib/reporting";
 import { formatDate, formatNumber, humanize, pluralize } from "@/lib/format";
@@ -76,11 +77,12 @@ const tabs: Array<{ id: DashboardTab; label: string; description: string; Icon: 
   { id: "applications", label: "Applications", description: "Application detail and history", Icon: ApplicationsIcon },
   { id: "people", label: "People", description: "Age, location and affiliation", Icon: PeopleIcon },
   { id: "report", label: "Koch report", description: "Leadership reporting and PDF export", Icon: ReportIcon },
+  { id: "modified-report", label: "Modified report", description: "Internal manual-adjustment reporting workspace", Icon: LockIcon },
   { id: "quality", label: "Data quality", description: "Coverage and missing fields", Icon: QualityIcon },
   { id: "members", label: "Members", description: "Search every person", Icon: MembersIcon },
 ];
 
-type Props = { bootstrap: DashboardBootstrap };
+type Props = { bootstrap: DashboardBootstrap; internalReportsEnabled?: boolean };
 type FilterState = {
   search: string;
   status: string;
@@ -813,7 +815,7 @@ function MembersTab({ members, openExplore, openMember }: { members: MemberSumma
   );
 }
 
-export default function Dashboard({ bootstrap }: Props) {
+export default function Dashboard({ bootstrap, internalReportsEnabled = false }: Props) {
   const reduced = useReducedMotion();
   const { members, applications, manualVisits, loading, error } = useRows(bootstrap);
   const [tab, setTab] = useState<DashboardTab>("overview");
@@ -876,6 +878,7 @@ export default function Dashboard({ bootstrap }: Props) {
   }
 
   function switchTab(next: DashboardTab) {
+    if (next === "modified-report" && !internalReportsEnabled) return;
     setTab(next);
     if (next === "report" && dateRange.preset === "all") setDateRange(kochRange(bootstrap));
   }
@@ -898,11 +901,19 @@ export default function Dashboard({ bootstrap }: Props) {
     URL.revokeObjectURL(url);
   }
 
-  function printKochReport() {
+  function printNamedReport(title: string) {
     const previousTitle = document.title;
-    document.title = `GoCreate Koch Report ${dateRange.from} to ${dateRange.to}`;
+    document.title = title;
     window.print();
     window.setTimeout(() => { document.title = previousTitle; }, 250);
+  }
+
+  function printKochReport() {
+    printNamedReport(`GoCreate Koch Report ${dateRange.from} to ${dateRange.to}`);
+  }
+
+  function printModifiedReport() {
+    printNamedReport(`GoCreate Internal Modified Report ${new Date().getFullYear()}`);
   }
 
   function showAllAssistance() {
@@ -919,6 +930,7 @@ export default function Dashboard({ bootstrap }: Props) {
     applications: <ApplicationsTab bootstrap={bootstrap} applications={scopedApplications} openExplore={openExplore} scoped={dateScopeActive || filterOnlyCount > 0} />,
     people: <PeopleTab bootstrap={bootstrap} members={filteredMembers} applications={scopedApplications} openExplore={openExplore} scoped={dateScopeActive || filterOnlyCount > 0} />,
     report: <KochReport bootstrap={bootstrap} members={filteredMembers} applications={scopedApplications} range={dateRange} openExplore={openExplore} onPrint={printKochReport} onShowAllAssistance={showAllAssistance} />,
+    "modified-report": internalReportsEnabled ? <ModifiedReport bootstrap={bootstrap} range={dateRange} onPrint={printModifiedReport} /> : null,
     quality: <QualityTab bootstrap={bootstrap} members={filteredMembers.filter((m) => m.isMasterMember)} applications={scopedApplications} manualEvents={drawerManualVisits} openExplore={openExplore} openMember={setMemberId} scoped={dateScopeActive || filterOnlyCount > 0} />,
     members: <MembersTab members={filteredMembers} openExplore={openExplore} openMember={setMemberId} />,
   } satisfies Record<DashboardTab, React.ReactNode>;
@@ -940,7 +952,7 @@ export default function Dashboard({ bootstrap }: Props) {
 
       <nav className="tab-nav" aria-label="Dashboard sections">
         <div className="tab-nav-inner soft-scrollbar">
-          {tabs.map(({ id, label, description, Icon }) => (
+          {tabs.filter(({ id }) => id !== "modified-report" || internalReportsEnabled).map(({ id, label, description, Icon }) => (
             <button key={id} className={cn("top-tab", tab === id && "active")} onClick={() => switchTab(id)} aria-current={tab === id ? "page" : undefined} title={description}>
               <Icon />
               <span>{label}</span>

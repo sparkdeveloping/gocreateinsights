@@ -1,4 +1,4 @@
-# GoCreate Insights — v5.4 data and reporting audit
+# GoCreate Insights — v5.5 data and reporting audit
 
 ## Purpose
 
@@ -91,3 +91,9 @@ The Koch Report follows GoCreate’s established white-page, blue/yellow, chart-
 ## Security boundary
 
 Raw source files and private detail JSON are included in the downloadable project for reproducibility and internal work. They are not public assets. Bulk analytics exclude exact birthdates, street addresses, emails, phones, emergency-contact values, medical-alert contents and Assistance questionnaire free text. Member detail remains masked unless `GOCREATE_PII_MODE=full` is explicitly enabled behind access control.
+
+## v5.5 internal Modified Report integrity rule
+
+The internal Modified Report contains two explicitly manual presentation overrides supplied by staff: Membership Assistance = 476 and Small Businesses = 62. They are not written into source-derived analytics and are not allowed to replace the standard Koch Report figures. The UI displays the corresponding database-derived all-time figures next to each override and labels the report as internal/manual on-screen and in print.
+
+Historical figures shown for 2020–2025 were transcribed from the supplied screenshot and are labeled legacy reported figures. Missing historical cells remain blank. This prevents the internal presentation layer from contaminating the factual data pipeline.
