@@ -1,39 +1,43 @@
-# Advanced GoCreate build brief
+# GoCreate Insights v4 — implementation brief
 
-Build a premium, high-performance **single-page operational intelligence application for GoCreate** using **Next.js App Router, React, TypeScript, Tailwind CSS, Framer Motion, and Recharts**. The experience should feel less like a static admin dashboard and more like an interactive analytical instrument: every chart is a control, every aggregate can become a filter, and users can move from organization-level patterns to an individual member record without navigating away.
+Build a strictly light-mode, single-page operational intelligence application for GoCreate using Next.js App Router, React, TypeScript, Tailwind CSS, Framer Motion and Recharts. It should feel like a precise staff reporting tool, not a generic “AI dashboard.” Use the official supplied GoCreate brand assets and restrained GoCreate blue/yellow/ink colors.
 
-## Product objective
+## Non-negotiable interaction rule
 
-Transform GoCreate membership and visit data into a fast decision surface for staff. The interface should help answer: What is the current membership lifecycle? Which membership groups dominate? Where is observed engagement concentrated? Who is requesting access? What records need data-quality review? Which memberships are approaching expiration? Which individual members make up any chart segment?
+Every visible metric, chart mark, legend item, cohort count, status badge, membership badge, application badge, completeness value, ranking row, report statistic and member row that implies underlying records must be interactive. Clicking it must open the matching cohort, apply/focus the corresponding filter, open member detail, or reveal a clear data-method explanation.
 
-## Design language
+## Global reporting range
 
-Use a **strictly light interface** with crisp white surfaces, light neutral page backgrounds, GoCreate blue as the primary action/data color, yellow as a sparing attention color, and black/ink typography. Avoid generic AI-dashboard gradients, glassmorphism, oversized decorative cards, fake futuristic motifs, and dark-mode styling. Motion must communicate state, clickability, hierarchy, filtering, drill-down, or change—not merely decorate the page. Use the official supplied GoCreate logo assets. The dashboard must remain highly legible on large desktop displays while collapsing cleanly for tablet and mobile.
+Place a persistent reporting-range control above global filters. Provide All time, Sep 2025 → now, current-year YTD, Last 90 days, and exact From/To inputs. Range changes should animate values and charts so the user understands that the scope changed. Preserve custom ranges across tabs. If the user enters Koch Report while still on All time, switch to Sep. 1, 2025 → data-as-of as the leadership default.
 
-## Interaction model
+Date semantics must remain honest: membership counts use membership submission dates; application/demographic/reference analytics use application submission dates. Do not fabricate historical visit events. If complete visit history is unavailable, explain the engagement limitation beside that view.
 
-The application must be one continuous page with anchored sections rather than separate analytics routes. Add a compact navigation rail on large screens and a sticky context/action header. All major filters must update all downstream visuals immediately. Chart segments and KPI cards should be clickable and act as contextual filters. Active filters must be visible and reversible. Use animated layout transitions so cross-filtering feels spatially continuous instead of like a page reload.
+## Membership Assistance
 
-## Required analytical modules
+Membership Assistance is a pathway within membership/application reporting, not a separate database. Denote it directly on the Membership tab, in application analytics, record explorer rows and member detail. Make assistance counts clickable. Add applicant ages, reason categories when the source provides them, and an explicit note when an assistance record lies outside the chosen range.
 
-Create an executive hero with live scope indicators and source metadata; animated KPI cards for member volume, approved status, engagement, door-access demand, expiration proximity, and data confidence; a global control center with search, status, membership type, data quality, door-access focus, top-N category control, and density control; a switchable lifecycle time-series chart; interactive membership-status bars; a membership-type donut; animated affiliation bars; an engagement scatter field; and a member-level explorer table.
+## Koch Report
 
-## Drill-down behavior
+Add a top-level horizontal **Koch report** tab designed for leadership self-service. It must answer:
 
-Clicking a member anywhere in the application must open a Framer Motion side drawer rather than route away. The drawer should progressively reveal contact data, membership lifecycle, access source, activity, affiliation, and data-quality/admin flags. Initial dashboard data should exclude sensitive contact fields; retrieve detailed fields only when the member drawer is opened.
+- WSU / WSU Tech members
+- Retail members (`Public/Regular` unless the source supplies a more explicit retail field)
+- Quilters / reduced rate
+- Membership Assistance
+- Small-business references in enrollment information
+- Nonprofit/organization references including examples such as Victory in the Valley, 4-H, clubs, churches and organizations
+- Age demographics
 
-## Data integrity
+Each total is clickable. Include membership mix and demographic charts. Use conservative source-text classifiers for business/nonprofit/reduced-rate references; never infer a reference from email addresses, phone/address fields, URLs or contact records.
 
-Do not invent utilization, revenue, age, demographic, or studio metrics when the source does not contain reliable values. Make sparse data visibly honest. Clearly distinguish observed events from total population metrics. Any “expiring soon” logic must be derived from actual expiration dates. All percentages must be computed from the current filtered view.
+## Print/PDF output
 
-## Power-user features
+The report must have a clean, branded screen layout and a dedicated print stylesheet that exports to US Letter through the browser's native print/Save-as-PDF flow. Hide app chrome, filters and drawers during print. Keep charts, GoCreate logo, section titles, date range, data caveats and footers. Use page breaks deliberately and preserve print colors.
 
-Include CSV export of the current filtered population, reversible cross-filtering, animated pagination, responsive charts, reduced-motion support, accessible buttons/labels, loading skeletons, graceful empty states, and a reproducible source-data transformation script. Structure the code so static snapshot JSON can later be swapped for authenticated live APIs without rebuilding the UI architecture.
+## Privacy
 
-## Production quality
+Bulk analytics must not expose exact birthdate, street address, phone, email, emergency-contact values, or medical-alert contents. Member details should be masked by default. Full PII may only be enabled explicitly on an authenticated internal deployment.
 
-Keep components typed, avoid unsafe browser-only logic in Server Components, isolate the interactive dashboard behind `use client`, use API routes for detail retrieval, and make the project directly deployable after dependencies are installed. Include documentation that explicitly warns against publicly deploying the supplied member data without authentication and authorization.
+## Motion
 
-
-## v3 non-negotiable interaction rule
-Every visible metric, chart mark, legend item, cohort count, status badge, membership badge, completeness value, ranking row, and member row that implies underlying records must be interactive. Clicking it opens the corresponding cohort explorer, applies/focuses the relevant filter, opens the person detail drawer, or reveals contextual explanation.
+Use motion aggressively only when it teaches the interface: count transitions after range/filter changes, shared tab indicator, drawer transitions, chart entry, layout reflow, progressive bars, hover affordances on clickable regions, row insertion/reordering, and collapsible detail history. Respect `prefers-reduced-motion`.

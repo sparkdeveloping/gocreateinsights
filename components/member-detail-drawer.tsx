@@ -138,6 +138,10 @@ export default function MemberDetailDrawer({ memberId, onClose }: Props) {
                     <DetailItem label="Model release" value={detail.modelReleaseGranted === null ? "Unknown" : detail.modelReleaseGranted ? "Granted" : "Not granted"} />
                     <DetailItem label="Signature" value={detail.application.signaturePresent ? <span className="inline-good"><CheckIcon /> Present</span> : "Not recorded"} />
                     <DetailItem label="Assistance" value={detail.assistanceRequested ? "Requested" : "Not requested"} />
+                    {detail.assistanceReason && <DetailItem label="Assistance reason" value={detail.assistanceReason} />}
+                    {detail.smallBusinessReference && <DetailItem label="Business signal" value={detail.smallBusinessLabels.join(", ") || "Detected"} />}
+                    {detail.nonprofitReference && <DetailItem label="Nonprofit / org signal" value={detail.nonprofitLabels.join(", ") || "Detected"} />}
+                    {detail.reducedRateReference && <DetailItem label="Reduced-rate signal" value={detail.reducedRateLabels.join(", ") || "Detected"} />}
                     <DetailItem label="Badge ID" value={detail.application.badgeId} muted={detail.piiMode === "masked"} />
                   </div>
 

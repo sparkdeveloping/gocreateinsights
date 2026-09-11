@@ -100,9 +100,14 @@ export default function ExplorerDrawer({ query, mode, members, applications, loa
         name: m.displayName,
         membership_status: m.membershipStatus,
         membership_type: m.membershipType,
+        membership_submitted: m.membershipSubmittedAt,
         visits: m.visitsInRange,
         guests: m.hostedGuestsInRange,
         student_affiliation: m.studentAffiliation,
+        membership_assistance: m.assistanceRequested ? "yes" : "no",
+        small_business_reference: m.smallBusinessReference ? "yes" : "no",
+        nonprofit_reference: m.nonprofitReference ? "yes" : "no",
+        reduced_rate_reference: m.reducedRateReference ? "yes" : "no",
         data_quality: m.dataQualityStatus,
         application_details: m.hasApplicationDetails ? "yes" : "no",
       })));
@@ -114,6 +119,10 @@ export default function ExplorerDrawer({ query, mode, members, applications, loa
         application_status: a.applicationStatus,
         model_release: a.modelReleaseGranted === null ? "unknown" : a.modelReleaseGranted ? "granted" : "not granted",
         assistance: a.assistanceRequested ? "yes" : "no",
+        assistance_reason: a.assistanceReason,
+        small_business_reference: a.smallBusinessReference ? "yes" : "no",
+        nonprofit_reference: a.nonprofitReference ? "yes" : "no",
+        reduced_rate_reference: a.reducedRateReference ? "yes" : "no",
         matched_to_master: a.isMatchedToMaster ? "yes" : "no",
         age_band: a.ageBand,
         city: a.homeCity,
@@ -210,6 +219,12 @@ export default function ExplorerDrawer({ query, mode, members, applications, loa
                       <div className="explorer-row-main">
                         <strong>{member.displayName}</strong>
                         <span>{humanize(member.membershipStatus)} · {member.membershipType}</span>
+                        {(member.assistanceRequested || member.smallBusinessReference || member.nonprofitReference || member.reducedRateReference) && <div className="row-signal-tags">
+                          {member.assistanceRequested && <em className="signal-tag assistance">Assistance</em>}
+                          {member.smallBusinessReference && <em className="signal-tag">Business</em>}
+                          {member.nonprofitReference && <em className="signal-tag ink">Nonprofit / org</em>}
+                          {member.reducedRateReference && <em className="signal-tag yellow">Reduced rate</em>}
+                        </div>}
                       </div>
                       <div className="row-metrics">
                         <span>{member.visitsInRange} visits</span>
@@ -237,6 +252,12 @@ export default function ExplorerDrawer({ query, mode, members, applications, loa
                       <div className="explorer-row-main">
                         <strong>{application.memberName}</strong>
                         <span>{application.membershipType}</span>
+                        {(application.assistanceRequested || application.smallBusinessReference || application.nonprofitReference || application.reducedRateReference) && <div className="row-signal-tags">
+                          {application.assistanceRequested && <em className="signal-tag assistance">Assistance</em>}
+                          {application.smallBusinessReference && <em className="signal-tag">Business</em>}
+                          {application.nonprofitReference && <em className="signal-tag ink">Nonprofit / org</em>}
+                          {application.reducedRateReference && <em className="signal-tag yellow">Reduced rate</em>}
+                        </div>}
                       </div>
                       <div className="row-metrics">
                         <span>{application.applicationStatus}</span>

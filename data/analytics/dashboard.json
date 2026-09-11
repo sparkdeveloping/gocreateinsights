@@ -1,7 +1,7 @@
 {
   "meta": {
-    "generatedAt": "2026-09-10T18:03:07+00:00",
-    "dataAsOf": "2026-09-10",
+    "generatedAt": "2026-09-11T15:59:53+00:00",
+    "dataAsOf": "2026-09-11",
     "masterFile": "gocreate-master-2026-09-09.csv",
     "enrichmentFile": "gocreate_membership_details.xlsx",
     "masterRows": 2383,
@@ -11,7 +11,14 @@
     "matchedApplications": 350,
     "distinctEnrichedMembers": 345,
     "unmatchedApplications": 9,
-    "enrichmentCoveragePercent": 97.5
+    "enrichmentCoveragePercent": 97.5,
+    "masterSubmissionMin": "2024-01-16",
+    "masterSubmissionMax": "2026-09-05",
+    "applicationSubmissionMin": "2024-02-20",
+    "applicationSubmissionMax": "2026-09-09",
+    "visitObservationMin": "2026-08-03",
+    "visitObservationMax": "2026-09-09",
+    "assistanceReasonRows": 0
   },
   "overview": {
     "masterMembers": 2383,

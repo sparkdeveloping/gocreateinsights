@@ -24,6 +24,7 @@ import GoCreateMark from "@/components/gocreate-mark";
 import {
   AlertIcon,
   ApplicationsIcon,
+  CalendarIcon,
   ArrowUpRightIcon,
   CheckIcon,
   ChevronRightIcon,
@@ -38,11 +39,14 @@ import {
   OverviewIcon,
   PeopleIcon,
   QualityIcon,
+  ReportIcon,
   RefreshIcon,
   SearchIcon,
 } from "@/components/icons";
 import MemberDetailDrawer from "@/components/member-detail-drawer";
+import KochReport from "@/components/koch-report";
 import { q, visitFrequency } from "@/lib/explore";
+import { defaultAllRange, inDateRange, kochRange, last90DaysRange, memberReportingDate, rangeLabel, yearRange, type DateRange } from "@/lib/reporting";
 import { formatDate, formatNumber, humanize, pluralize } from "@/lib/format";
 import type {
   ApplicationSummary,
@@ -69,6 +73,7 @@ const tabs: Array<{ id: DashboardTab; label: string; description: string; Icon: 
   { id: "engagement", label: "Engagement", description: "Visits and guest activity", Icon: EngagementIcon },
   { id: "applications", label: "Applications", description: "Application detail and history", Icon: ApplicationsIcon },
   { id: "people", label: "People", description: "Age, location and affiliation", Icon: PeopleIcon },
+  { id: "report", label: "Koch report", description: "Leadership reporting and PDF export", Icon: ReportIcon },
   { id: "quality", label: "Data quality", description: "Coverage and missing fields", Icon: QualityIcon },
   { id: "members", label: "Members", description: "Search every person", Icon: MembersIcon },
 ];
@@ -335,26 +340,84 @@ function DashboardFilters({
   );
 }
 
+function DateRangeBar({
+  bootstrap,
+  range,
+  setRange,
+  memberCount,
+  applicationCount,
+}: {
+  bootstrap: DashboardBootstrap;
+  range: DateRange;
+  setRange: React.Dispatch<React.SetStateAction<DateRange>>;
+  memberCount: number;
+  applicationCount: number;
+}) {
+  const presets = [
+    { id: "all", label: "All time", get: () => defaultAllRange(bootstrap) },
+    { id: "koch", label: "Sep 2025 → now", get: () => kochRange(bootstrap) },
+    { id: "year", label: `${bootstrap.meta.dataAsOf.slice(0, 4)} YTD`, get: () => yearRange(bootstrap) },
+    { id: "90d", label: "Last 90 days", get: () => last90DaysRange(bootstrap) },
+  ] as const;
+
+  function updateBoundary(key: "from" | "to", value: string) {
+    setRange((current) => {
+      const next = { ...current, [key]: value, preset: "custom" as const };
+      if (next.from > next.to) {
+        if (key === "from") next.to = value;
+        else next.from = value;
+      }
+      return next;
+    });
+  }
+
+  return (
+    <motion.section className="date-range-bar" layout>
+      <div className="date-range-title"><CalendarIcon /><div><strong>Reporting range</strong><span>{rangeLabel(range)}</span></div></div>
+      <div className="date-presets soft-scrollbar">
+        {presets.map((preset) => <button key={preset.id} className={cn("date-preset", range.preset === preset.id && "active")} onClick={() => setRange(preset.get())}>{preset.label}</button>)}
+      </div>
+      <div className="date-inputs">
+        <label><span>From</span><input type="date" value={range.from} max={range.to} onChange={(event: any) => updateBoundary("from", event.target.value)} /></label>
+        <span className="date-arrow">→</span>
+        <label><span>To</span><input type="date" value={range.to} min={range.from} max={bootstrap.meta.dataAsOf} onChange={(event: any) => updateBoundary("to", event.target.value)} /></label>
+      </div>
+      <div className="date-scope-summary" title="The selected range is applied to the dashboard">
+        <strong>{formatNumber(memberCount)}</strong><span>people</span><i />
+        <strong>{formatNumber(applicationCount)}</strong><span>applications</span>
+      </div>
+    </motion.section>
+  );
+}
+
 function OverviewTab({
   bootstrap,
   members,
+  applications,
   statusData,
   typeData,
   openExplore,
   loading,
+  scoped,
 }: {
   bootstrap: DashboardBootstrap;
   members: MemberSummary[];
+  applications: ApplicationSummary[];
   statusData: DistributionPoint[];
   typeData: DistributionPoint[];
   openExplore: (query: ExploreQuery, mode?: ExploreMode) => void;
   loading: boolean;
+  scoped: boolean;
 }) {
-  const approved = members.length ? members.filter((m) => m.membershipStatus === "approved").length : bootstrap.overview.approvedMembers;
-  const engaged = members.length ? members.filter((m) => m.visitsInRange > 0).length : bootstrap.overview.engagedMembers;
-  const applicationPeople = members.length ? members.filter((m) => m.hasApplicationDetails).length : bootstrap.meta.distinctEnrichedMembers + bootstrap.meta.unmatchedApplications;
-  const quarantined = members.length ? members.filter((m) => m.dataQualityStatus === "quarantined").length : bootstrap.overview.quarantinedRecords;
-  const master = members.length ? members.filter((m) => m.isMasterMember).length : bootstrap.meta.masterRows;
+  const useRows = scoped || members.length > 0;
+  const approved = useRows ? members.filter((m) => m.membershipStatus === "approved").length : bootstrap.overview.approvedMembers;
+  const engaged = useRows ? members.filter((m) => m.visitsInRange > 0).length : bootstrap.overview.engagedMembers;
+  const applicationPeople = useRows ? new Set(applications.map((a) => a.memberId || a.id)).size : bootstrap.meta.distinctEnrichedMembers + bootstrap.meta.unmatchedApplications;
+  const applicationRows = useRows ? applications.length : bootstrap.meta.applicationRows;
+  const unmatchedApplications = useRows ? applications.filter((a) => !a.isMatchedToMaster).length : bootstrap.meta.unmatchedApplications;
+  const observedVisits = useRows ? members.reduce((sum, member) => sum + member.visitsInRange, 0) : bootstrap.overview.observedVisits;
+  const quarantined = useRows ? members.filter((m) => m.dataQualityStatus === "quarantined").length : bootstrap.overview.quarantinedRecords;
+  const master = useRows ? members.filter((m) => m.isMasterMember).length : bootstrap.meta.masterRows;
 
   return (
     <div className="tab-stack">
@@ -362,8 +425,8 @@ function OverviewTab({
       <div className="metric-grid six">
         <MetricCard label="Master members" value={master} detail="Current member records in the master source" onClick={() => openExplore(q("master", "Master members", "All people represented by the master membership source."))} tone="ink" helper="Open all records" />
         <MetricCard label="Approved members" value={approved} detail="Approved status in the current master source" onClick={() => openExplore(q("membership-status", "Approved members", "People whose master membership status is approved.", "approved"))} helper="See exactly who" />
-        <MetricCard label="Members with visits" value={engaged} detail={`${formatNumber(bootstrap.overview.observedVisits)} observed visits in the source window`} onClick={() => openExplore(q("engaged", "Members with observed visits", "People with at least one visit in the current source window."))} tone="yellow" helper="Inspect activity" />
-        <MetricCard label="Application rows" value={bootstrap.meta.applicationRows} detail={`${bootstrap.meta.distinctEnrichedMembers} distinct master members have enrichment`} onClick={() => openExplore(q("application-details", "Application records", "Every enriched application row in the uploaded workbook."), "applications")} helper="Open application rows" />
+        <MetricCard label="Members with visits" value={engaged} detail={`${formatNumber(observedVisits)} observed visits in the source window`} onClick={() => openExplore(q("engaged", "Members with observed visits", "People with at least one visit in the current source window."))} tone="yellow" helper="Inspect activity" />
+        <MetricCard label="Application rows" value={applicationRows} detail={`${formatNumber(applicationPeople)} distinct people represented`} onClick={() => openExplore(q("application-details", "Application records", "Every enriched application row in the uploaded workbook."), "applications")} helper="Open application rows" />
         <MetricCard label="People with app detail" value={applicationPeople} detail="Distinct people with at least one attached application" onClick={() => openExplore(q("application-details", "People with application detail", "Distinct people with an application record attached to their profile."))} tone="ink" helper="Open people" />
         <MetricCard label="Quality attention" value={quarantined} detail="Master records marked quarantined" onClick={() => openExplore(q("data-quality", "Records needing data-quality attention", "Master records currently marked quarantined.", "quarantined"))} tone="red" helper="Review queue" />
       </div>
@@ -379,20 +442,23 @@ function OverviewTab({
 
       <ChartPanel eyebrow="Where to look" title="Three useful next clicks" note={loading ? "Underlying record lists are loading; server-rendered totals are already available." : "These are derived from the current source, not generated recommendations."}>
         <div className="insight-list">
-          <InsightRow title="Expired membership records" copy="A large expired population is the fastest way to understand lifecycle shape." count={formatNumber((statusData.find((d) => d.name === "expired")?.value ?? bootstrap.membershipStatus.find((d) => d.name === "expired")?.value) || 0)} onClick={() => openExplore(q("membership-status", "Expired membership records", "People whose master membership status is expired.", "expired"))} tone="ink" />
+          <InsightRow title="Expired membership records" copy="A large expired population is the fastest way to understand lifecycle shape." count={formatNumber(scoped ? (statusData.find((d) => d.name === "expired")?.value ?? 0) : ((statusData.find((d) => d.name === "expired")?.value ?? bootstrap.membershipStatus.find((d) => d.name === "expired")?.value) || 0))} onClick={() => openExplore(q("membership-status", "Expired membership records", "People whose master membership status is expired.", "expired"))} tone="ink" />
           <InsightRow title="Quarantined source records" copy="These are separated from reportable records so quality work does not get hidden inside totals." count={formatNumber(quarantined)} onClick={() => openExplore(q("data-quality", "Quarantined records", "People marked quarantined in the master source.", "quarantined"))} tone="red" />
-          <InsightRow title="Application rows not matched to master" copy="Useful reconciliation queue: the workbook contains an application but no exact email/name master match." count={formatNumber(bootstrap.meta.unmatchedApplications)} onClick={() => openExplore(q("application-match", "Unmatched application rows", "Application records that did not match a master member by exact email or normalized name.", false), "applications")} tone="yellow" />
+          <InsightRow title="Application rows not matched to master" copy="Useful reconciliation queue: the workbook contains an application but no exact email/name master match." count={formatNumber(unmatchedApplications)} onClick={() => openExplore(q("application-match", "Unmatched application rows", "Application records that did not match a master member by exact email or normalized name.", false), "applications")} tone="yellow" />
         </div>
       </ChartPanel>
     </div>
   );
 }
 
-function MembershipTab({ members, statusData, typeData, openExplore }: { members: MemberSummary[]; statusData: DistributionPoint[]; typeData: DistributionPoint[]; openExplore: (query: ExploreQuery, mode?: ExploreMode) => void }) {
+function MembershipTab({ members, applications, statusData, typeData, openExplore }: { members: MemberSummary[]; applications: ApplicationSummary[]; statusData: DistributionPoint[]; typeData: DistributionPoint[]; openExplore: (query: ExploreQuery, mode?: ExploreMode) => void }) {
   const pending = statusData.find((d) => d.name === "pending")?.value ?? 0;
   const expired = statusData.find((d) => d.name === "expired")?.value ?? 0;
   const approved = statusData.find((d) => d.name === "approved")?.value ?? 0;
   const staff = statusData.find((d) => d.name === "staff")?.value ?? 0;
+  const assistanceApps = applications.filter((application) => application.assistanceRequested);
+  const assistancePeople = new Set(assistanceApps.map((application) => application.memberId || application.id)).size;
+  const reducedRateRefs = applications.filter((application) => application.reducedRateReference).length;
   return (
     <div className="tab-stack">
       <PageIntro eyebrow="Membership" title="Understand the lifecycle, then open the people" copy="Status and membership-type charts are fully cross-filterable. Click a count, bar, donut slice or legend line to inspect the matching members." />
@@ -401,6 +467,11 @@ function MembershipTab({ members, statusData, typeData, openExplore }: { members
         <MetricCard label="Pending" value={pending} detail="Current pending master status" onClick={() => openExplore(q("membership-status", "Pending members", "Members with pending status.", "pending"))} tone="yellow" />
         <MetricCard label="Expired" value={expired} detail="Current expired master status" onClick={() => openExplore(q("membership-status", "Expired members", "Members with expired status.", "expired"))} tone="ink" />
         <MetricCard label="Staff" value={staff} detail="Staff status in the master source" onClick={() => openExplore(q("staff", "Staff records", "People marked as staff or employee in the available source."))} tone="ink" />
+      </div>
+      <div className="membership-overlay-strip">
+        <button onClick={() => openExplore(q("assistance", "Membership assistance", "Membership-assistance applications inside the selected reporting range."), "applications")}><span className="overlay-dot yellow" /><div><span>Membership assistance</span><strong>{formatNumber(assistancePeople)} people · {formatNumber(assistanceApps.length)} application {pluralize(assistanceApps.length, "row")}</strong></div><ChevronRightIcon /></button>
+        <button onClick={() => openExplore(q("reduced-rate-reference", "Quilters / reduced-rate references", "Application rows with explicit quilter or reduced-rate wording."), "applications")}><span className="overlay-dot blue" /><div><span>Quilters / reduced-rate</span><strong>{formatNumber(reducedRateRefs)} explicit {pluralize(reducedRateRefs, "reference")}</strong></div><ChevronRightIcon /></button>
+        <div className="overlay-explain"><InfoIcon /><span>These application pathways are denoted alongside membership rather than treated as a separate database.</span></div>
       </div>
       <div className="two-column">
         <ChartPanel eyebrow="Status" title="Membership status" note="Horizontal bars preserve full status labels.">
@@ -417,7 +488,7 @@ function MembershipTab({ members, statusData, typeData, openExplore }: { members
   );
 }
 
-function EngagementTab({ bootstrap, members, openExplore, openMember }: { bootstrap: DashboardBootstrap; members: MemberSummary[]; openExplore: (query: ExploreQuery, mode?: ExploreMode) => void; openMember: (id: string) => void }) {
+function EngagementTab({ bootstrap, members, openExplore, openMember, scoped }: { bootstrap: DashboardBootstrap; members: MemberSummary[]; openExplore: (query: ExploreQuery, mode?: ExploreMode) => void; openMember: (id: string) => void; scoped: boolean }) {
   const visitData = countBy(members, (m) => visitFrequency(m.visitsInRange));
   const orderedBuckets = ["0 visits", "1 visit", "2–4 visits", "5–9 visits", "10+ visits"].map((name) => visitData.find((item) => item.name === name) ?? { name, value: 0 });
   const engaged = members.filter((m) => m.visitsInRange > 0);
@@ -430,9 +501,9 @@ function EngagementTab({ bootstrap, members, openExplore, openMember }: { bootst
     <div className="tab-stack">
       <PageIntro eyebrow="Engagement" title="Observed activity without overstating the data" copy="The source currently records a limited activity window. The interface separates members with activity from total visit events so the counts stay interpretable." />
       <div className="metric-grid four">
-        <MetricCard label="Members with visits" value={engaged.length || bootstrap.overview.engagedMembers} detail="At least one observed visit" onClick={() => openExplore(q("engaged", "Members with observed visits", "People with at least one visit in the available activity window."))} />
-        <MetricCard label="Observed visits" value={visits || bootstrap.overview.observedVisits} detail="Visit events across the current people scope" onClick={() => openExplore(q("engaged", "People behind observed visits", "Members who account for the observed visit events."))} tone="yellow" helper="Opens contributing members" />
-        <MetricCard label="Hosted guests" value={guests || bootstrap.overview.hostedGuests} detail="Guest activity recorded in the current source" onClick={() => openExplore(q("engaged", "Members with activity", "Members in the current activity population; guest counts are shown on each record."))} tone="ink" />
+        <MetricCard label="Members with visits" value={scoped ? engaged.length : (engaged.length || bootstrap.overview.engagedMembers)} detail="At least one observed visit" onClick={() => openExplore(q("engaged", "Members with observed visits", "People with at least one visit in the available activity window."))} />
+        <MetricCard label="Observed visits" value={scoped ? visits : (visits || bootstrap.overview.observedVisits)} detail="Visit events across the current people scope" onClick={() => openExplore(q("engaged", "People behind observed visits", "Members who account for the observed visit events."))} tone="yellow" helper="Opens contributing members" />
+        <MetricCard label="Hosted guests" value={scoped ? guests : (guests || bootstrap.overview.hostedGuests)} detail="Guest activity recorded in the current source" onClick={() => openExplore(q("engaged", "Members with activity", "Members in the current activity population; guest counts are shown on each record."))} tone="ink" />
         <MetricCard label="Visits per engaged member" value={average} formatter={(value) => value.toFixed(1)} detail="Average among people with at least one visit" onClick={() => openExplore(q("engaged", "Engaged members", "The population used to calculate average visits per engaged member."))} tone="ink" />
       </div>
       <div className="two-column wide-left">
@@ -463,19 +534,21 @@ function EngagementTab({ bootstrap, members, openExplore, openMember }: { bootst
   );
 }
 
-function ApplicationsTab({ bootstrap, applications, openExplore }: { bootstrap: DashboardBootstrap; applications: ApplicationSummary[]; openExplore: (query: ExploreQuery, mode?: ExploreMode) => void }) {
-  const typeData = applications.length ? countBy(applications, (a) => a.membershipType) : bootstrap.applicationMembershipType;
-  const statusData = applications.length ? countBy(applications, (a) => a.applicationStatus) : bootstrap.applicationStatus;
-  const model = applications.length ? [
+function ApplicationsTab({ bootstrap, applications, openExplore, scoped }: { bootstrap: DashboardBootstrap; applications: ApplicationSummary[]; openExplore: (query: ExploreQuery, mode?: ExploreMode) => void; scoped: boolean }) {
+  const useRows = scoped || applications.length > 0;
+  const typeData = useRows ? countBy(applications, (a) => a.membershipType) : bootstrap.applicationMembershipType;
+  const statusData = useRows ? countBy(applications, (a) => a.applicationStatus) : bootstrap.applicationStatus;
+  const model = useRows ? [
     { name: "Granted", value: applications.filter((a) => a.modelReleaseGranted === true).length },
     { name: "Not granted", value: applications.filter((a) => a.modelReleaseGranted === false).length },
   ] : bootstrap.modelRelease;
-  const signed = applications.length ? applications.filter((a) => a.signaturePresent).length : bootstrap.overview.signedApplications;
-  const assistance = applications.length ? applications.filter((a) => a.assistanceRequested).length : bootstrap.overview.assistanceRequests;
-  const matched = applications.length ? applications.filter((a) => a.isMatchedToMaster).length : bootstrap.meta.matchedApplications;
+  const signed = useRows ? applications.filter((a) => a.signaturePresent).length : bootstrap.overview.signedApplications;
+  const assistance = useRows ? applications.filter((a) => a.assistanceRequested).length : bootstrap.overview.assistanceRequests;
+  const matched = useRows ? applications.filter((a) => a.isMatchedToMaster).length : bootstrap.meta.matchedApplications;
+  const matchCoverage = useRows ? (applications.length ? Math.round((matched / applications.length) * 1000) / 10 : 0) : bootstrap.meta.enrichmentCoveragePercent;
 
   const monthly = useMemo(() => {
-    if (!applications.length) return bootstrap.submissionTimeline;
+    if (!applications.length) return scoped ? [] : bootstrap.submissionTimeline;
     const map = new Map<string, number>();
     applications.forEach((a) => {
       if (!a.submittedAt) return;
@@ -483,15 +556,15 @@ function ApplicationsTab({ bootstrap, applications, openExplore }: { bootstrap: 
       map.set(key, (map.get(key) ?? 0) + 1);
     });
     return [...map.entries()].sort(([a], [b]) => a.localeCompare(b)).map(([month, value]) => ({ month, label: new Date(`${month}-01T12:00:00`).toLocaleDateString("en-US", { month: "short", year: "numeric" }), value }));
-  }, [applications, bootstrap.submissionTimeline]);
+  }, [applications, bootstrap.submissionTimeline, scoped]);
 
   return (
     <div className="tab-stack">
       <PageIntro eyebrow="Applications" title="Application detail as a real operational layer" copy="Application rows remain separate from people so repeat submissions are preserved as history. Click any metric or chart segment to inspect the exact application rows behind it." />
       <div className="metric-grid six">
-        <MetricCard label="Application rows" value={applications.length || bootstrap.meta.applicationRows} detail="Rows in the uploaded detail workbook" onClick={() => openExplore(q("application-details", "All application rows", "Every application row in the uploaded workbook."), "applications")} />
-        <MetricCard label="Matched to master" value={matched} detail={`${bootstrap.meta.enrichmentCoveragePercent}% of application rows`} onClick={() => openExplore(q("application-match", "Applications matched to master", "Application rows matched to a master member by exact email or normalized name.", true), "applications")} tone="ink" />
-        <MetricCard label="Unmatched rows" value={(applications.length ? applications.filter((a) => !a.isMatchedToMaster).length : bootstrap.meta.unmatchedApplications)} detail="Reconciliation queue" onClick={() => openExplore(q("application-match", "Unmatched application rows", "Application rows that currently have no exact master-member match.", false), "applications")} tone="yellow" />
+        <MetricCard label="Application rows" value={useRows ? applications.length : bootstrap.meta.applicationRows} detail="Rows in the uploaded detail workbook" onClick={() => openExplore(q("application-details", "All application rows", "Every application row in the uploaded workbook."), "applications")} />
+        <MetricCard label="Matched to master" value={matched} detail={`${matchCoverage}% of application rows`} onClick={() => openExplore(q("application-match", "Applications matched to master", "Application rows matched to a master member by exact email or normalized name.", true), "applications")} tone="ink" />
+        <MetricCard label="Unmatched rows" value={(useRows ? applications.filter((a) => !a.isMatchedToMaster).length : bootstrap.meta.unmatchedApplications)} detail="Reconciliation queue" onClick={() => openExplore(q("application-match", "Unmatched application rows", "Application rows that currently have no exact master-member match.", false), "applications")} tone="yellow" />
         <MetricCard label="Model release granted" value={model.find((m) => m.name === "Granted")?.value ?? 0} detail="Consent field in application rows" onClick={() => openExplore(q("model-release", "Model release granted", "Application rows where model-release permission is granted.", true), "applications")} />
         <MetricCard label="Signed applications" value={signed} detail="Signature-present flag is recorded" onClick={() => openExplore(q("signature", "Signed application rows", "Application rows with a signature-present flag.", true), "applications")} tone="ink" />
         <MetricCard label="Assistance requests" value={assistance} detail="Membership-assistance pathway" onClick={() => openExplore(q("assistance", "Membership assistance requests", "Application rows that use the membership-assistance pathway."), "applications")} tone="yellow" />
@@ -531,17 +604,18 @@ function ApplicationsTab({ bootstrap, applications, openExplore }: { bootstrap: 
   );
 }
 
-function PeopleTab({ bootstrap, members, applications, openExplore }: { bootstrap: DashboardBootstrap; members: MemberSummary[]; applications: ApplicationSummary[]; openExplore: (query: ExploreQuery, mode?: ExploreMode) => void }) {
-  const ageData = applications.length ? countBy(applications, (a) => a.ageBand ?? "Unknown") : bootstrap.ageBands;
-  const stateData = applications.length ? countBy(applications, (a) => a.homeState ?? "Unknown") : bootstrap.homeStates;
-  const cityData = applications.length ? countBy(applications, (a) => a.homeCity ?? "Unknown") : bootstrap.homeCities;
-  const affiliationData = members.length ? countBy(members.filter((m) => m.isMasterMember), (m) => m.studentAffiliation) : bootstrap.studentAffiliation;
-  const applicationPeople = new Set(applications.map((a) => a.memberId).filter(Boolean)).size || bootstrap.meta.distinctEnrichedMembers + bootstrap.meta.unmatchedApplications;
+function PeopleTab({ bootstrap, members, applications, openExplore, scoped }: { bootstrap: DashboardBootstrap; members: MemberSummary[]; applications: ApplicationSummary[]; openExplore: (query: ExploreQuery, mode?: ExploreMode) => void; scoped: boolean }) {
+  const useRows = scoped || applications.length > 0;
+  const ageData = useRows ? countBy(applications, (a) => a.ageBand ?? "Unknown") : bootstrap.ageBands;
+  const stateData = useRows ? countBy(applications, (a) => a.homeState ?? "Unknown") : bootstrap.homeStates;
+  const cityData = useRows ? countBy(applications, (a) => a.homeCity ?? "Unknown") : bootstrap.homeCities;
+  const affiliationData = (scoped || members.length) ? countBy(members.filter((m) => m.isMasterMember), (m) => m.studentAffiliation) : bootstrap.studentAffiliation;
+  const applicationPeople = useRows ? new Set(applications.map((a) => a.memberId || a.id)).size : bootstrap.meta.distinctEnrichedMembers + bootstrap.meta.unmatchedApplications;
   return (
     <div className="tab-stack">
       <PageIntro eyebrow="People" title="Demographic and location context, without exposing raw PII" copy="Age bands and location aggregates come from the application workbook. Exact birthdates and street-level details never appear in the bulk analytics payload." />
       <div className="metric-grid four">
-        <MetricCard label="People with app detail" value={applicationPeople} detail="Distinct people represented by 359 application rows" onClick={() => openExplore(q("application-details", "People with application detail", "Distinct people who have at least one application attached."))} />
+        <MetricCard label="People with app detail" value={applicationPeople} detail={`Distinct people represented by ${formatNumber(useRows ? applications.length : bootstrap.meta.applicationRows)} application rows`} onClick={() => openExplore(q("application-details", "People with application detail", "Distinct people who have at least one application attached."))} />
         <MetricCard label="WSU / WSU Tech affiliation" value={affiliationData.filter((d) => d.name.toLowerCase().includes("wsu")).reduce((s, d) => s + d.value, 0)} detail="Master student-affiliation labels containing WSU" onClick={() => openExplore(q("wsu-affiliation", "WSU / WSU Tech affiliation", "Members whose student-affiliation label includes WSU."))} tone="ink" helper="Open matching people" />
         <MetricCard label="Wichita application rows" value={cityData.find((d) => d.name === "Wichita")?.value ?? 0} detail="Application rows with Wichita as home city" onClick={() => openExplore(q("home-city", "Wichita applications", "Application rows with Wichita as the normalized home city.", "Wichita"), "applications")} tone="yellow" />
         <MetricCard label="Kansas application rows" value={stateData.find((d) => d.name === "KS")?.value ?? 0} detail="Application rows with KS as home state" onClick={() => openExplore(q("home-state", "Kansas application rows", "Application rows with KS as the normalized home state.", "KS"), "applications")} tone="ink" />
@@ -581,26 +655,36 @@ function CompletenessRow({ item, openExplore }: { item: FieldCompleteness; openE
   );
 }
 
-function QualityTab({ bootstrap, members, openExplore, openMember }: { bootstrap: DashboardBootstrap; members: MemberSummary[]; openExplore: (query: ExploreQuery, mode?: ExploreMode) => void; openMember: (id: string) => void }) {
-  const reportable = members.length ? members.filter((m) => m.dataQualityStatus === "reportable").length : bootstrap.meta.masterRows - bootstrap.overview.quarantinedRecords;
-  const quarantined = members.length ? members.filter((m) => m.dataQualityStatus === "quarantined").length : bootstrap.overview.quarantinedRecords;
+function QualityTab({ bootstrap, members, applications, openExplore, openMember, scoped }: { bootstrap: DashboardBootstrap; members: MemberSummary[]; applications: ApplicationSummary[]; openExplore: (query: ExploreQuery, mode?: ExploreMode) => void; openMember: (id: string) => void; scoped: boolean }) {
+  const useRows = scoped || members.length > 0;
+  const reportable = useRows ? members.filter((m) => m.dataQualityStatus === "reportable").length : bootstrap.meta.masterRows - bootstrap.overview.quarantinedRecords;
+  const quarantined = useRows ? members.filter((m) => m.dataQualityStatus === "quarantined").length : bootstrap.overview.quarantinedRecords;
+  const useApplications = scoped || applications.length > 0;
+  const matchedApplications = useApplications ? applications.filter((a) => a.isMatchedToMaster).length : bootstrap.meta.matchedApplications;
+  const unmatchedApplications = useApplications ? applications.filter((a) => !a.isMatchedToMaster).length : bootstrap.meta.unmatchedApplications;
+  const completeness = scoped ? bootstrap.fieldCompleteness.filter((item) => item.key !== "medical_alerts").map((item) => {
+    const fieldKey = item.key as keyof ApplicationSummary["fields"];
+    const count = applications.filter((application) => Boolean(application.fields?.[fieldKey])).length;
+    const total = applications.length;
+    return { ...item, count, missing: total - count, total, percent: total ? Math.round((count / total) * 1000) / 10 : 0 };
+  }) : bootstrap.fieldCompleteness;
   return (
     <div className="tab-stack">
       <PageIntro eyebrow="Data quality" title="Coverage that tells you what is missing" copy="Completeness meters are interactive. Select a percentage to see records where the field is present, or use the missing link to open the exact cleanup queue. Sensitive fields stay aggregate-only." />
       <div className="metric-grid four">
         <MetricCard label="Reportable records" value={reportable} detail="Master records currently marked reportable" onClick={() => openExplore(q("data-quality", "Reportable records", "Master records marked reportable.", "reportable"))} />
         <MetricCard label="Quarantined records" value={quarantined} detail="Master records requiring quality attention" onClick={() => openExplore(q("data-quality", "Quarantined records", "Master records marked quarantined.", "quarantined"))} tone="red" />
-        <MetricCard label="Matched application rows" value={bootstrap.meta.matchedApplications} detail={`${bootstrap.meta.enrichmentCoveragePercent}% of uploaded applications`} onClick={() => openExplore(q("application-match", "Matched application rows", "Application rows that matched a master member.", true), "applications")} tone="ink" />
-        <MetricCard label="Unmatched application rows" value={bootstrap.meta.unmatchedApplications} detail="Application-to-master reconciliation queue" onClick={() => openExplore(q("application-match", "Unmatched application rows", "Application rows that have no exact master match.", false), "applications")} tone="yellow" />
+        <MetricCard label="Matched application rows" value={matchedApplications} detail={useApplications && applications.length ? `${Math.round((matchedApplications / applications.length) * 1000) / 10}% of in-range applications` : `${bootstrap.meta.enrichmentCoveragePercent}% of uploaded applications`} onClick={() => openExplore(q("application-match", "Matched application rows", "Application rows that matched a master member.", true), "applications")} tone="ink" />
+        <MetricCard label="Unmatched application rows" value={unmatchedApplications} detail="Application-to-master reconciliation queue" onClick={() => openExplore(q("application-match", "Unmatched application rows", "Application rows that have no exact master match.", false), "applications")} tone="yellow" />
       </div>
-      <ChartPanel eyebrow="Workbook completeness" title="Field coverage across 359 application rows" note="Private field values are not loaded into this screen; only presence/missing flags are available for safe drill-down.">
+      <ChartPanel eyebrow="Workbook completeness" title={`Field coverage across ${formatNumber(scoped ? applications.length : bootstrap.meta.applicationRows)} application rows`} note={scoped ? "Private field values are not loaded here. Medical-alert presence is omitted from date-scoped completeness because that sensitive field remains aggregate-only." : "Private field values are not loaded into this screen; only presence/missing flags are available for safe drill-down."}>
         <div className="completeness-list">
-          {bootstrap.fieldCompleteness.map((item) => <CompletenessRow key={item.key} item={item} openExplore={openExplore} />)}
+          {completeness.map((item) => <CompletenessRow key={item.key} item={item} openExplore={openExplore} />)}
         </div>
       </ChartPanel>
       <ChartPanel eyebrow="Reconciliation" title="Application-only people" note="These applications did not match a master member by exact email or normalized name. Select a row to inspect the public-safe person record." actionLabel="Open all unmatched" onAction={() => openExplore(q("application-match", "Unmatched application rows", "All application rows without an exact master match.", false), "applications")}>
         <div className="unmatched-grid">
-          {bootstrap.unmatchedApplications.map((item) => (
+          {(scoped ? applications.filter((application) => !application.isMatchedToMaster).map((application) => ({ id: application.memberId || application.id, displayName: application.memberName, membershipType: application.membershipType, homeCity: application.homeCity, homeState: application.homeState })) : bootstrap.unmatchedApplications).map((item) => (
             <motion.button key={item.id} className="unmatched-card" onClick={() => openMember(item.id)} whileHover={{ y: -2 }}>
               <div className="member-avatar app">{item.displayName.split(/\s+/).slice(0, 2).map((p) => p[0]).join("")}</div>
               <div><strong>{item.displayName}</strong><span>{item.membershipType}</span><small>{[item.homeCity, item.homeState].filter(Boolean).join(", ") || "Location unavailable"}</small></div>
@@ -641,7 +725,7 @@ function MembersTab({ members, openExplore, openMember }: { members: MemberSumma
               <button className="table-badge" style={{ borderColor: `${statusColor(member.membershipStatus)}55` }} onClick={() => openExplore(q("membership-status", `${humanize(member.membershipStatus)} members`, `Members with ${humanize(member.membershipStatus).toLowerCase()} status.`, member.membershipStatus))}>{humanize(member.membershipStatus)}</button>
               <button className="table-link" onClick={() => openExplore(q("membership-type", member.membershipType, `Members with ${member.membershipType}.`, member.membershipType))}>{member.membershipType}<ChevronRightIcon /></button>
               <button className="activity-cell" onClick={() => member.visitsInRange > 0 ? openExplore(q("visit-frequency", visitFrequency(member.visitsInRange), `Members with ${visitFrequency(member.visitsInRange)}.`, visitFrequency(member.visitsInRange))) : openMember(member.id)}><strong>{member.visitsInRange}</strong><span>visits</span></button>
-              {member.hasApplicationDetails ? <button className="app-badge" onClick={() => openExplore(q("application-details", "People with application detail", "People with at least one attached application."))}>{member.applicationCount} app{member.applicationCount === 1 ? "" : "s"}<ChevronRightIcon /></button> : <button className="quiet-badge" onClick={() => openMember(member.id)}>No app detail</button>}
+              {member.hasApplicationDetails ? <button className={cn("app-badge", member.assistanceRequested && "assistance")} onClick={() => member.assistanceRequested ? openExplore(q("assistance", "Membership assistance", "People with a membership-assistance application in the current scope.")) : openExplore(q("application-details", "People with application detail", "People with at least one attached application."))}>{member.assistanceRequested && <span className="assistance-mini-dot" aria-hidden="true" />}{member.assistanceRequested ? "Assistance" : `${member.applicationCount} app${member.applicationCount === 1 ? "" : "s"}`}<ChevronRightIcon /></button> : <button className="quiet-badge" onClick={() => openMember(member.id)}>No app detail</button>}
               <button className="row-open" onClick={() => openMember(member.id)} aria-label={`Open ${member.displayName}`}><ChevronRightIcon /></button>
             </motion.div>
           ))}
@@ -658,10 +742,11 @@ export default function Dashboard({ bootstrap }: Props) {
   const { members, applications, loading, error } = useRows(bootstrap);
   const [tab, setTab] = useState<DashboardTab>("overview");
   const [filters, setFilters] = useState<FilterState>(EMPTY_FILTERS);
+  const [dateRange, setDateRange] = useState<DateRange>(() => defaultAllRange(bootstrap));
   const [explore, setExplore] = useState<{ query: ExploreQuery; mode: ExploreMode } | null>(null);
   const [memberId, setMemberId] = useState<string | null>(null);
 
-  const filteredMembers = useMemo(() => {
+  const baseFilteredMembers = useMemo(() => {
     const needle = filters.search.trim().toLowerCase();
     return members.filter((member) => {
       if (filters.source === "master" && !member.isMasterMember) return false;
@@ -669,53 +754,93 @@ export default function Dashboard({ bootstrap }: Props) {
       if (filters.status !== "all" && member.membershipStatus !== filters.status) return false;
       if (filters.membershipType !== "all" && member.membershipType !== filters.membershipType) return false;
       if (filters.quality !== "all" && member.dataQualityStatus !== filters.quality) return false;
-      if (needle && !`${member.displayName} ${member.membershipStatus} ${member.membershipType} ${member.studentAffiliation} ${member.homeCity ?? ""} ${member.homeState ?? ""} ${member.applicationMembershipType ?? ""}`.toLowerCase().includes(needle)) return false;
+      if (needle && !`${member.displayName} ${member.membershipStatus} ${member.membershipType} ${member.studentAffiliation} ${member.homeCity ?? ""} ${member.homeState ?? ""} ${member.applicationMembershipType ?? ""} ${member.smallBusinessLabels.join(" ")} ${member.nonprofitLabels.join(" ")} ${member.reducedRateLabels.join(" ")}`.toLowerCase().includes(needle)) return false;
       return true;
     });
   }, [filters, members]);
 
-  const filteredApplications = useMemo(() => {
+  const baseFilteredApplications = useMemo(() => {
     if (!applications.length) return [];
-    const ids = new Set(filteredMembers.map((member) => member.id));
+    const ids = new Set(baseFilteredMembers.map((member) => member.id));
     return applications.filter((app) => app.memberId && ids.has(app.memberId));
-  }, [applications, filteredMembers]);
+  }, [applications, baseFilteredMembers]);
+
+  const dateScopeActive = dateRange.preset !== "all";
+  const filteredMembers = useMemo(() => {
+    if (!dateScopeActive) return baseFilteredMembers;
+    return baseFilteredMembers.filter((member) => inDateRange(memberReportingDate(member), dateRange));
+  }, [baseFilteredMembers, dateRange, dateScopeActive]);
+
+  const filteredApplications = useMemo(() => {
+    if (!dateScopeActive) return baseFilteredApplications;
+    return baseFilteredApplications.filter((application) => inDateRange(application.submittedAt, dateRange));
+  }, [baseFilteredApplications, dateRange, dateScopeActive]);
+
+  // Individual visit history is not present in this export. For a custom range, engagement is
+  // therefore scoped by last observed visit date; the per-person visit count remains the source-window total.
+  const activityMembers = useMemo(() => {
+    const masterRows = baseFilteredMembers.filter((member) => member.isMasterMember);
+    if (!dateScopeActive) return masterRows;
+    return masterRows.filter((member) => inDateRange(member.lastVisitAt, dateRange));
+  }, [baseFilteredMembers, dateRange, dateScopeActive]);
 
   const statusData = useMemo(() => members.length ? countBy(filteredMembers.filter((m) => m.isMasterMember), (m) => m.membershipStatus) : bootstrap.membershipStatus, [bootstrap.membershipStatus, filteredMembers, members.length]);
   const typeData = useMemo(() => members.length ? countBy(filteredMembers.filter((m) => m.isMasterMember), (m) => m.membershipType) : bootstrap.membershipType, [bootstrap.membershipType, filteredMembers, members.length]);
 
-  const activeFilterCount = [filters.search, filters.status !== "all", filters.membershipType !== "all", filters.quality !== "all", filters.source !== "all"].filter(Boolean).length;
+  const filterOnlyCount = [filters.search, filters.status !== "all", filters.membershipType !== "all", filters.quality !== "all", filters.source !== "all"].filter(Boolean).length;
+  const activeFilterCount = filterOnlyCount + (dateScopeActive ? 1 : 0);
   const scopeCount = members.length ? filteredMembers.length : bootstrap.meta.knownPeople;
-  const scopeLabel = activeFilterCount ? `${scopeCount.toLocaleString()} people · ${activeFilterCount} active ${pluralize(activeFilterCount, "filter")}` : `All ${scopeCount.toLocaleString()} known people`;
+  const scopeLabel = `${activeFilterCount ? `${scopeCount.toLocaleString()} people · ${activeFilterCount} active ${pluralize(activeFilterCount, "filter")}` : `All ${scopeCount.toLocaleString()} known people`} · ${rangeLabel(dateRange)}`;
 
   function openExplore(query: ExploreQuery, mode: ExploreMode = "members") {
     setExplore({ query, mode });
   }
 
+  function switchTab(next: DashboardTab) {
+    setTab(next);
+    if (next === "report" && dateRange.preset === "all") setDateRange(kochRange(bootstrap));
+  }
+
   function exportCurrentScope() {
-    const rows = filteredMembers.length ? filteredMembers : members;
+    const rows = filteredMembers.length || dateScopeActive || filterOnlyCount ? filteredMembers : members;
     if (!rows.length) return;
-    const headers = ["name", "membership_status", "membership_type", "visits", "guests", "student_affiliation", "data_quality", "application_details"];
+    const headers = ["name", "membership_status", "membership_type", "membership_submitted", "application_submitted", "visits", "guests", "student_affiliation", "membership_assistance", "small_business_reference", "nonprofit_reference", "reduced_rate_reference", "data_quality"];
     const escape = (value: unknown) => {
       const raw = String(value ?? "");
       return /[",\n]/.test(raw) ? `"${raw.replace(/"/g, '""')}"` : raw;
     };
-    const csv = [headers.join(","), ...rows.map((m) => [m.displayName, m.membershipStatus, m.membershipType, m.visitsInRange, m.hostedGuestsInRange, m.studentAffiliation, m.dataQualityStatus, m.hasApplicationDetails ? "yes" : "no"].map(escape).join(","))].join("\n");
+    const csv = [headers.join(","), ...rows.map((m) => [m.displayName, m.membershipStatus, m.membershipType, m.membershipSubmittedAt, m.applicationSubmittedAt, m.visitsInRange, m.hostedGuestsInRange, m.studentAffiliation, m.assistanceRequested ? "yes" : "no", m.smallBusinessReference ? "yes" : "no", m.nonprofitReference ? "yes" : "no", m.reducedRateReference ? "yes" : "no", m.dataQualityStatus].map(escape).join(","))].join("\n");
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement("a");
     anchor.href = url;
-    anchor.download = "gocreate-current-scope.csv";
+    anchor.download = `gocreate-scope-${dateRange.from}-to-${dateRange.to}.csv`;
     anchor.click();
     URL.revokeObjectURL(url);
   }
 
+  function printKochReport() {
+    const previousTitle = document.title;
+    document.title = `GoCreate Koch Report ${dateRange.from} to ${dateRange.to}`;
+    window.print();
+    window.setTimeout(() => { document.title = previousTitle; }, 250);
+  }
+
+  function showAllAssistance() {
+    setFilters(EMPTY_FILTERS);
+    setDateRange(defaultAllRange(bootstrap));
+    setExplore({ query: q("assistance", "All membership assistance records", "Every membership-assistance application in the uploaded workbook, across all available dates."), mode: "applications" });
+  }
+
+  const scopedApplications = applications.length ? filteredApplications : [];
   const tabContent = {
-    overview: <OverviewTab bootstrap={bootstrap} members={filteredMembers} statusData={statusData} typeData={typeData} openExplore={openExplore} loading={loading} />,
-    membership: <MembershipTab members={filteredMembers.filter((m) => m.isMasterMember)} statusData={statusData} typeData={typeData} openExplore={openExplore} />,
-    engagement: <EngagementTab bootstrap={bootstrap} members={filteredMembers.filter((m) => m.isMasterMember)} openExplore={openExplore} openMember={setMemberId} />,
-    applications: <ApplicationsTab bootstrap={bootstrap} applications={filteredApplications.length || activeFilterCount ? filteredApplications : applications} openExplore={openExplore} />,
-    people: <PeopleTab bootstrap={bootstrap} members={filteredMembers} applications={filteredApplications.length || activeFilterCount ? filteredApplications : applications} openExplore={openExplore} />,
-    quality: <QualityTab bootstrap={bootstrap} members={filteredMembers.filter((m) => m.isMasterMember)} openExplore={openExplore} openMember={setMemberId} />,
+    overview: <OverviewTab bootstrap={bootstrap} members={filteredMembers} applications={scopedApplications} statusData={statusData} typeData={typeData} openExplore={openExplore} loading={loading} scoped={dateScopeActive || filterOnlyCount > 0} />,
+    membership: <MembershipTab members={filteredMembers.filter((m) => m.isMasterMember)} applications={scopedApplications} statusData={statusData} typeData={typeData} openExplore={openExplore} />,
+    engagement: <EngagementTab bootstrap={bootstrap} members={activityMembers} openExplore={openExplore} openMember={setMemberId} scoped={dateScopeActive || filterOnlyCount > 0} />,
+    applications: <ApplicationsTab bootstrap={bootstrap} applications={scopedApplications} openExplore={openExplore} scoped={dateScopeActive || filterOnlyCount > 0} />,
+    people: <PeopleTab bootstrap={bootstrap} members={filteredMembers} applications={scopedApplications} openExplore={openExplore} scoped={dateScopeActive || filterOnlyCount > 0} />,
+    report: <KochReport bootstrap={bootstrap} members={filteredMembers} applications={scopedApplications} range={dateRange} openExplore={openExplore} onPrint={printKochReport} onShowAllAssistance={showAllAssistance} />,
+    quality: <QualityTab bootstrap={bootstrap} members={filteredMembers.filter((m) => m.isMasterMember)} applications={scopedApplications} openExplore={openExplore} openMember={setMemberId} scoped={dateScopeActive || filterOnlyCount > 0} />,
     members: <MembersTab members={filteredMembers} openExplore={openExplore} openMember={setMemberId} />,
   } satisfies Record<DashboardTab, React.ReactNode>;
 
@@ -727,7 +852,8 @@ export default function Dashboard({ bootstrap }: Props) {
           <div className="header-context"><span>Member intelligence</span><small>Data as of {formatDate(bootstrap.meta.dataAsOf)}</small></div>
           <div className="header-actions">
             {loading ? <span className="sync-state"><i /> Loading records</span> : error ? <span className="sync-state error"><AlertIcon /> Data error</span> : <span className="sync-state ready"><CheckIcon /> Records ready</span>}
-            <button className="secondary-button" onClick={() => setTab("quality")}><QualityIcon />Data sources</button>
+            <button className="secondary-button header-report-button" onClick={() => switchTab("report")}><ReportIcon />Koch report</button>
+            <button className="secondary-button" onClick={() => switchTab("quality")}><QualityIcon />Data sources</button>
             <button className="primary-button" onClick={exportCurrentScope} disabled={!members.length}><DownloadIcon />Export scope</button>
           </div>
         </div>
@@ -736,7 +862,7 @@ export default function Dashboard({ bootstrap }: Props) {
       <nav className="tab-nav" aria-label="Dashboard sections">
         <div className="tab-nav-inner soft-scrollbar">
           {tabs.map(({ id, label, description, Icon }) => (
-            <button key={id} className={cn("top-tab", tab === id && "active")} onClick={() => setTab(id)} aria-current={tab === id ? "page" : undefined} title={description}>
+            <button key={id} className={cn("top-tab", tab === id && "active")} onClick={() => switchTab(id)} aria-current={tab === id ? "page" : undefined} title={description}>
               <Icon />
               <span>{label}</span>
               {tab === id && <motion.i className="tab-indicator" layoutId="active-tab" transition={{ type: reduced ? "tween" : "spring", stiffness: 420, damping: 34 }} />}
@@ -746,7 +872,10 @@ export default function Dashboard({ bootstrap }: Props) {
       </nav>
 
       <div className="dashboard-body">
-        <DashboardFilters filters={filters} setFilters={setFilters} members={members} resultCount={scopeCount} onExplore={() => openExplore(q("all", "Current people scope", "Every person matching the current dashboard filters."))} />
+        <DateRangeBar bootstrap={bootstrap} range={dateRange} setRange={setDateRange} memberCount={filteredMembers.length} applicationCount={filteredApplications.length} />
+        <DashboardFilters filters={filters} setFilters={setFilters} members={members} resultCount={scopeCount} onExplore={() => openExplore(q("all", "Current people scope", `Every person matching the current dashboard filters and reporting range (${rangeLabel(dateRange)}).`))} />
+
+        {dateScopeActive && tab === "engagement" && <div className="range-data-caveat"><InfoIcon /><span><strong>Engagement range behavior:</strong> individual historical visit events are not included in the uploaded master file. This tab filters people by their last observed visit date; each displayed visit total is still the source-window total for that person.</span></div>}
 
         <AnimatePresence initial={false} mode="wait">
           <motion.div key={tab} className="tab-content" initial={{ opacity: 0, y: reduced ? 0 : 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: reduced ? 0 : -6 }} transition={{ duration: reduced ? 0.01 : 0.22 }}>
@@ -759,7 +888,7 @@ export default function Dashboard({ bootstrap }: Props) {
         query={explore?.query ?? null}
         mode={explore?.mode ?? "members"}
         members={filteredMembers}
-        applications={filteredApplications.length || activeFilterCount ? filteredApplications : applications}
+        applications={filteredApplications}
         loading={loading}
         contextLabel={scopeLabel}
         onClose={() => setExplore(null)}

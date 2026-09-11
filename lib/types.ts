@@ -46,6 +46,13 @@ export type MemberSummary = {
   signaturePresent: boolean | null;
   applicationSubmittedAt: string | null;
   applicationFields: ApplicationFieldFlags | null;
+  assistanceReason: string | null;
+  smallBusinessReference: boolean;
+  smallBusinessLabels: string[];
+  nonprofitReference: boolean;
+  nonprofitLabels: string[];
+  reducedRateReference: boolean;
+  reducedRateLabels: string[];
 };
 
 export type FieldCompleteness = {
@@ -73,6 +80,13 @@ export type DashboardBootstrap = {
     distinctEnrichedMembers: number;
     unmatchedApplications: number;
     enrichmentCoveragePercent: number;
+    masterSubmissionMin: string | null;
+    masterSubmissionMax: string | null;
+    applicationSubmissionMin: string | null;
+    applicationSubmissionMax: string | null;
+    visitObservationMin: string | null;
+    visitObservationMax: string | null;
+    assistanceReasonRows: number;
   };
   overview: {
     masterMembers: number;
@@ -176,6 +190,13 @@ export type ApplicationSummary = {
   homeState: string | null;
   isMatchedToMaster: boolean;
   fields: ApplicationFieldFlags;
+  assistanceReason: string | null;
+  smallBusinessReference: boolean;
+  smallBusinessLabels: string[];
+  nonprofitReference: boolean;
+  nonprofitLabels: string[];
+  reducedRateReference: boolean;
+  reducedRateLabels: string[];
 };
 
 export type DashboardPayload = { members: MemberSummary[]; applications: ApplicationSummary[] };
@@ -205,7 +226,15 @@ export type ExploreKind =
   | "field-missing"
   | "staff"
   | "wsu-affiliation"
-  | "privacy-info";
+  | "privacy-info"
+  | "business-reference"
+  | "business-reference-label"
+  | "nonprofit-reference"
+  | "nonprofit-reference-label"
+  | "reduced-rate-reference"
+  | "reduced-rate-reference-label"
+  | "assistance-reason"
+  | "koch-wsu";
 
 export type ExploreQuery = {
   id: string;
@@ -224,4 +253,5 @@ export type DashboardTab =
   | "applications"
   | "people"
   | "quality"
+  | "report"
   | "members";
