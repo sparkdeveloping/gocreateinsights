@@ -706,7 +706,7 @@ button:disabled { cursor: not-allowed; opacity: .46; }
   .report-footer { padding-bottom: .12in !important; }
 }
 
-/* v5.5 internal Modified Report */
+/* v5.6 internal Modified Report */
 .modified-report-shell { gap: 22px; }
 .internal-integrity-banner { padding: 11px 14px; border: 1px solid #e8d474; border-radius: 12px; background: #fffaf0; color: #62510f; display: flex; align-items: center; gap: 10px; }
 .internal-integrity-banner > svg { width: 17px; height: 17px; flex: 0 0 auto; }

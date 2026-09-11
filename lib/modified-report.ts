@@ -9,7 +9,7 @@ export const LEGACY_ASSISTANCE_HISTORY = [
 
 export const DEFAULT_MODIFIED_REPORT = {
   reportingYear: "2026",
-  membershipAssistance: 476,
+  membershipAssistance: 84,
   smallBusinesses: 62,
   provenance: "Manual internal reporting override supplied by GoCreate staff on Sep 11, 2026.",
 } as const;

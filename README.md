@@ -1,8 +1,8 @@
-# GoCreate Insights v5.5
+# GoCreate Insights v5.6
 
-GoCreate Insights v5.5 is a strictly light-mode, single-page Next.js operational intelligence application for GoCreate. It combines the master membership export, the latest membership-detail workbook, and the historical paper sign-in archive into one source-aware analytics system without pretending that unlike data sources have the same precision.
+GoCreate Insights v5.6 is a strictly light-mode, single-page Next.js operational intelligence application for GoCreate. It combines the master membership export, the latest membership-detail workbook, and the historical paper sign-in archive into one source-aware analytics system without pretending that unlike data sources have the same precision.
 
-**v5.5 base source refresh:** the newest uploaded workbook (`gocreate_membership_details(5).xlsx`) was welded into the stable project source path. This is a materially larger source than v5.3 (SHA-256 `1df915a3c04456e3c37b58e38d2f2a12ac5b155d67e17558537c90f88ae965b1` versus the prior `2f1c19ce3d275d8628fcab79e94dd391be19c4f2eeebce86f7c9021c9330b98f`). The full generation and manual-attendance reconciliation pipeline was rerun against it.
+**v5.6 base source refresh:** the newest uploaded workbook (`gocreate_membership_details(5).xlsx`) was welded into the stable project source path. This is a materially larger source than v5.3 (SHA-256 `1df915a3c04456e3c37b58e38d2f2a12ac5b155d67e17558537c90f88ae965b1` versus the prior `2f1c19ce3d275d8628fcab79e94dd391be19c4f2eeebce86f7c9021c9330b98f`). The full generation and manual-attendance reconciliation pipeline was rerun against it.
 
 ## What v5 adds
 
@@ -130,16 +130,16 @@ Do not enable full PII on an unauthenticated public deployment. The project incl
 
 See `AUDIT.md` for source/date semantics and `BUILD-BRIEF.md` for the product interaction contract.
 
-## v5.5 — internal Modified Report
+## v5.6 — internal Modified Report
 
-v5.5 adds a separate **Modified report** workspace for internal staff reporting. It is deliberately isolated from imported source data, the standard Koch Report, analytics calculations, and CSV exports.
+v5.6 adds a separate **Modified report** workspace for internal staff reporting. It is deliberately isolated from imported source data, the standard Koch Report, analytics calculations, and CSV exports.
 
 The default manual presentation values are:
 
-- Membership Assistance: **476**
+- Membership Assistance: **84**
 - Small Businesses: **62**
 
-These values are manual overrides, not database-derived statistics. The interface always labels them as manually adjusted and shows the current database-derived comparison alongside them. Staff can change the two values in the internal report UI for the current browser session; nothing is written back to JSON, Excel, CSV, or member records.
+These are internal presentation values. Membership Assistance is now set to **84**, matching the current database-derived all-time Assistance count; Small Businesses remains the staff-supplied presentation value of **62**. The interface keeps the current database-derived comparison alongside both values. Staff can change the two values in the internal report UI for the current browser session; nothing is written back to JSON, Excel, CSV, or member records.
 
 The internal report also includes the legacy figures supplied in `reference/internal-modified-report/legacy-report-history-reference.PNG`. Missing historical values are left blank rather than estimated.
 
@@ -150,5 +150,7 @@ The Modified Report is visible automatically in local development. In production
 ```bash
 GOCREATE_INTERNAL_REPORTS=enabled
 ```
+
+On Vercel, add this exact variable to the **Production** environment and redeploy. The Modified report tab will then be visible in production; if the variable is absent or any other value, it stays hidden in production.
 
 For genuinely staff-only use, enable this only on an authenticated/protected internal Vercel deployment. The environment toggle hides the feature from the normal production navigation but is not itself user authentication.

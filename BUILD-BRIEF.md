@@ -1,4 +1,4 @@
-# GoCreate Insights v5.5 — implementation brief
+# GoCreate Insights v5.6 — implementation brief
 
 Build a strictly light-mode, single-page operational intelligence application for GoCreate using Next.js App Router, React, TypeScript, Tailwind CSS, Framer Motion and Recharts. It must feel like a precise staff reporting tool rather than a generic AI dashboard. Use the supplied official GoCreate assets and restrained blue/yellow/ink colors.
 
@@ -68,6 +68,6 @@ Use motion heavily only when it teaches the interface: count changes after filte
 
 ## Internal Modified Report
 
-Maintain a separate staff-only presentation workspace named **Modified report**. It may accept manual presentation overrides, but manual values must never mutate imports, analytics JSON, member/application records, source-derived Koch Report metrics, or CSV exports. Manual figures must remain visibly identifiable as manually adjusted, including in printed output. The current defaults are 476 Membership Assistance and 62 Small Businesses.
+Maintain a separate staff-only presentation workspace named **Modified report**. It may accept manual presentation overrides, but manual values must never mutate imports, analytics JSON, member/application records, source-derived Koch Report metrics, or CSV exports. Manual figures must remain visibly identifiable as manually adjusted, including in printed output. The current defaults are 84 Membership Assistance and 62 Small Businesses. The Assistance default currently matches the source-derived all-time count; the Small Businesses value remains a manual presentation adjustment.
 
 Production visibility is gated by `GOCREATE_INTERNAL_REPORTS=enabled`; use it only behind an internal/authenticated deployment.

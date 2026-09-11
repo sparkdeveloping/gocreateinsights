@@ -6,4 +6,4 @@
 - Total members: 2024 805; 2025 1,685.
 - Youth served: 2022 1,450; 2023 1,400; 2024 3,200; 2025 3,450.
 
-Missing values are intentionally left blank. The 2026 internal figures (476 Membership Assistance and 62 Small Businesses) are manual reporting overrides supplied by staff and are not derived from the membership database.
+Missing values are intentionally left blank. The 2026 internal working figures are 84 Membership Assistance and 62 Small Businesses. The Assistance value currently matches the database-derived all-time Assistance count; the Small Businesses value is a staff-supplied presentation adjustment.
