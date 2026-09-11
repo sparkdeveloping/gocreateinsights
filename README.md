@@ -1,8 +1,8 @@
-# GoCreate Insights v5.6
+# GoCreate Insights v5.7
 
-GoCreate Insights v5.6 is a strictly light-mode, single-page Next.js operational intelligence application for GoCreate. It combines the master membership export, the latest membership-detail workbook, and the historical paper sign-in archive into one source-aware analytics system without pretending that unlike data sources have the same precision.
+GoCreate Insights v5.7 is a strictly light-mode, single-page Next.js operational intelligence application for GoCreate. It combines the master membership export, the latest membership-detail workbook, and the historical paper sign-in archive into one source-aware analytics system without pretending that unlike data sources have the same precision.
 
-**v5.6 base source refresh:** the newest uploaded workbook (`gocreate_membership_details(5).xlsx`) was welded into the stable project source path. This is a materially larger source than v5.3 (SHA-256 `1df915a3c04456e3c37b58e38d2f2a12ac5b155d67e17558537c90f88ae965b1` versus the prior `2f1c19ce3d275d8628fcab79e94dd391be19c4f2eeebce86f7c9021c9330b98f`). The full generation and manual-attendance reconciliation pipeline was rerun against it.
+**v5.7 base source:** the newest uploaded workbook (`gocreate_membership_details(5).xlsx`) was welded into the stable project source path. This is a materially larger source than v5.3 (SHA-256 `1df915a3c04456e3c37b58e38d2f2a12ac5b155d67e17558537c90f88ae965b1` versus the prior `2f1c19ce3d275d8628fcab79e94dd391be19c4f2eeebce86f7c9021c9330b98f`). The full generation and manual-attendance reconciliation pipeline was rerun against it.
 
 ## What v5 adds
 
@@ -130,18 +130,20 @@ Do not enable full PII on an unauthenticated public deployment. The project incl
 
 See `AUDIT.md` for source/date semantics and `BUILD-BRIEF.md` for the product interaction contract.
 
-## v5.6 — internal Modified Report
+## v5.7 — reporting presentation update
 
-v5.6 adds a separate **Modified report** workspace for internal staff reporting. It is deliberately isolated from imported source data, the standard Koch Report, analytics calculations, and CSV exports.
+The separate **Modified report** workspace remains isolated from imported source data, the standard Koch Report, analytics calculations, and CSV exports. In v5.7 its manual defaults are explicitly scoped to the fixed **Sep. 1, 2025 → data-as-of** reporting window:
 
-The default manual presentation values are:
+- Membership Assistance: **84** for Sep. 1, 2025 → current data-as-of
+- Small Businesses: **62** for Sep. 1, 2025 → current data-as-of
 
-- Membership Assistance: **84**
-- Small Businesses: **62**
+These are period-specific internal presentation values, not all-time totals. The report locks its date controls to that reporting window and compares each adjusted figure only with the database-derived count from the **same period**. With the current source that comparison is 5 database Assistance rows and 0 conservatively detected small-business references in the window. Staff can change the two adjusted values for the current browser session; nothing is written back to JSON, Excel, CSV, imports, Koch Report metrics, or member records.
 
-These are internal presentation values. Membership Assistance is now set to **84**, matching the current database-derived all-time Assistance count; Small Businesses remains the staff-supplied presentation value of **62**. The interface keeps the current database-derived comparison alongside both values. Staff can change the two values in the internal report UI for the current browser session; nothing is written back to JSON, Excel, CSV, or member records.
+The historical 2020–2025 figures supplied in `reference/internal-modified-report/legacy-report-history-reference.PNG` remain a separate legacy-context section. The current-period adjustments are no longer plotted as if they were 2026 annual totals. Missing historical values remain blank rather than estimated.
 
-The internal report also includes the legacy figures supplied in `reference/internal-modified-report/legacy-report-history-reference.PNG`. Missing historical values are left blank rather than estimated.
+### Expired-status presentation
+
+Expired membership/application records remain intact in the source data, private detail payloads and exported source lineage, but v5.7 removes their **aggregate counts from normal presentation surfaces**. The Overview and Membership status charts omit expired-status bars, the Membership KPI row no longer shows an Expired count, the global status selector no longer offers Expired as a default aggregate filter, and the application-status chart omits portal statuses containing “Expired.” Presentation copy explicitly states that those source records are retained rather than deleted. This prevents the UI from implying that the underlying data was changed.
 
 ### Internal visibility
 

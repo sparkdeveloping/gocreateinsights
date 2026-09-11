@@ -317,7 +317,7 @@ function DashboardFilters({
   resultCount: number;
   onExplore: () => void;
 }) {
-  const statusOptions = useMemo(() => [...new Set(members.filter((m) => m.isMasterMember).map((m) => m.membershipStatus))].sort(), [members]);
+  const statusOptions = useMemo(() => [...new Set(members.filter((m) => m.isMasterMember && m.membershipStatus !== "expired").map((m) => m.membershipStatus))].sort(), [members]);
   const typeOptions = useMemo(() => [...new Set(members.filter((m) => m.isMasterMember).map((m) => m.membershipType))].sort(), [members]);
   const activeCount = [filters.search, filters.status !== "all", filters.membershipType !== "all", filters.quality !== "all", filters.source !== "all"].filter(Boolean).length;
 
@@ -350,12 +350,14 @@ function DateRangeBar({
   setRange,
   memberCount,
   applicationCount,
+  locked = false,
 }: {
   bootstrap: DashboardBootstrap;
   range: DateRange;
   setRange: React.Dispatch<React.SetStateAction<DateRange>>;
   memberCount: number;
   applicationCount: number;
+  locked?: boolean;
 }) {
   const presets = [
     { id: "all", label: "All time", get: () => defaultAllRange(bootstrap) },
@@ -379,16 +381,15 @@ function DateRangeBar({
     <motion.section className="date-range-bar" layout>
       <div className="date-range-title"><CalendarIcon /><div><strong>Reporting range</strong><span>{rangeLabel(range)}</span></div></div>
       <div className="date-presets soft-scrollbar">
-        {presets.map((preset) => <button key={preset.id} className={cn("date-preset", range.preset === preset.id && "active")} onClick={() => setRange(preset.get())}>{preset.label}</button>)}
+        {presets.map((preset) => <button key={preset.id} className={cn("date-preset", range.preset === preset.id && "active")} onClick={() => setRange(preset.get())} disabled={locked}>{preset.label}</button>)}
       </div>
       <div className="date-inputs">
-        <label><span>From</span><input type="date" value={range.from} max={range.to} onChange={(event: any) => updateBoundary("from", event.target.value)} /></label>
+        <label><span>From</span><input type="date" value={range.from} max={range.to} onChange={(event: any) => updateBoundary("from", event.target.value)} disabled={locked} /></label>
         <span className="date-arrow">→</span>
-        <label><span>To</span><input type="date" value={range.to} min={range.from} max={bootstrap.meta.dataAsOf} onChange={(event: any) => updateBoundary("to", event.target.value)} /></label>
+        <label><span>To</span><input type="date" value={range.to} min={range.from} max={bootstrap.meta.dataAsOf} onChange={(event: any) => updateBoundary("to", event.target.value)} disabled={locked} /></label>
       </div>
-      <div className="date-scope-summary" title="The selected range is applied to the dashboard">
-        <strong>{formatNumber(memberCount)}</strong><span>people</span><i />
-        <strong>{formatNumber(applicationCount)}</strong><span>applications</span>
+      <div className="date-scope-summary" title={locked ? "This internal report is fixed to the Sep. 2025 → current reporting window" : "The selected range is applied to the dashboard"}>
+        {locked ? <><LockIcon /><span>Fixed internal range</span></> : <><strong>{formatNumber(memberCount)}</strong><span>people</span><i /><strong>{formatNumber(applicationCount)}</strong><span>applications</span></>}
       </div>
     </motion.section>
   );
@@ -422,6 +423,7 @@ function OverviewTab({
   const observedVisits = useRows ? members.reduce((sum, member) => sum + member.trackerVisits, 0) : bootstrap.overview.trackerVisits;
   const quarantined = useRows ? members.filter((m) => m.dataQualityStatus === "quarantined").length : bootstrap.overview.quarantinedRecords;
   const master = useRows ? members.filter((m) => m.isMasterMember).length : bootstrap.meta.masterRows;
+  const assistanceInScope = useRows ? applications.filter((application) => application.assistanceRequested).length : bootstrap.overview.assistanceRequests;
 
   return (
     <div className="tab-stack">
@@ -436,8 +438,8 @@ function OverviewTab({
       </div>
 
       <div className="two-column wide-left">
-        <ChartPanel eyebrow="Membership" title="Status distribution" note="Click any bar to open the people behind it." actionLabel="Explore all members" onAction={() => openExplore(q("master", "All master members", "Every master member record in the current filtered scope."))}>
-          <DistributionBar data={statusData.slice(0, 7)} horizontal onClick={(point) => openExplore(q("membership-status", `${humanize(point.name)} members`, `People whose membership status is ${humanize(point.name).toLowerCase()}.`, point.name))} />
+        <ChartPanel eyebrow="Membership" title="Current status distribution" note="Expired records are retained in source data but intentionally omitted from presentation status metrics." actionLabel="Explore current members" onAction={() => openExplore(q("master", "Current master members", "Master member records in the current filtered scope."))}>
+          <DistributionBar data={statusData.filter((point) => point.name !== "expired").slice(0, 7)} horizontal onClick={(point) => openExplore(q("membership-status", `${humanize(point.name)} members`, `People whose membership status is ${humanize(point.name).toLowerCase()}.`, point.name))} />
         </ChartPanel>
         <ChartPanel eyebrow="Membership" title="Membership mix" note="A compact overview; the Membership tab goes deeper.">
           <Donut data={typeData.slice(0, 6)} centerLabel="people" centerValue={typeData.reduce((sum, item) => sum + item.value, 0)} onClick={(point) => point.name === "All" ? openExplore(q("master", "All master members", "Every master member in the current scope.")) : openExplore(q("membership-type", point.name, `People with ${point.name} as their master membership type.`, point.name))} />
@@ -446,7 +448,7 @@ function OverviewTab({
 
       <ChartPanel eyebrow="Where to look" title="Three useful next clicks" note={loading ? "Underlying record lists are loading; server-rendered totals are already available." : "These are derived from the current source, not generated recommendations."}>
         <div className="insight-list">
-          <InsightRow title="Expired membership records" copy="A large expired population is the fastest way to understand lifecycle shape." count={formatNumber(scoped ? (statusData.find((d) => d.name === "expired")?.value ?? 0) : ((statusData.find((d) => d.name === "expired")?.value ?? bootstrap.membershipStatus.find((d) => d.name === "expired")?.value) || 0))} onClick={() => openExplore(q("membership-status", "Expired membership records", "People whose master membership status is expired.", "expired"))} tone="ink" />
+          <InsightRow title="Membership Assistance applications" copy="Open the assistance pathway records behind the current reporting scope." count={formatNumber(assistanceInScope)} onClick={() => openExplore(q("assistance", "Membership Assistance applications", "Membership Assistance application rows in the current reporting scope."), "applications")} tone="ink" />
           <InsightRow title="Quarantined source records" copy="These are separated from reportable records so quality work does not get hidden inside totals." count={formatNumber(quarantined)} onClick={() => openExplore(q("data-quality", "Quarantined records", "People marked quarantined in the master source.", "quarantined"))} tone="red" />
           <InsightRow title="Application rows not matched to master" copy="Useful reconciliation queue: the workbook contains an application but no exact email/name master match." count={formatNumber(unmatchedApplications)} onClick={() => openExplore(q("application-match", "Unmatched application rows", "Application records that did not match a master member by exact email or normalized name.", false), "applications")} tone="yellow" />
         </div>
@@ -457,9 +459,9 @@ function OverviewTab({
 
 function MembershipTab({ bootstrap, members, applications, statusData, typeData, openExplore, scoped }: { bootstrap: DashboardBootstrap; members: MemberSummary[]; applications: ApplicationSummary[]; statusData: DistributionPoint[]; typeData: DistributionPoint[]; openExplore: (query: ExploreQuery, mode?: ExploreMode) => void; scoped: boolean }) {
   const pending = statusData.find((d) => d.name === "pending")?.value ?? 0;
-  const expired = statusData.find((d) => d.name === "expired")?.value ?? 0;
   const approved = statusData.find((d) => d.name === "approved")?.value ?? 0;
   const staff = statusData.find((d) => d.name === "staff")?.value ?? 0;
+  const publicRegular = typeData.find((d) => d.name === "Public/Regular")?.value ?? 0;
   const assistanceApps = applications.filter((application) => application.assistanceRequested);
   const assistancePeople = new Set(assistanceApps.map((application) => application.memberId || application.id)).size;
   const reducedRateRefs = applications.filter((application) => application.reducedRateReference).length;
@@ -469,7 +471,7 @@ function MembershipTab({ bootstrap, members, applications, statusData, typeData,
       <div className="metric-grid four">
         <MetricCard label="Approved" value={approved} detail="Current approved master status" onClick={() => openExplore(q("membership-status", "Approved members", "Members with approved status.", "approved"))} />
         <MetricCard label="Pending" value={pending} detail="Current pending master status" onClick={() => openExplore(q("membership-status", "Pending members", "Members with pending status.", "pending"))} tone="yellow" />
-        <MetricCard label="Expired" value={expired} detail="Current expired master status" onClick={() => openExplore(q("membership-status", "Expired members", "Members with expired status.", "expired"))} tone="ink" />
+        <MetricCard label="Public / Regular" value={publicRegular} detail="Current Public/Regular membership type" onClick={() => openExplore(q("membership-type", "Public / Regular members", "Members whose current master membership type is Public/Regular.", "Public/Regular"))} tone="ink" />
         <MetricCard label="Staff" value={staff} detail="Staff status in the master source" onClick={() => openExplore(q("staff", "Staff records", "People marked as staff or employee in the available source."))} tone="ink" />
       </div>
       <div className="membership-overlay-strip">
@@ -478,8 +480,8 @@ function MembershipTab({ bootstrap, members, applications, statusData, typeData,
         <div className="overlay-explain"><InfoIcon /><span>These application pathways are denoted alongside membership rather than treated as a separate database.</span></div>
       </div>
       <div className="two-column">
-        <ChartPanel eyebrow="Status" title="Membership status" note="Horizontal bars preserve full status labels.">
-          <DistributionBar data={statusData.slice(0, 8)} onClick={(point) => openExplore(q("membership-status", `${humanize(point.name)} members`, `Members with ${humanize(point.name).toLowerCase()} status.`, point.name))} height={340} />
+        <ChartPanel eyebrow="Status" title="Current membership status" note="Expired records remain in the source dataset but are omitted from this presentation view.">
+          <DistributionBar data={statusData.filter((point) => point.name !== "expired").slice(0, 8)} onClick={(point) => openExplore(q("membership-status", `${humanize(point.name)} members`, `Members with ${humanize(point.name).toLowerCase()} status.`, point.name))} height={340} />
         </ChartPanel>
         <ChartPanel eyebrow="Type" title="Membership type" note="Click a slice or the matching legend row.">
           <Donut data={typeData.slice(0, 7)} centerLabel="members" centerValue={members.length} onClick={(point) => point.name === "All" ? openExplore(q("master", "All master members", "All master members in the current scope.")) : openExplore(q("membership-type", point.name, `Members with ${point.name} as their master membership type.`, point.name))} />
@@ -605,7 +607,7 @@ function EngagementTab({ bootstrap, members, manualEvents, dateRange, dateScopeA
 function ApplicationsTab({ bootstrap, applications, openExplore, scoped }: { bootstrap: DashboardBootstrap; applications: ApplicationSummary[]; openExplore: (query: ExploreQuery, mode?: ExploreMode) => void; scoped: boolean }) {
   const useRows = scoped || applications.length > 0;
   const typeData = useRows ? countBy(applications, (a) => a.membershipType) : bootstrap.applicationMembershipType;
-  const statusData = useRows ? countBy(applications, (a) => a.applicationStatus) : bootstrap.applicationStatus;
+  const statusData = (useRows ? countBy(applications, (a) => a.applicationStatus) : bootstrap.applicationStatus).filter((point) => !point.name.toLowerCase().includes("expired"));
   const model = useRows ? [
     { name: "Granted", value: applications.filter((a) => a.modelReleaseGranted === true).length },
     { name: "Not granted", value: applications.filter((a) => a.modelReleaseGranted === false).length },
@@ -665,7 +667,7 @@ function ApplicationsTab({ bootstrap, applications, openExplore, scoped }: { boo
         </div>
       </ChartPanel>
 
-      <ChartPanel eyebrow="Portal snapshot" title="Application status field" note="The uploaded workbook currently contains a highly concentrated status snapshot, so this is kept separate from membership status.">
+      <ChartPanel eyebrow="Portal snapshot" title="Current application status field" note="Expired portal-status values are retained in the source data but omitted from this presentation chart.">
         <DistributionBar data={statusData.slice(0, 8)} horizontal={false} height={260} onClick={(point) => openExplore(q("application-status", point.name, `Application rows with portal status “${point.name}”.`, point.name), "applications")} />
       </ChartPanel>
     </div>
@@ -880,7 +882,8 @@ export default function Dashboard({ bootstrap, internalReportsEnabled = false }:
   function switchTab(next: DashboardTab) {
     if (next === "modified-report" && !internalReportsEnabled) return;
     setTab(next);
-    if (next === "report" && dateRange.preset === "all") setDateRange(kochRange(bootstrap));
+    if (next === "modified-report") setDateRange(kochRange(bootstrap));
+    else if (next === "report" && dateRange.preset === "all") setDateRange(kochRange(bootstrap));
   }
 
   function exportCurrentScope() {
@@ -913,7 +916,7 @@ export default function Dashboard({ bootstrap, internalReportsEnabled = false }:
   }
 
   function printModifiedReport() {
-    printNamedReport(`GoCreate Internal Modified Report ${new Date().getFullYear()}`);
+    printNamedReport(`GoCreate Internal Modified Report Sep 2025 to ${bootstrap.meta.dataAsOf}`);
   }
 
   function showAllAssistance() {
@@ -930,7 +933,7 @@ export default function Dashboard({ bootstrap, internalReportsEnabled = false }:
     applications: <ApplicationsTab bootstrap={bootstrap} applications={scopedApplications} openExplore={openExplore} scoped={dateScopeActive || filterOnlyCount > 0} />,
     people: <PeopleTab bootstrap={bootstrap} members={filteredMembers} applications={scopedApplications} openExplore={openExplore} scoped={dateScopeActive || filterOnlyCount > 0} />,
     report: <KochReport bootstrap={bootstrap} members={filteredMembers} applications={scopedApplications} range={dateRange} openExplore={openExplore} onPrint={printKochReport} onShowAllAssistance={showAllAssistance} />,
-    "modified-report": internalReportsEnabled ? <ModifiedReport bootstrap={bootstrap} range={dateRange} onPrint={printModifiedReport} /> : null,
+    "modified-report": internalReportsEnabled ? <ModifiedReport bootstrap={bootstrap} applications={applications} range={dateRange} onPrint={printModifiedReport} /> : null,
     quality: <QualityTab bootstrap={bootstrap} members={filteredMembers.filter((m) => m.isMasterMember)} applications={scopedApplications} manualEvents={drawerManualVisits} openExplore={openExplore} openMember={setMemberId} scoped={dateScopeActive || filterOnlyCount > 0} />,
     members: <MembersTab members={filteredMembers} openExplore={openExplore} openMember={setMemberId} />,
   } satisfies Record<DashboardTab, React.ReactNode>;
@@ -963,8 +966,8 @@ export default function Dashboard({ bootstrap, internalReportsEnabled = false }:
       </nav>
 
       <div className="dashboard-body">
-        <DateRangeBar bootstrap={bootstrap} range={dateRange} setRange={setDateRange} memberCount={filteredMembers.length} applicationCount={filteredApplications.length} />
-        <DashboardFilters filters={filters} setFilters={setFilters} members={members} resultCount={scopeCount} onExplore={() => openExplore(q("all", "Current people scope", `Every person matching the current dashboard filters and reporting range (${rangeLabel(dateRange)}).`))} />
+        <DateRangeBar bootstrap={bootstrap} range={dateRange} setRange={setDateRange} memberCount={filteredMembers.length} applicationCount={filteredApplications.length} locked={tab === "modified-report"} />
+        {tab !== "modified-report" && <DashboardFilters filters={filters} setFilters={setFilters} members={members} resultCount={scopeCount} onExplore={() => openExplore(q("all", "Current people scope", `Every person matching the current dashboard filters and reporting range (${rangeLabel(dateRange)}).`))} />}
 
 
         <AnimatePresence initial={false} mode="wait">
