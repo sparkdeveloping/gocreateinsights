@@ -1,6 +1,8 @@
-# GoCreate Insights v5.1
+# GoCreate Insights v5.2
 
-GoCreate Insights v5.1 is a strictly light-mode, single-page Next.js operational intelligence application for GoCreate. It combines the master membership export, the latest membership-detail workbook, and the historical paper sign-in archive into one source-aware analytics system without pretending that unlike data sources have the same precision.
+GoCreate Insights v5.2 is a strictly light-mode, single-page Next.js operational intelligence application for GoCreate. It combines the master membership export, the latest membership-detail workbook, and the historical paper sign-in archive into one source-aware analytics system without pretending that unlike data sources have the same precision.
+
+**v5.2 source refresh:** the newest uploaded workbook (`gocreate_membership_details(3).xlsx`) was welded into the stable project source path. It is byte-for-byte identical to the immediately preceding `(2)` workbook (SHA-256 `2f1c19ce3d275d8628fcab79e94dd391be19c4f2eeebce86f7c9021c9330b98f`), so this refresh correctly produces no count changes. The full generation/reconciliation pipeline was still rerun so the downloadable project reflects the newest supplied source lineage.
 
 ## What v5 adds
 
