@@ -1,4 +1,4 @@
-# GoCreate Insights v5.2 — implementation brief
+# GoCreate Insights v5.3 — implementation brief
 
 Build a strictly light-mode, single-page operational intelligence application for GoCreate using Next.js App Router, React, TypeScript, Tailwind CSS, Framer Motion and Recharts. It must feel like a precise staff reporting tool rather than a generic AI dashboard. Use the supplied official GoCreate assets and restrained blue/yellow/ink colors.
 

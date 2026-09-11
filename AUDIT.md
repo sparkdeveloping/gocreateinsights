@@ -1,4 +1,4 @@
-# GoCreate Insights — v5.2 data and reporting audit
+# GoCreate Insights — v5.3 data and reporting audit
 
 ## Purpose
 
@@ -12,7 +12,7 @@ The dashboard keeps provenance visible so staff can answer leadership questions 
 
 ## Latest enrichment workbook
 
-This audit reflects the Sep. 11, 2026 newest supplied workbook (`gocreate_membership_details(3).xlsx` welded into the project under the stable source name `data/source/gocreate_membership_details.xlsx`). The uploaded `(3)` workbook is byte-for-byte identical to the preceding `(2)` workbook (SHA-256 `2f1c19ce3d275d8628fcab79e94dd391be19c4f2eeebce86f7c9021c9330b98f`), so a correct regeneration leaves the analytical counts unchanged.
+This audit reflects the Sep. 11, 2026 newest supplied workbook (`gocreate_membership_details(4).xlsx` welded into the project under the stable source name `data/source/gocreate_membership_details.xlsx`). The uploaded `(4)` workbook is byte-for-byte identical to the preceding `(2)` and `(3)` workbooks (SHA-256 `2f1c19ce3d275d8628fcab79e94dd391be19c4f2eeebce86f7c9021c9330b98f`), so a correct regeneration leaves the analytical counts unchanged.
 
 The current detail workbook contains:
 
