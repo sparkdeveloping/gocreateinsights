@@ -1,29 +1,29 @@
 {
   "meta": {
-    "generatedAt": "2026-09-11T19:53:40+00:00",
+    "generatedAt": "2026-09-11T20:07:59+00:00",
     "dataAsOf": "2026-09-11",
     "masterFile": "gocreate-master-2026-09-09.csv",
     "enrichmentFile": "gocreate_membership_details.xlsx",
     "masterRows": 2383,
-    "knownPeople": 2433,
-    "applicationRows": 857,
-    "emergencyContactRows": 1714,
-    "matchedApplications": 807,
-    "distinctEnrichedMembers": 795,
-    "unmatchedApplications": 50,
-    "enrichmentCoveragePercent": 94.2,
+    "knownPeople": 2468,
+    "applicationRows": 2125,
+    "emergencyContactRows": 4248,
+    "matchedApplications": 2040,
+    "distinctEnrichedMembers": 2002,
+    "unmatchedApplications": 85,
+    "enrichmentCoveragePercent": 96.0,
     "masterSubmissionMin": "2024-01-16",
     "masterSubmissionMax": "2026-09-05",
     "applicationSubmissionMin": "2024-01-16",
     "applicationSubmissionMax": "2026-09-11",
     "visitObservationMin": "2026-08-03",
     "visitObservationMax": "2026-09-09",
-    "assistanceReasonRows": 50,
-    "rawControlRows": 40630,
-    "assistanceQuestionnaireApplications": 50,
-    "assistanceQuestionnaireResponses": 250,
-    "assistanceSubmissionMin": "2024-01-31",
-    "assistanceSubmissionMax": "2025-04-07",
+    "assistanceReasonRows": 82,
+    "rawControlRows": 100941,
+    "assistanceQuestionnaireApplications": 82,
+    "assistanceQuestionnaireResponses": 410,
+    "assistanceSubmissionMin": "2024-01-23",
+    "assistanceSubmissionMax": "2026-08-05",
     "manualScanPages": 82,
     "duplicateManualScansIgnored": 2,
     "manualSignInRows": 513,
@@ -39,22 +39,22 @@
   },
   "overview": {
     "masterMembers": 2383,
-    "knownPeople": 2433,
+    "knownPeople": 2468,
     "approvedMembers": 196,
     "staffMembers": 2,
     "engagedMembers": 79,
     "observedVisits": 216,
     "hostedGuests": 9,
-    "applicationDetails": 857,
+    "applicationDetails": 2125,
     "quarantinedRecords": 360,
-    "modelReleaseYes": 783,
-    "modelReleaseNo": 74,
-    "assistanceRequests": 52,
-    "assistancePeople": 51,
-    "smallBusinessReferences": 9,
-    "nonprofitReferences": 16,
-    "reducedRateReferences": 8,
-    "signedApplications": 857,
+    "modelReleaseYes": 1934,
+    "modelReleaseNo": 191,
+    "assistanceRequests": 84,
+    "assistancePeople": 83,
+    "smallBusinessReferences": 12,
+    "nonprofitReferences": 28,
+    "reducedRateReferences": 15,
+    "signedApplications": 2124,
     "trackerVisits": 216,
     "manualMemberVisits": 14,
     "manualGuestVisits": 390,
@@ -144,23 +144,23 @@
   "applicationMembershipType": [
     {
       "name": "WSU Student/WSU Tech Student",
-      "value": 676
-    },
-    {
-      "name": "Membership Assistance",
-      "value": 50
+      "value": 1747
     },
     {
       "name": "Public/Regular",
-      "value": 50
+      "value": 128
     },
     {
       "name": "Military (Active & Veteran) / Senior Citizen",
-      "value": 42
+      "value": 85
+    },
+    {
+      "name": "Membership Assistance",
+      "value": 82
     },
     {
       "name": "Student/Staff/Educator",
-      "value": 35
+      "value": 79
     },
     {
       "name": "Corporate Membership",
@@ -173,12 +173,56 @@
       "value": 361
     },
     {
+      "name": "Expired Expired On: 05/31/2025",
+      "value": 101
+    },
+    {
+      "name": "Expired Expired On: 05/30/2026",
+      "value": 80
+    },
+    {
+      "name": "Expired Expired On: 12/31/2025",
+      "value": 80
+    },
+    {
+      "name": "Expired Expired On: 12/31/2024",
+      "value": 79
+    },
+    {
+      "name": "Expired Expired On: 12/12/2024",
+      "value": 70
+    },
+    {
+      "name": "Expired Expired On: 12/18/2024",
+      "value": 51
+    },
+    {
+      "name": "Approved Expires On: 12/31/2026",
+      "value": 49
+    },
+    {
       "name": "Pending Pending",
       "value": 46
     },
     {
+      "name": "Expired Expired On: 08/29/2026",
+      "value": 44
+    },
+    {
+      "name": "Expired Expired On: 05/31/2026",
+      "value": 36
+    },
+    {
       "name": "Expired Expired On: 05/10/2024",
       "value": 33
+    },
+    {
+      "name": "Expired Expired On: 12/16/2024",
+      "value": 33
+    },
+    {
+      "name": "Expired Expired On: 01/10/2025",
+      "value": 27
     },
     {
       "name": "Expired Expired On: 05/31/2024",
@@ -186,42 +230,114 @@
     },
     {
       "name": "Expired Expired On: 01/01/2025",
-      "value": 23
+      "value": 24
     },
     {
-      "name": "Expired Expired On: 12/31/2024",
+      "name": "Expired Expired On: 05/29/2026",
       "value": 17
     },
     {
-      "name": "Expired Expired On: 05/31/2025",
-      "value": 14
+      "name": "Expired Expired On: 07/19/2025",
+      "value": 16
     },
     {
-      "name": "Expired Expired On: 01/10/2025",
-      "value": 14
+      "name": "Expired Expired On: 01/13/2025",
+      "value": 15
+    },
+    {
+      "name": "Expired Expired On: 12/15/2024",
+      "value": 15
+    },
+    {
+      "name": "Expired Expired On: 01/07/2025",
+      "value": 13
+    },
+    {
+      "name": "Denied",
+      "value": 12
+    },
+    {
+      "name": "Expired Expired On: 05/30/2025",
+      "value": 12
     },
     {
       "name": "Expired Expired On: 06/01/2024",
       "value": 12
     },
     {
-      "name": "Expired Expired On: 12/12/2024",
+      "name": "Expired Expired On: 12/17/2024",
+      "value": 12
+    },
+    {
+      "name": "Expired Expired On: 08/31/2026",
       "value": 11
     },
     {
-      "name": "Expired Expired On: 12/31/2025",
+      "name": "Expired Expired On: 12/19/2024",
+      "value": 11
+    },
+    {
+      "name": "Expired Approved Expired On: 07/04/2024",
       "value": 10
     },
     {
-      "name": "Expired Expired On: 12/17/2024",
+      "name": "Expired Expired On: 12/20/2024",
+      "value": 10
+    },
+    {
+      "name": "Expired Expired On: 01/26/2025",
+      "value": 10
+    },
+    {
+      "name": "Approved Expires On: 05/31/2027",
+      "value": 9
+    },
+    {
+      "name": "Expired Expired On: 08/01/2026",
+      "value": 9
+    },
+    {
+      "name": "Expired Expired On: 08/30/2026",
       "value": 8
     },
     {
-      "name": "Denied",
+      "name": "Expired Expired On: 05/09/2025",
+      "value": 8
+    },
+    {
+      "name": "Expired Expired On: 08/17/2026",
+      "value": 8
+    },
+    {
+      "name": "Expired Expired On: 01/24/2025",
+      "value": 8
+    },
+    {
+      "name": "Expired Expired On: 12/11/2025",
       "value": 7
     },
     {
-      "name": "Expired Expired On: 12/16/2024",
+      "name": "Approved Expires On: 01/18/2027",
+      "value": 7
+    },
+    {
+      "name": "Expired Expired On: 05/15/2025",
+      "value": 7
+    },
+    {
+      "name": "Expired Expired On: 05/08/2025",
+      "value": 7
+    },
+    {
+      "name": "Expired Expired On: 10/11/2024",
+      "value": 7
+    },
+    {
+      "name": "Expired Expired On: 05/10/2025",
+      "value": 7
+    },
+    {
+      "name": "Approved Expires On: 05/31/2028",
       "value": 7
     },
     {
@@ -229,11 +345,31 @@
       "value": 7
     },
     {
-      "name": "Expired Expired On: 12/15/2024",
+      "name": "Expired Expired On: 12/11/2024",
       "value": 7
     },
     {
-      "name": "Expired Expired On: 05/30/2026",
+      "name": "Expired Expired On: 12/14/2024",
+      "value": 7
+    },
+    {
+      "name": "Expired Expired On: 06/04/2026",
+      "value": 6
+    },
+    {
+      "name": "Expired Expired On: 05/10/2026",
+      "value": 6
+    },
+    {
+      "name": "Approved Expires On: 11/21/2028",
+      "value": 6
+    },
+    {
+      "name": "Expired Expired On: 01/15/2025",
+      "value": 6
+    },
+    {
+      "name": "Expired Expired On: 02/04/2025",
       "value": 6
     },
     {
@@ -241,7 +377,35 @@
       "value": 5
     },
     {
+      "name": "Expired Expired On: 05/15/2026",
+      "value": 5
+    },
+    {
+      "name": "Expired Expired On: 01/03/2026",
+      "value": 5
+    },
+    {
+      "name": "Expired Expired On: 05/18/2025",
+      "value": 5
+    },
+    {
       "name": "Expired Expired On: 07/20/2024",
+      "value": 5
+    },
+    {
+      "name": "Expired Expired On: 05/12/2026",
+      "value": 5
+    },
+    {
+      "name": "Expired Expired On: 05/20/2025",
+      "value": 5
+    },
+    {
+      "name": "Expired Expired On: 08/31/2025",
+      "value": 5
+    },
+    {
+      "name": "Expired Expired On: 10/14/2024",
       "value": 5
     },
     {
@@ -249,15 +413,31 @@
       "value": 5
     },
     {
+      "name": "Approved Expires On: 05/14/2027",
+      "value": 5
+    },
+    {
       "name": "Expired Expired On: 01/25/2025",
       "value": 5
     },
     {
-      "name": "Approved Expires On: 05/31/2028",
+      "name": "Expired Expired On: 01/16/2025",
       "value": 5
     },
     {
-      "name": "Expired Expired On: 05/31/2026",
+      "name": "Approved Expires On: 12/30/2026",
+      "value": 5
+    },
+    {
+      "name": "Expired Expired On: 02/27/2025",
+      "value": 5
+    },
+    {
+      "name": "Expired Expired On: 05/22/2025",
+      "value": 4
+    },
+    {
+      "name": "Approved Expires On: 12/04/2026",
       "value": 4
     },
     {
@@ -265,7 +445,11 @@
       "value": 4
     },
     {
-      "name": "Expired Expired On: 08/29/2026",
+      "name": "Expired Expired On: 08/04/2026",
+      "value": 4
+    },
+    {
+      "name": "Expired Expired On: 08/05/2026",
       "value": 4
     },
     {
@@ -273,11 +457,63 @@
       "value": 4
     },
     {
-      "name": "Expired Expired On: 05/10/2025",
+      "name": "Expired Expired On: 08/16/2026",
       "value": 4
     },
     {
+      "name": "Expired Expired On: 08/10/2025",
+      "value": 4
+    },
+    {
+      "name": "Expired Expired On: 12/26/2024",
+      "value": 4
+    },
+    {
+      "name": "Expired Expired On: 01/09/2026",
+      "value": 4
+    },
+    {
+      "name": "Expired Expired On: 12/03/2024",
+      "value": 4
+    },
+    {
+      "name": "Approved Expires On: 11/01/2028",
+      "value": 4
+    },
+    {
+      "name": "Expired Expired On: 01/29/2025",
+      "value": 4
+    },
+    {
+      "name": "Expired Expired On: 01/30/2026",
+      "value": 4
+    },
+    {
+      "name": "Expired Expired On: 08/09/2026",
+      "value": 3
+    },
+    {
+      "name": "Expired Expired On: 04/28/2025",
+      "value": 3
+    },
+    {
+      "name": "Expired Expired On: 07/16/2025",
+      "value": 3
+    },
+    {
       "name": "Expired Expired On: 08/30/2024",
+      "value": 3
+    },
+    {
+      "name": "Approved Expires On: 12/12/2026",
+      "value": 3
+    },
+    {
+      "name": "Expired Expired On: 08/12/2026",
+      "value": 3
+    },
+    {
+      "name": "Expired Expired On: 01/02/2026",
       "value": 3
     },
     {
@@ -285,7 +521,27 @@
       "value": 3
     },
     {
+      "name": "Expired Expired On: 12/01/2024",
+      "value": 3
+    },
+    {
+      "name": "Expired Expired On: 07/10/2026",
+      "value": 3
+    },
+    {
       "name": "Expired Expired On: 10/07/2024",
+      "value": 3
+    },
+    {
+      "name": "Expired Expired On: 08/10/2026",
+      "value": 3
+    },
+    {
+      "name": "Expired Expired On: 05/12/2025",
+      "value": 3
+    },
+    {
+      "name": "Approved Expires On: 05/20/2027",
       "value": 3
     },
     {
@@ -293,7 +549,27 @@
       "value": 3
     },
     {
+      "name": "Approved Expires On: 02/21/2027",
+      "value": 3
+    },
+    {
       "name": "Expired Expired On: 10/03/2024",
+      "value": 3
+    },
+    {
+      "name": "Expired Expired On: 02/16/2026",
+      "value": 3
+    },
+    {
+      "name": "Expired Expired On: 08/12/2025",
+      "value": 3
+    },
+    {
+      "name": "Expired Expired On: 09/08/2025",
+      "value": 3
+    },
+    {
+      "name": "Expired Expired On: 07/31/2025",
       "value": 3
     },
     {
@@ -301,7 +577,15 @@
       "value": 3
     },
     {
-      "name": "Expired Expired On: 12/03/2024",
+      "name": "Approved Expires On: 01/21/2027",
+      "value": 3
+    },
+    {
+      "name": "Approved Expires On: 09/30/2026",
+      "value": 3
+    },
+    {
+      "name": "Approved Expires On: 12/11/2026",
       "value": 3
     },
     {
@@ -309,7 +593,31 @@
       "value": 3
     },
     {
-      "name": "Expired Expired On: 01/29/2025",
+      "name": "Approved Expires On: 01/27/2027",
+      "value": 3
+    },
+    {
+      "name": "Expired Expired On: 05/28/2025",
+      "value": 3
+    },
+    {
+      "name": "Expired Expired On: 01/11/2025",
+      "value": 3
+    },
+    {
+      "name": "Expired Expired On: 01/14/2025",
+      "value": 3
+    },
+    {
+      "name": "Expired Expired On: 12/25/2024",
+      "value": 3
+    },
+    {
+      "name": "Expired Expired On: 12/24/2024",
+      "value": 3
+    },
+    {
+      "name": "Expired Expired On: 01/19/2025",
       "value": 3
     },
     {
@@ -321,6 +629,66 @@
       "value": 2
     },
     {
+      "name": "Approved Expires On: 10/27/2026",
+      "value": 2
+    },
+    {
+      "name": "Approved Expires On: 03/06/2027",
+      "value": 2
+    },
+    {
+      "name": "Expired Expired On: 02/06/2026",
+      "value": 2
+    },
+    {
+      "name": "Expired Expired On: 04/13/2026",
+      "value": 2
+    },
+    {
+      "name": "Expired Expired On: 02/17/2026",
+      "value": 2
+    },
+    {
+      "name": "Expired Expired On: 12/12/2025",
+      "value": 2
+    },
+    {
+      "name": "Expired Expired On: 02/21/2026",
+      "value": 2
+    },
+    {
+      "name": "Expired Expired On: 02/10/2026",
+      "value": 2
+    },
+    {
+      "name": "Approved Expires On: 02/19/2027",
+      "value": 2
+    },
+    {
+      "name": "Expired Expired On: 05/27/2026",
+      "value": 2
+    },
+    {
+      "name": "Expired Expired On: 05/08/2026",
+      "value": 2
+    },
+    {
+      "name": "Expired Expired On: 08/02/2025",
+      "value": 2
+    },
+    {
+      "name": "Expired Expired On: 05/22/2026",
+      "value": 2
+    },
+    {
+      "name": "Approved Expires On: 02/24/2027",
+      "value": 2
+    },
+    {
+      "name": "Expired Expired On: 05/14/2026",
+      "value": 2
+    },
+    {
       "name": "Expired Expired On: 05/01/2024",
       "value": 2
     },
@@ -329,19 +697,47 @@
       "value": 2
     },
     {
-      "name": "Expired Expired On: 08/31/2025",
+      "name": "Approved Expires On: 03/09/2027",
       "value": 2
     },
     {
-      "name": "Expired Expired On: 05/08/2025",
+      "name": "Expired Expired On: 01/16/2026",
       "value": 2
     },
     {
-      "name": "Expired Expired On: 12/18/2024",
+      "name": "Expired Expired On: 04/07/2025",
       "value": 2
     },
     {
-      "name": "Expired Expired On: 12/01/2024",
+      "name": "Expired Expired On: 05/07/2025",
+      "value": 2
+    },
+    {
+      "name": "Expired Expired On: 06/04/2025",
+      "value": 2
+    },
+    {
+      "name": "Approved Expires On: 10/02/2026",
+      "value": 2
+    },
+    {
+      "name": "Expired Expired On: 09/18/2025",
+      "value": 2
+    },
+    {
+      "name": "Expired Expired On: 05/19/2025",
+      "value": 2
+    },
+    {
+      "name": "Expired Expired On: 05/19/2026",
+      "value": 2
+    },
+    {
+      "name": "Expired Expired On: 09/22/2025",
+      "value": 2
+    },
+    {
+      "name": "Expired Expired On: 08/14/2026",
       "value": 2
     },
     {
@@ -349,7 +745,23 @@
       "value": 2
     },
     {
+      "name": "Approved Expires On: 12/31/2027",
+      "value": 2
+    },
+    {
+      "name": "Expired Expired On: 05/26/2026",
+      "value": 2
+    },
+    {
+      "name": "Expired Expired On: 05/29/2025",
+      "value": 2
+    },
+    {
       "name": "Expired Expired On: 10/05/2024",
+      "value": 2
+    },
+    {
+      "name": "Expired Expired On: 01/03/2025",
       "value": 2
     },
     {
@@ -357,11 +769,19 @@
       "value": 2
     },
     {
-      "name": "Expired Expired On: 01/13/2025",
+      "name": "Expired Expired On: 05/18/2026",
       "value": 2
     },
     {
-      "name": "Expired Expired On: 10/11/2024",
+      "name": "Expired Expired On: 08/21/2026",
+      "value": 2
+    },
+    {
+      "name": "Expired Expired On: 10/22/2025",
+      "value": 2
+    },
+    {
+      "name": "Expired Expired On: 06/10/2026",
       "value": 2
     },
     {
@@ -369,11 +789,15 @@
       "value": 2
     },
     {
-      "name": "Approved Expires On: 02/21/2027",
+      "name": "Expired Expired On: 09/29/2025",
       "value": 2
     },
     {
-      "name": "Approved Expires On: 12/31/2026",
+      "name": "Expired Expired On: 06/01/2026",
+      "value": 2
+    },
+    {
+      "name": "Expired Expired On: 08/13/2025",
       "value": 2
     },
     {
@@ -381,23 +805,59 @@
       "value": 2
     },
     {
+      "name": "Expired Expired On: 12/04/2025",
+      "value": 2
+    },
+    {
+      "name": "Expired Expired On: 12/19/2025",
+      "value": 2
+    },
+    {
+      "name": "Expired Expired On: 09/04/2025",
+      "value": 2
+    },
+    {
+      "name": "Approved Expires On: 12/05/2026",
+      "value": 2
+    },
+    {
+      "name": "Approved Expires On: 01/30/2027",
+      "value": 2
+    },
+    {
+      "name": "Approved Expires On: 09/24/2026",
+      "value": 2
+    },
+    {
       "name": "Expired Expired On: 07/27/2024",
       "value": 2
     },
     {
-      "name": "Expired Expired On: 12/26/2024",
+      "name": "Expired Expired On: 12/27/2024",
       "value": 2
     },
     {
-      "name": "Approved Expires On: 11/21/2028",
+      "name": "Expired Expired On: 01/11/2026",
       "value": 2
     },
     {
-      "name": "Expired Expired On: 01/24/2025",
+      "name": "Approved Expires On: 01/15/2027",
       "value": 2
     },
     {
-      "name": "Expired Expired On: 01/15/2025",
+      "name": "Expired Expired On: 10/03/2025",
+      "value": 2
+    },
+    {
+      "name": "Approved Expires On: 05/10/2027",
+      "value": 2
+    },
+    {
+      "name": "Expired Expired On: 10/31/2024",
+      "value": 2
+    },
+    {
+      "name": "Expired Expired On: 12/10/2025",
       "value": 2
     },
     {
@@ -405,23 +865,179 @@
       "value": 2
     },
     {
-      "name": "Expired Expired On: 05/28/2025",
+      "name": "Expired Expired On: 12/25/2025",
       "value": 2
+    },
+    {
+      "name": "Expired Expired On: 11/07/2025",
+      "value": 2
+    },
+    {
+      "name": "Expired Expired On: 12/13/2025",
+      "value": 2
+    },
+    {
+      "name": "Expired Expired On: 12/16/2025",
+      "value": 2
+    },
+    {
+      "name": "Expired Expired On: 01/08/2025",
+      "value": 2
+    },
+    {
+      "name": "Expired Expired On: 01/29/2026",
+      "value": 2
+    },
+    {
+      "name": "Expired Expired On: 02/02/2025",
+      "value": 2
+    },
+    {
+      "name": "Approved Expires On: 11/22/2028",
+      "value": 2
+    },
+    {
+      "name": "Expired Expired On: 01/06/2025",
+      "value": 2
+    },
+    {
+      "name": "Expired Expired On: 01/31/2025",
+      "value": 2
+    },
+    {
+      "name": "Approved Expires On: 11/07/2028",
+      "value": 2
+    },
+    {
+      "name": "Expired Expired On: 02/20/2026",
+      "value": 2
+    },
+    {
+      "name": "Expired Expired On: 05/01/2026",
+      "value": 2
+    },
+    {
+      "name": "Denied Approved",
+      "value": 1
+    },
+    {
+      "name": "Expired Approved Expired On: 02/29/2024",
+      "value": 1
+    },
+    {
+      "name": "Expired Approved Expired On: 03/21/2025",
+      "value": 1
+    },
+    {
+      "name": "Expired Approved Expired On: 03/06/2024",
+      "value": 1
+    },
+    {
+      "name": "Expired Approved Expired On: 04/30/2026",
+      "value": 1
+    },
+    {
+      "name": "Expired Approved Expired On: 04/13/2025",
+      "value": 1
+    },
+    {
+      "name": "Approved Approved Expires On: 06/09/2027",
+      "value": 1
+    },
+    {
+      "name": "Approved Approved Expires On: 11/10/2027",
+      "value": 1
+    },
+    {
+      "name": "Denied Denied",
+      "value": 1
+    },
+    {
+      "name": "Expired Approved Expired On: 06/16/2024",
+      "value": 1
+    },
+    {
+      "name": "Approved Approved Expires On: 03/02/2027",
+      "value": 1
+    },
+    {
+      "name": "Expired Approved Expired On: 05/10/2024",
+      "value": 1
+    },
+    {
+      "name": "Expired Approved Expired On: 01/15/2025",
+      "value": 1
+    },
+    {
+      "name": "Expired Approved Expired On: 06/30/2025",
+      "value": 1
+    },
+    {
+      "name": "Expired Approved Expired On: 05/23/2024",
+      "value": 1
+    },
+    {
+      "name": "Expired Approved Expired On: 07/12/2024",
+      "value": 1
+    },
+    {
+      "name": "Expired Approved Expired On: 05/27/2026",
+      "value": 1
+    },
+    {
+      "name": "Expired Approved Expired On: 10/01/2024",
+      "value": 1
+    },
+    {
+      "name": "Expired Approved Expired On: 12/31/2024",
+      "value": 1
+    },
+    {
+      "name": "Approved Approved Expires On: 12/30/2030",
+      "value": 1
+    },
+    {
+      "name": "Approved Approved Expires On: 12/31/2026",
+      "value": 1
+    },
+    {
+      "name": "Expired Approved Expired On: 01/04/2025",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 03/09/2026",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 05/05/2026",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 09/06/2026",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 02/09/2026",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 03/12/2026",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 02/18/2026",
+      "value": 1
     },
     {
       "name": "Expired Expired On: 02/25/2025",
       "value": 1
     },
     {
-      "name": "Approved Expires On: 02/19/2027",
+      "name": "Approved Expires On: 12/22/2026",
       "value": 1
     },
     {
-      "name": "Approved Expires On: 12/04/2026",
-      "value": 1
-    },
-    {
-      "name": "Expired Expired On: 07/16/2025",
+      "name": "Expired Expired On: 06/25/2025",
       "value": 1
     },
     {
@@ -429,7 +1045,23 @@
       "value": 1
     },
     {
+      "name": "Expired Expired On: 05/06/2025",
+      "value": 1
+    },
+    {
       "name": "Expired Expired On: 12/01/2025",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 06/28/2025",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 07/28/2025",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 08/28/2026",
       "value": 1
     },
     {
@@ -441,11 +1073,31 @@
       "value": 1
     },
     {
+      "name": "Expired Expired On: 08/20/2026",
+      "value": 1
+    },
+    {
       "name": "Expired Expired On: 06/02/2024",
       "value": 1
     },
     {
-      "name": "Approved Expires On: 12/12/2026",
+      "name": "Expired Expired On: 08/01/2025",
+      "value": 1
+    },
+    {
+      "name": "Approved Expires On: 02/03/2027",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 04/11/2026",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 05/11/2026",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 03/05/2025",
       "value": 1
     },
     {
@@ -461,7 +1113,19 @@
       "value": 1
     },
     {
-      "name": "Expired Expired On: 04/13/2026",
+      "name": "Expired Expired On: 08/11/2025",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 05/21/2025",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 06/11/2025",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 03/11/2025",
       "value": 1
     },
     {
@@ -469,7 +1133,19 @@
       "value": 1
     },
     {
-      "name": "Expired Expired On: 05/18/2025",
+      "name": "Expired Expired On: 08/13/2026",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 03/14/2025",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 08/18/2026",
+      "value": 1
+    },
+    {
+      "name": "Approved Expires On: 03/11/2027",
       "value": 1
     },
     {
@@ -482,6 +1158,18 @@
     },
     {
       "name": "Expired Expired On: 05/23/2026",
+      "value": 1
+    },
+    {
+      "name": "Approved Expires On: 02/23/2027",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 03/29/2025",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 03/27/2026",
       "value": 1
     },
     {
@@ -505,11 +1193,23 @@
       "value": 1
     },
     {
+      "name": "Expired Expired On: 04/01/2025",
+      "value": 1
+    },
+    {
       "name": "Expired Expired On: 06/03/2024",
       "value": 1
     },
     {
       "name": "Approved Expires On: 12/20/2026",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 04/30/2025",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 04/04/2026",
       "value": 1
     },
     {
@@ -533,15 +1233,15 @@
       "value": 1
     },
     {
+      "name": "Expired Expired On: 04/05/2025",
+      "value": 1
+    },
+    {
       "name": "Expired Expired On: 11/30/2024",
       "value": 1
     },
     {
       "name": "Approved Expires On: 06/05/2027",
-      "value": 1
-    },
-    {
-      "name": "Expired Expired On: 04/07/2025",
       "value": 1
     },
     {
@@ -553,11 +1253,19 @@
       "value": 1
     },
     {
+      "name": "Expired Expired On: 02/19/2026",
+      "value": 1
+    },
+    {
       "name": "Expired Expired On: 09/15/2024",
       "value": 1
     },
     {
       "name": "Approved Expires On: 02/20/2027",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 04/17/2026",
       "value": 1
     },
     {
@@ -569,7 +1277,19 @@
       "value": 1
     },
     {
+      "name": "Expired Expired On: 05/25/2025",
+      "value": 1
+    },
+    {
       "name": "Expired Expired On: 09/26/2024",
+      "value": 1
+    },
+    {
+      "name": "Approved Expires On: 12/06/2026",
+      "value": 1
+    },
+    {
+      "name": "Approved Expires On: 12/31/2030",
       "value": 1
     },
     {
@@ -585,11 +1305,7 @@
       "value": 1
     },
     {
-      "name": "Expired Expired On: 10/14/2024",
-      "value": 1
-    },
-    {
-      "name": "Expired Expired On: 05/07/2025",
+      "name": "Expired Expired On: 10/08/2025",
       "value": 1
     },
     {
@@ -597,11 +1313,11 @@
       "value": 1
     },
     {
-      "name": "Expired Expired On: 08/30/2026",
+      "name": "Expired Expired On: 06/09/2025",
       "value": 1
     },
     {
-      "name": "Expired Expired On: 01/03/2025",
+      "name": "Expired Expired On: 06/09/2026",
       "value": 1
     },
     {
@@ -617,7 +1333,23 @@
       "value": 1
     },
     {
+      "name": "Expired Expired On: 03/11/2026",
+      "value": 1
+    },
+    {
       "name": "Expired Expired On: 05/23/2025",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 08/15/2026",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 06/16/2025",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 05/17/2025",
       "value": 1
     },
     {
@@ -637,7 +1369,11 @@
       "value": 1
     },
     {
-      "name": "Expired Expired On: 01/02/2026",
+      "name": "Approved Expires On: 06/30/2027",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 06/21/2026",
       "value": 1
     },
     {
@@ -649,11 +1385,27 @@
       "value": 1
     },
     {
-      "name": "Expired Expired On: 08/02/2025",
+      "name": "Approved Expires On: 10/24/2026",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 05/16/2026",
       "value": 1
     },
     {
       "name": "Expired Expired On: 10/26/2024",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 07/26/2025",
+      "value": 1
+    },
+    {
+      "name": "Approved Expires On: 03/03/2027",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 05/20/2026",
       "value": 1
     },
     {
@@ -665,7 +1417,15 @@
       "value": 1
     },
     {
-      "name": "Expired Expired On: 08/05/2026",
+      "name": "Approved Expires On: 11/01/2026",
+      "value": 1
+    },
+    {
+      "name": "Approved Expires On: 12/01/2026",
+      "value": 1
+    },
+    {
+      "name": "Approved Expires On: 12/20/2027",
       "value": 1
     },
     {
@@ -673,7 +1433,15 @@
       "value": 1
     },
     {
+      "name": "Expired Expired On: 08/06/2026",
+      "value": 1
+    },
+    {
       "name": "Expired Expired On: 06/07/2024",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 06/07/2025",
       "value": 1
     },
     {
@@ -685,7 +1453,19 @@
       "value": 1
     },
     {
+      "name": "Expired Expired On: 05/16/2025",
+      "value": 1
+    },
+    {
       "name": "Approved Expires On: 03/02/2027",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 06/13/2025",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 06/14/2025",
       "value": 1
     },
     {
@@ -701,11 +1481,35 @@
       "value": 1
     },
     {
+      "name": "Approved Expires On: 11/28/2026",
+      "value": 1
+    },
+    {
+      "name": "Approved Expires On: 01/06/2027",
+      "value": 1
+    },
+    {
       "name": "Expired Expired On: 05/24/2024",
       "value": 1
     },
     {
+      "name": "Expired Expired On: 06/20/2025",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 07/23/2026",
+      "value": 1
+    },
+    {
       "name": "Expired Expired On: 06/17/2024",
+      "value": 1
+    },
+    {
+      "name": "Approved Expires On: 11/20/2026",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 06/28/2026",
       "value": 1
     },
     {
@@ -721,6 +1525,14 @@
       "value": 1
     },
     {
+      "name": "Expired Expired On: 08/29/2025",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 10/29/2025",
+      "value": 1
+    },
+    {
       "name": "Expired Expired On: 08/01/2024",
       "value": 1
     },
@@ -729,7 +1541,15 @@
       "value": 1
     },
     {
-      "name": "Approved Expires On: 05/31/2027",
+      "name": "Expired Expired On: 06/11/2026",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 08/04/2025",
+      "value": 1
+    },
+    {
+      "name": "Approved Expires On: 10/06/2026",
       "value": 1
     },
     {
@@ -737,11 +1557,11 @@
       "value": 1
     },
     {
-      "name": "Expired Expired On: 12/20/2024",
+      "name": "Expired Expired On: 09/06/2025",
       "value": 1
     },
     {
-      "name": "Expired Expired On: 08/09/2026",
+      "name": "Expired Expired On: 07/06/2026",
       "value": 1
     },
     {
@@ -749,7 +1569,23 @@
       "value": 1
     },
     {
+      "name": "Expired Expired On: 07/13/2025",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 07/31/2026",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 07/05/2026",
+      "value": 1
+    },
+    {
       "name": "Expired Expired On: 10/12/2025",
+      "value": 1
+    },
+    {
+      "name": "Approved Expires On: 08/04/2027",
       "value": 1
     },
     {
@@ -757,11 +1593,15 @@
       "value": 1
     },
     {
+      "name": "Expired Expired On: 08/18/2025",
+      "value": 1
+    },
+    {
       "name": "Expired Expired On: 12/21/2024",
       "value": 1
     },
     {
-      "name": "Approved Expires On: 02/24/2027",
+      "name": "Expired Expired On: 08/19/2025",
       "value": 1
     },
     {
@@ -769,11 +1609,15 @@
       "value": 1
     },
     {
-      "name": "Expired Expired On: 12/27/2024",
+      "name": "Expired Expired On: 08/25/2026",
       "value": 1
     },
     {
       "name": "Expired Expired On: 08/28/2024",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 12/15/2025",
       "value": 1
     },
     {
@@ -793,15 +1637,23 @@
       "value": 1
     },
     {
+      "name": "Approved Expires On: 08/05/2027",
+      "value": 1
+    },
+    {
+      "name": "Approved Expires On: 01/08/2027",
+      "value": 1
+    },
+    {
       "name": "Expired Expired On: 08/09/2024",
       "value": 1
     },
     {
-      "name": "Expired Expired On: 12/11/2024",
+      "name": "Expired Expired On: 08/12/2024",
       "value": 1
     },
     {
-      "name": "Expired Expired On: 08/12/2024",
+      "name": "Approved Expires On: 01/14/2027",
       "value": 1
     },
     {
@@ -813,7 +1665,23 @@
       "value": 1
     },
     {
+      "name": "Approved Expires On: 10/20/2026",
+      "value": 1
+    },
+    {
       "name": "Expired Expired On: 11/02/2024",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 08/24/2026",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 05/28/2026",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 08/26/2025",
       "value": 1
     },
     {
@@ -825,7 +1693,15 @@
       "value": 1
     },
     {
-      "name": "Expired Expired On: 10/31/2024",
+      "name": "Expired Expired On: 12/24/2025",
+      "value": 1
+    },
+    {
+      "name": "Approved Expires On: 06/15/2027",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 01/08/2026",
       "value": 1
     },
     {
@@ -833,7 +1709,11 @@
       "value": 1
     },
     {
-      "name": "Expired Expired On: 05/22/2025",
+      "name": "Expired Expired On: 09/07/2025",
+      "value": 1
+    },
+    {
+      "name": "Approved Expires On: 05/12/2027",
       "value": 1
     },
     {
@@ -841,7 +1721,7 @@
       "value": 1
     },
     {
-      "name": "Expired Expired On: 08/31/2026",
+      "name": "Expired Expired On: 12/20/2025",
       "value": 1
     },
     {
@@ -849,11 +1729,19 @@
       "value": 1
     },
     {
-      "name": "Expired Expired On: 08/12/2026",
+      "name": "Expired Expired On: 05/24/2026",
       "value": 1
     },
     {
-      "name": "Expired Expired On: 01/16/2025",
+      "name": "Approved Expires On: 01/12/2027",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 01/15/2026",
+      "value": 1
+    },
+    {
+      "name": "Approved Expires On: 05/11/2029",
       "value": 1
     },
     {
@@ -861,11 +1749,11 @@
       "value": 1
     },
     {
-      "name": "Approved Expires On: 11/01/2028",
+      "name": "Approved Expires On: 10/17/2026",
       "value": 1
     },
     {
-      "name": "Expired Expired On: 05/09/2025",
+      "name": "Approved Expires On: 03/19/2027",
       "value": 1
     },
     {
@@ -873,11 +1761,15 @@
       "value": 1
     },
     {
+      "name": "Expired Expired On: 09/20/2025",
+      "value": 1
+    },
+    {
       "name": "Expired Expired On: 06/15/2026",
       "value": 1
     },
     {
-      "name": "Expired Expired On: 05/18/2026",
+      "name": "Expired Expired On: 01/21/2026",
       "value": 1
     },
     {
@@ -885,19 +1777,39 @@
       "value": 1
     },
     {
-      "name": "Expired Expired On: 02/16/2026",
-      "value": 1
-    },
-    {
       "name": "Expired Expired On: 09/25/2024",
       "value": 1
     },
     {
-      "name": "Approved Expires On: 09/30/2026",
+      "name": "Expired Expired On: 01/22/2026",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 01/01/2026",
       "value": 1
     },
     {
       "name": "Expired Expired On: 01/30/2025",
+      "value": 1
+    },
+    {
+      "name": "Approved Expires On: 01/29/2027",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 09/27/2025",
+      "value": 1
+    },
+    {
+      "name": "Approved Expires On: 12/23/2026",
+      "value": 1
+    },
+    {
+      "name": "Approved Expires On: 12/15/2026",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 12/09/2025",
       "value": 1
     },
     {
@@ -909,80 +1821,300 @@
       "value": 1
     },
     {
-      "name": "Expired Expired On: 05/30/2025",
+      "name": "Expired Expired On: 12/14/2025",
       "value": 1
     },
     {
-      "name": "Expired Expired On: 05/29/2025",
+      "name": "Expired Expired On: 01/05/2026",
       "value": 1
     },
     {
-      "name": "Expired Expired On: 12/19/2024",
+      "name": "Expired Expired On: 10/05/2025",
       "value": 1
     },
     {
-      "name": "Expired Expired On: 01/26/2025",
+      "name": "Expired Expired On: 12/17/2025",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 01/28/2026",
+      "value": 1
+    },
+    {
+      "name": "Approved Expires On: 01/10/2027",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 09/10/2025",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 05/01/2025",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 12/22/2025",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 06/20/2026",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 12/30/2024",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 12/10/2024",
+      "value": 1
+    },
+    {
+      "name": "Approved Expires On: 04/22/2027",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 12/22/2024",
+      "value": 1
+    },
+    {
+      "name": "Approved Expires On: 03/27/2027",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 08/19/2026",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 12/09/2024",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 05/07/2026",
+      "value": 1
+    },
+    {
+      "name": "Approved Expires On: 10/03/2028",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 01/07/2026",
+      "value": 1
+    },
+    {
+      "name": "Approved Expires On: 10/05/2026",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 04/06/2026",
+      "value": 1
+    },
+    {
+      "name": "Approved Expires On: 10/31/2026",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 01/24/2026",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 01/14/2026",
+      "value": 1
+    },
+    {
+      "name": "Approved Expires On: 10/10/2029",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 11/12/2024",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 04/16/2026",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 11/15/2025",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 04/15/2026",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 11/17/2024",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 01/17/2025",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 11/18/2024",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 11/23/2024",
+      "value": 1
+    },
+    {
+      "name": "Approved Expires On: 09/23/2026",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 04/27/2026",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 03/28/2026",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 02/27/2026",
+      "value": 1
+    },
+    {
+      "name": "Approved Expires On: 11/02/2028",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 01/05/2025",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 02/05/2025",
+      "value": 1
+    },
+    {
+      "name": "Approved Expires On: 12/01/2028",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 02/03/2025",
+      "value": 1
+    },
+    {
+      "name": "Approved Expires On: 11/14/2028",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 04/29/2025",
+      "value": 1
+    },
+    {
+      "name": "Approved Expires On: 05/06/2027",
+      "value": 1
+    },
+    {
+      "name": "Approved Expires On: 11/17/2028",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 04/27/2025",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 08/27/2025",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 05/11/2025",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 05/13/2025",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 05/02/2026",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 05/03/2025",
+      "value": 1
+    },
+    {
+      "name": "Approved Expires On: 12/16/2026",
+      "value": 1
+    },
+    {
+      "name": "Expired Expired On: 03/01/2025",
+      "value": 1
+    },
+    {
+      "name": "Approved Expires On: 03/01/2027",
       "value": 1
     }
   ],
   "ageBands": [
     {
       "name": "18–24",
-      "value": 494
+      "value": 1367
     },
     {
       "name": "25–34",
-      "value": 169
+      "value": 365
     },
     {
       "name": "35–44",
-      "value": 63
+      "value": 118
     },
     {
       "name": "65+",
-      "value": 49
+      "value": 102
     },
     {
       "name": "55–64",
-      "value": 38
+      "value": 72
     },
     {
       "name": "45–54",
-      "value": 35
+      "value": 65
     },
     {
       "name": "Under 18",
-      "value": 9
+      "value": 35
+    },
+    {
+      "name": "Unknown",
+      "value": 1
     }
   ],
   "homeStates": [
     {
       "name": "KS",
-      "value": 767
+      "value": 1922
     },
     {
       "name": "OK",
-      "value": 20
+      "value": 48
     },
     {
       "name": "MO",
-      "value": 19
+      "value": 45
     },
     {
       "name": "TX",
-      "value": 19
+      "value": 40
     },
     {
       "name": "CO",
-      "value": 11
-    },
-    {
-      "name": "AR",
-      "value": 4
+      "value": 21
     },
     {
       "name": "NE",
-      "value": 4
+      "value": 8
+    },
+    {
+      "name": "AR",
+      "value": 6
+    },
+    {
+      "name": "IA",
+      "value": 6
+    },
+    {
+      "name": "IL",
+      "value": 5
     },
     {
       "name": "NJ",
@@ -997,7 +2129,19 @@
       "value": 2
     },
     {
-      "name": "IA",
+      "name": "MS",
+      "value": 2
+    },
+    {
+      "name": "CA",
+      "value": 2
+    },
+    {
+      "name": "WA",
+      "value": 2
+    },
+    {
+      "name": "NC",
       "value": 2
     },
     {
@@ -1009,7 +2153,7 @@
       "value": 1
     },
     {
-      "name": "IL",
+      "name": "LA",
       "value": 1
     },
     {
@@ -1017,101 +2161,225 @@
       "value": 1
     },
     {
-      "name": "NC",
+      "name": "SD",
+      "value": 1
+    },
+    {
+      "name": "ND",
+      "value": 1
+    },
+    {
+      "name": "MN",
+      "value": 1
+    },
+    {
+      "name": "CT",
+      "value": 1
+    },
+    {
+      "name": "Unknown",
+      "value": 1
+    },
+    {
+      "name": "MT",
       "value": 1
     }
   ],
   "homeCities": [
     {
       "name": "Wichita",
-      "value": 577
+      "value": 1434
     },
     {
       "name": "Derby",
-      "value": 27
+      "value": 57
     },
     {
       "name": "Andover",
-      "value": 21
+      "value": 46
     },
     {
       "name": "Bel Aire",
-      "value": 15
-    },
-    {
-      "name": "Liberal",
-      "value": 8
+      "value": 29
     },
     {
       "name": "Kansas City",
-      "value": 7
+      "value": 27
     },
     {
-      "name": "Edmond",
-      "value": 7
+      "name": "Newton",
+      "value": 16
     },
     {
-      "name": "Benton",
-      "value": 6
+      "name": "Goddard",
+      "value": 16
+    },
+    {
+      "name": "Valley Center",
+      "value": 14
     },
     {
       "name": "Park City",
-      "value": 6
+      "value": 13
+    },
+    {
+      "name": "Edmond",
+      "value": 13
+    },
+    {
+      "name": "Mulvane",
+      "value": 12
+    },
+    {
+      "name": "El Dorado",
+      "value": 11
     },
     {
       "name": "Rose Hill",
-      "value": 5
+      "value": 10
+    },
+    {
+      "name": "Liberal",
+      "value": 10
     },
     {
       "name": "Maize",
+      "value": 10
+    },
+    {
+      "name": "Hutchinson",
+      "value": 9
+    },
+    {
+      "name": "Augusta",
+      "value": 9
+    },
+    {
+      "name": "Kechi",
+      "value": 8
+    },
+    {
+      "name": "Topeka",
+      "value": 8
+    },
+    {
+      "name": "Benton",
+      "value": 7
+    },
+    {
+      "name": "Salina",
+      "value": 6
+    },
+    {
+      "name": "Tulsa",
+      "value": 6
+    },
+    {
+      "name": "Overland Park",
+      "value": 6
+    },
+    {
+      "name": "Clearwater",
       "value": 5
     },
     {
       "name": "Greeley",
+      "value": 5
+    },
+    {
+      "name": "Wellington",
+      "value": 5
+    },
+    {
+      "name": "Shawnee",
+      "value": 5
+    },
+    {
+      "name": "Yukon",
+      "value": 5
+    },
+    {
+      "name": "Eudora",
       "value": 4
     },
     {
-      "name": "Goddard",
+      "name": "Halstead",
       "value": 4
     },
     {
-      "name": "Mulvane",
+      "name": "Andale",
       "value": 4
     },
     {
-      "name": "Valley Center",
+      "name": "Sedgwick",
       "value": 4
-    },
-    {
-      "name": "Kechi",
-      "value": 3
-    },
-    {
-      "name": "Clearwater",
-      "value": 3
-    },
-    {
-      "name": "Salina",
-      "value": 3
-    },
-    {
-      "name": "Newton",
-      "value": 3
-    },
-    {
-      "name": "El Dorado",
-      "value": 3
-    },
-    {
-      "name": "Topeka",
-      "value": 3
     },
     {
       "name": "Blue Springs",
-      "value": 3
+      "value": 4
+    },
+    {
+      "name": "Haysville",
+      "value": 4
+    },
+    {
+      "name": "Manhattan",
+      "value": 4
+    },
+    {
+      "name": "Lenexa",
+      "value": 4
     },
     {
       "name": "Raymore",
+      "value": 4
+    },
+    {
+      "name": "Fort Worth",
+      "value": 4
+    },
+    {
+      "name": "Olathe",
+      "value": 4
+    },
+    {
+      "name": "Colwich",
+      "value": 3
+    },
+    {
+      "name": "Keller",
+      "value": 3
+    },
+    {
+      "name": "Hillsboro",
+      "value": 3
+    },
+    {
+      "name": "Cheney",
+      "value": 3
+    },
+    {
+      "name": "Bonner Springs",
+      "value": 3
+    },
+    {
+      "name": "Allen",
+      "value": 3
+    },
+    {
+      "name": "Great Bend",
+      "value": 3
+    },
+    {
+      "name": "Pratt",
+      "value": 3
+    },
+    {
+      "name": "Council Grove",
+      "value": 3
+    },
+    {
+      "name": "Denver",
       "value": 3
     },
     {
@@ -1119,19 +2387,23 @@
       "value": 2
     },
     {
-      "name": "Keller",
+      "name": "Norman",
       "value": 2
     },
     {
-      "name": "Eudora",
+      "name": "Bel-Aire",
       "value": 2
     },
     {
-      "name": "Bonner Springs",
+      "name": "Bixby",
       "value": 2
     },
     {
-      "name": "Halstead",
+      "name": "Wichita Ks",
+      "value": 2
+    },
+    {
+      "name": "Ottawa",
       "value": 2
     },
     {
@@ -1139,15 +2411,7 @@
       "value": 2
     },
     {
-      "name": "Andale",
-      "value": 2
-    },
-    {
-      "name": "Hutchinson",
-      "value": 2
-    },
-    {
-      "name": "Sedgwick",
+      "name": "Cushing",
       "value": 2
     },
     {
@@ -1155,19 +2419,19 @@
       "value": 2
     },
     {
-      "name": "Wellington",
-      "value": 2
-    },
-    {
-      "name": "Tulsa",
-      "value": 2
-    },
-    {
       "name": "Siloam Springs",
       "value": 2
     },
     {
-      "name": "Shawnee",
+      "name": "Wichta",
+      "value": 2
+    },
+    {
+      "name": "Garden Plain",
+      "value": 2
+    },
+    {
+      "name": "Hays",
       "value": 2
     },
     {
@@ -1175,11 +2439,23 @@
       "value": 2
     },
     {
+      "name": "Mckinney",
+      "value": 2
+    },
+    {
+      "name": "Peabody",
+      "value": 2
+    },
+    {
       "name": "Imperial",
       "value": 2
     },
     {
-      "name": "Allen",
+      "name": "Bethany",
+      "value": 2
+    },
+    {
+      "name": "Lakewood",
       "value": 2
     },
     {
@@ -1187,27 +2463,87 @@
       "value": 2
     },
     {
-      "name": "Overland Park",
+      "name": "Independence",
       "value": 2
     },
     {
-      "name": "Colwich",
-      "value": 1
+      "name": "Emporia",
+      "value": 2
     },
     {
-      "name": "Norman",
-      "value": 1
+      "name": "Udall",
+      "value": 2
+    },
+    {
+      "name": "San Antonio",
+      "value": 2
+    },
+    {
+      "name": "South Hutchinson",
+      "value": 2
+    },
+    {
+      "name": "Kearney",
+      "value": 2
+    },
+    {
+      "name": "Wichia",
+      "value": 2
+    },
+    {
+      "name": "Garden City",
+      "value": 2
+    },
+    {
+      "name": "Arkansas City",
+      "value": 2
+    },
+    {
+      "name": "Winfield",
+      "value": 2
+    },
+    {
+      "name": "Bentley",
+      "value": 2
+    },
+    {
+      "name": "Atchison",
+      "value": 2
+    },
+    {
+      "name": "Lawrence",
+      "value": 2
+    },
+    {
+      "name": "Hesston",
+      "value": 2
+    },
+    {
+      "name": "Centerton",
+      "value": 2
+    },
+    {
+      "name": "Garnett",
+      "value": 2
+    },
+    {
+      "name": "Wylie",
+      "value": 2
+    },
+    {
+      "name": "Broken Arrow",
+      "value": 2
+    },
+    {
+      "name": "Lincoln",
+      "value": 2
+    },
+    {
+      "name": "Marthasville",
+      "value": 2
     },
     {
       "name": "Cassville",
-      "value": 1
-    },
-    {
-      "name": "Bel-Aire",
-      "value": 1
-    },
-    {
-      "name": "Hillsboro",
       "value": 1
     },
     {
@@ -1215,19 +2551,7 @@
       "value": 1
     },
     {
-      "name": "Bixby",
-      "value": 1
-    },
-    {
-      "name": "Cheney",
-      "value": 1
-    },
-    {
       "name": "Buhler",
-      "value": 1
-    },
-    {
-      "name": "Wichita Ks",
       "value": 1
     },
     {
@@ -1244,10 +2568,6 @@
     },
     {
       "name": "Hamilton",
-      "value": 1
-    },
-    {
-      "name": "Ottawa",
       "value": 1
     },
     {
@@ -1276,10 +2596,6 @@
     },
     {
       "name": "Westminster",
-      "value": 1
-    },
-    {
-      "name": "Cushing",
       "value": 1
     },
     {
@@ -1319,11 +2635,23 @@
       "value": 1
     },
     {
-      "name": "Garden Plain",
+      "name": "Burns",
+      "value": 1
+    },
+    {
+      "name": "New Orleans",
       "value": 1
     },
     {
       "name": "Walton",
+      "value": 1
+    },
+    {
+      "name": "Douglass",
+      "value": 1
+    },
+    {
+      "name": "Basehor",
       "value": 1
     },
     {
@@ -1335,7 +2663,15 @@
       "value": 1
     },
     {
+      "name": "Towanda",
+      "value": 1
+    },
+    {
       "name": "St. Louis",
+      "value": 1
+    },
+    {
+      "name": "Spring",
       "value": 1
     },
     {
@@ -1351,7 +2687,27 @@
       "value": 1
     },
     {
+      "name": "Little Elm",
+      "value": 1
+    },
+    {
+      "name": "Osage City",
+      "value": 1
+    },
+    {
+      "name": "Wichita K",
+      "value": 1
+    },
+    {
+      "name": "Leauge City",
+      "value": 1
+    },
+    {
       "name": "Carbondale",
+      "value": 1
+    },
+    {
+      "name": "Wihita",
       "value": 1
     },
     {
@@ -1363,11 +2719,15 @@
       "value": 1
     },
     {
+      "name": "Smithville",
+      "value": 1
+    },
+    {
       "name": "Coppell",
       "value": 1
     },
     {
-      "name": "Bethany",
+      "name": "Wiichita",
       "value": 1
     },
     {
@@ -1379,7 +2739,7 @@
       "value": 1
     },
     {
-      "name": "Lenexa",
+      "name": "Lee'S Summit",
       "value": 1
     },
     {
@@ -1395,15 +2755,15 @@
       "value": 1
     },
     {
-      "name": "Lakewood",
-      "value": 1
-    },
-    {
       "name": "Eagle",
       "value": 1
     },
     {
-      "name": "Great Bend",
+      "name": "Inman",
+      "value": 1
+    },
+    {
+      "name": "Boone",
       "value": 1
     },
     {
@@ -1411,11 +2771,31 @@
       "value": 1
     },
     {
+      "name": "Wic",
+      "value": 1
+    },
+    {
       "name": "Chalfont",
       "value": 1
     },
     {
-      "name": "Udall",
+      "name": "Sterling",
+      "value": 1
+    },
+    {
+      "name": "W",
+      "value": 1
+    },
+    {
+      "name": "Centennial",
+      "value": 1
+    },
+    {
+      "name": "Gretna",
+      "value": 1
+    },
+    {
+      "name": "Aurora",
       "value": 1
     },
     {
@@ -1423,7 +2803,15 @@
       "value": 1
     },
     {
+      "name": "Plainfield",
+      "value": 1
+    },
+    {
       "name": "Quinter",
+      "value": 1
+    },
+    {
+      "name": "Santa Barbara",
       "value": 1
     },
     {
@@ -1435,7 +2823,47 @@
       "value": 1
     },
     {
-      "name": "Fort Worth",
+      "name": "Mcpherson",
+      "value": 1
+    },
+    {
+      "name": "Idabel",
+      "value": 1
+    },
+    {
+      "name": "Wichit",
+      "value": 1
+    },
+    {
+      "name": "Witchita",
+      "value": 1
+    },
+    {
+      "name": "Sand Springs",
+      "value": 1
+    },
+    {
+      "name": "Eastborough",
+      "value": 1
+    },
+    {
+      "name": "Belle Plaine",
+      "value": 1
+    },
+    {
+      "name": "Kansas",
+      "value": 1
+    },
+    {
+      "name": "Mount Hope",
+      "value": 1
+    },
+    {
+      "name": "Evanston",
+      "value": 1
+    },
+    {
+      "name": "Derby, Ks, Us",
       "value": 1
     },
     {
@@ -1443,7 +2871,11 @@
       "value": 1
     },
     {
-      "name": "Arkansas City",
+      "name": "Trenton",
+      "value": 1
+    },
+    {
+      "name": "Gardner",
       "value": 1
     },
     {
@@ -1455,7 +2887,15 @@
       "value": 1
     },
     {
+      "name": "Garden City Kansas",
+      "value": 1
+    },
+    {
       "name": "Aubrey",
+      "value": 1
+    },
+    {
+      "name": "Harrisonville",
       "value": 1
     },
     {
@@ -1463,7 +2903,19 @@
       "value": 1
     },
     {
+      "name": "Richland",
+      "value": 1
+    },
+    {
+      "name": "Grand Junction",
+      "value": 1
+    },
+    {
       "name": "Iola",
+      "value": 1
+    },
+    {
+      "name": "Holton",
       "value": 1
     },
     {
@@ -1491,19 +2943,11 @@
       "value": 1
     },
     {
-      "name": "Garden City",
-      "value": 1
-    },
-    {
       "name": "Bellvue",
       "value": 1
     },
     {
       "name": "Frisco",
-      "value": 1
-    },
-    {
-      "name": "Lawrence",
       "value": 1
     },
     {
@@ -1519,11 +2963,11 @@
       "value": 1
     },
     {
-      "name": "Bentley",
+      "name": "Justin",
       "value": 1
     },
     {
-      "name": "Independence",
+      "name": "Leavenworth",
       "value": 1
     },
     {
@@ -1531,15 +2975,7 @@
       "value": 1
     },
     {
-      "name": "Peabody",
-      "value": 1
-    },
-    {
-      "name": "Manhattan",
-      "value": 1
-    },
-    {
-      "name": "Denver",
+      "name": "Okeene",
       "value": 1
     },
     {
@@ -1567,18 +3003,230 @@
       "value": 1
     },
     {
-      "name": "Centerton",
+      "name": "Arcadia",
+      "value": 1
+    },
+    {
+      "name": "Garland",
+      "value": 1
+    },
+    {
+      "name": "Woodstock",
+      "value": 1
+    },
+    {
+      "name": "Wellsville",
+      "value": 1
+    },
+    {
+      "name": "Buena Vista",
+      "value": 1
+    },
+    {
+      "name": "Erie",
+      "value": 1
+    },
+    {
+      "name": "Belaire",
+      "value": 1
+    },
+    {
+      "name": "Cary",
+      "value": 1
+    },
+    {
+      "name": "Glenpool",
+      "value": 1
+    },
+    {
+      "name": "Bakersfield",
+      "value": 1
+    },
+    {
+      "name": "Davenport",
+      "value": 1
+    },
+    {
+      "name": "Drby",
+      "value": 1
+    },
+    {
+      "name": "Mesquite",
+      "value": 1
+    },
+    {
+      "name": "Ashland Il",
+      "value": 1
+    },
+    {
+      "name": "Harrisburg",
+      "value": 1
+    },
+    {
+      "name": "Tonkawa",
+      "value": 1
+    },
+    {
+      "name": "Meade",
+      "value": 1
+    },
+    {
+      "name": "Okc",
+      "value": 1
+    },
+    {
+      "name": "Watauga",
+      "value": 1
+    },
+    {
+      "name": "Parkville",
+      "value": 1
+    },
+    {
+      "name": "Euless",
+      "value": 1
+    },
+    {
+      "name": "Bedford",
+      "value": 1
+    },
+    {
+      "name": "Norfolk",
+      "value": 1
+    },
+    {
+      "name": "Farlington",
+      "value": 1
+    },
+    {
+      "name": "Richmond",
+      "value": 1
+    },
+    {
+      "name": "Berryton",
+      "value": 1
+    },
+    {
+      "name": "Bismarck",
+      "value": 1
+    },
+    {
+      "name": "Grand Meadow",
+      "value": 1
+    },
+    {
+      "name": "Nortonville",
+      "value": 1
+    },
+    {
+      "name": "Raytown",
+      "value": 1
+    },
+    {
+      "name": "Viola",
+      "value": 1
+    },
+    {
+      "name": "Lowell",
+      "value": 1
+    },
+    {
+      "name": "Rock",
+      "value": 1
+    },
+    {
+      "name": "Mayfield",
+      "value": 1
+    },
+    {
+      "name": "Wichits",
+      "value": 1
+    },
+    {
+      "name": "Wichita, Ks, Usa",
+      "value": 1
+    },
+    {
+      "name": "Coldwater",
+      "value": 1
+    },
+    {
+      "name": "Woodbury",
+      "value": 1
+    },
+    {
+      "name": "Logan",
+      "value": 1
+    },
+    {
+      "name": "West Des Moines",
+      "value": 1
+    },
+    {
+      "name": "Prairie Village",
+      "value": 1
+    },
+    {
+      "name": "Harper",
+      "value": 1
+    },
+    {
+      "name": "Enterprise",
+      "value": 1
+    },
+    {
+      "name": "Annapolis",
+      "value": 1
+    },
+    {
+      "name": "Unknown",
+      "value": 1
+    },
+    {
+      "name": "Webb City",
+      "value": 1
+    },
+    {
+      "name": "Marion",
+      "value": 1
+    },
+    {
+      "name": "Newcastle",
+      "value": 1
+    },
+    {
+      "name": "Circle",
+      "value": 1
+    },
+    {
+      "name": "Belton",
+      "value": 1
+    },
+    {
+      "name": "Oklahoma City",
+      "value": 1
+    },
+    {
+      "name": "Lees Summit",
+      "value": 1
+    },
+    {
+      "name": "Ephrata",
+      "value": 1
+    },
+    {
+      "name": "Park Cityq",
       "value": 1
     }
   ],
   "modelRelease": [
     {
       "name": "Granted",
-      "value": 783
+      "value": 1934
     },
     {
       "name": "Not granted",
-      "value": 74
+      "value": 191
     }
   ],
   "visitFrequency": [
@@ -1607,22 +3255,22 @@
     {
       "month": "2024-01",
       "label": "Jan 2024",
-      "value": 28
+      "value": 30
     },
     {
       "month": "2024-02",
       "label": "Feb 2024",
-      "value": 50
+      "value": 53
     },
     {
       "month": "2024-03",
       "label": "Mar 2024",
-      "value": 55
+      "value": 56
     },
     {
       "month": "2024-04",
       "label": "Apr 2024",
-      "value": 100
+      "value": 103
     },
     {
       "month": "2024-05",
@@ -1632,12 +3280,12 @@
     {
       "month": "2024-06",
       "label": "Jun 2024",
-      "value": 34
+      "value": 46
     },
     {
       "month": "2024-07",
       "label": "Jul 2024",
-      "value": 44
+      "value": 46
     },
     {
       "month": "2024-08",
@@ -1647,136 +3295,136 @@
     {
       "month": "2024-09",
       "label": "Sep 2024",
-      "value": 110
+      "value": 341
     },
     {
       "month": "2024-10",
       "label": "Oct 2024",
-      "value": 34
+      "value": 137
     },
     {
       "month": "2024-11",
       "label": "Nov 2024",
-      "value": 22
+      "value": 130
     },
     {
       "month": "2024-12",
       "label": "Dec 2024",
-      "value": 23
+      "value": 70
     },
     {
       "month": "2025-01",
       "label": "Jan 2025",
-      "value": 6
+      "value": 34
     },
     {
       "month": "2025-02",
       "label": "Feb 2025",
-      "value": 8
+      "value": 43
     },
     {
       "month": "2025-03",
       "label": "Mar 2025",
-      "value": 13
+      "value": 63
     },
     {
       "month": "2025-04",
       "label": "Apr 2025",
-      "value": 9
+      "value": 71
     },
     {
       "month": "2025-05",
       "label": "May 2025",
-      "value": 4
+      "value": 73
     },
     {
       "month": "2025-06",
       "label": "Jun 2025",
-      "value": 3
+      "value": 25
     },
     {
       "month": "2025-07",
       "label": "Jul 2025",
-      "value": 3
+      "value": 26
     },
     {
       "month": "2025-08",
       "label": "Aug 2025",
-      "value": 9
+      "value": 55
     },
     {
       "month": "2025-09",
       "label": "Sep 2025",
-      "value": 11
+      "value": 62
     },
     {
       "month": "2025-10",
       "label": "Oct 2025",
-      "value": 24
+      "value": 56
     },
     {
       "month": "2025-11",
       "label": "Nov 2025",
-      "value": 20
+      "value": 37
     },
     {
       "month": "2025-12",
       "label": "Dec 2025",
-      "value": 13
+      "value": 52
     },
     {
       "month": "2026-01",
       "label": "Jan 2026",
-      "value": 8
+      "value": 38
     },
     {
       "month": "2026-02",
       "label": "Feb 2026",
-      "value": 3
+      "value": 37
     },
     {
       "month": "2026-03",
       "label": "Mar 2026",
-      "value": 10
+      "value": 47
     },
     {
       "month": "2026-04",
       "label": "Apr 2026",
-      "value": 10
+      "value": 76
     },
     {
       "month": "2026-05",
       "label": "May 2026",
-      "value": 8
+      "value": 39
     },
     {
       "month": "2026-06",
       "label": "Jun 2026",
-      "value": 5
+      "value": 25
     },
     {
       "month": "2026-07",
       "label": "Jul 2026",
-      "value": 13
+      "value": 29
     },
     {
       "month": "2026-08",
       "label": "Aug 2026",
-      "value": 7
+      "value": 37
     },
     {
       "month": "2026-09",
       "label": "Sep 2026",
-      "value": 15
+      "value": 33
     }
   ],
   "fieldCompleteness": [
     {
       "key": "member_name",
       "label": "Member name",
-      "count": 857,
+      "count": 2125,
       "missing": 0,
-      "total": 857,
+      "total": 2125,
       "percent": 100.0,
       "sensitivity": "identity",
       "exploreSafe": true
@@ -1784,9 +3432,9 @@
     {
       "key": "email",
       "label": "Email",
-      "count": 857,
+      "count": 2125,
       "missing": 0,
-      "total": 857,
+      "total": 2125,
       "percent": 100.0,
       "sensitivity": "private",
       "exploreSafe": true
@@ -1794,9 +3442,9 @@
     {
       "key": "primary_phone",
       "label": "Primary phone",
-      "count": 857,
+      "count": 2125,
       "missing": 0,
-      "total": 857,
+      "total": 2125,
       "percent": 100.0,
       "sensitivity": "private",
       "exploreSafe": true
@@ -1804,9 +3452,9 @@
     {
       "key": "birthdate",
       "label": "Birthdate",
-      "count": 857,
-      "missing": 0,
-      "total": 857,
+      "count": 2124,
+      "missing": 1,
+      "total": 2125,
       "percent": 100.0,
       "sensitivity": "sensitive",
       "exploreSafe": true
@@ -1814,9 +3462,9 @@
     {
       "key": "home_city",
       "label": "Home city",
-      "count": 857,
-      "missing": 0,
-      "total": 857,
+      "count": 2124,
+      "missing": 1,
+      "total": 2125,
       "percent": 100.0,
       "sensitivity": "aggregate-safe",
       "exploreSafe": true
@@ -1824,9 +3472,9 @@
     {
       "key": "home_state",
       "label": "Home state",
-      "count": 857,
-      "missing": 0,
-      "total": 857,
+      "count": 2124,
+      "missing": 1,
+      "total": 2125,
       "percent": 100.0,
       "sensitivity": "aggregate-safe",
       "exploreSafe": true
@@ -1834,9 +3482,9 @@
     {
       "key": "membership_type_list",
       "label": "Membership selection",
-      "count": 857,
+      "count": 2125,
       "missing": 0,
-      "total": 857,
+      "total": 2125,
       "percent": 100.0,
       "sensitivity": "aggregate-safe",
       "exploreSafe": true
@@ -1844,9 +3492,9 @@
     {
       "key": "model_release_list",
       "label": "Model release",
-      "count": 857,
+      "count": 2125,
       "missing": 0,
-      "total": 857,
+      "total": 2125,
       "percent": 100.0,
       "sensitivity": "aggregate-safe",
       "exploreSafe": true
@@ -1854,9 +3502,9 @@
     {
       "key": "submitted_on",
       "label": "Submission date",
-      "count": 857,
+      "count": 2125,
       "missing": 0,
-      "total": 857,
+      "total": 2125,
       "percent": 100.0,
       "sensitivity": "aggregate-safe",
       "exploreSafe": true
@@ -1864,9 +3512,9 @@
     {
       "key": "signature_present",
       "label": "Signature present",
-      "count": 857,
+      "count": 2125,
       "missing": 0,
-      "total": 857,
+      "total": 2125,
       "percent": 100.0,
       "sensitivity": "aggregate-safe",
       "exploreSafe": true
@@ -1874,10 +3522,10 @@
     {
       "key": "badge_id",
       "label": "Badge ID",
-      "count": 1,
-      "missing": 856,
-      "total": 857,
-      "percent": 0.1,
+      "count": 29,
+      "missing": 2096,
+      "total": 2125,
+      "percent": 1.4,
       "sensitivity": "private",
       "exploreSafe": true
     },
@@ -1885,8 +3533,8 @@
       "key": "medical_alerts",
       "label": "Medical alert field",
       "count": 0,
-      "missing": 857,
-      "total": 857,
+      "missing": 2125,
+      "total": 2125,
       "percent": 0.0,
       "sensitivity": "sensitive",
       "exploreSafe": false
@@ -2242,6 +3890,251 @@
       "membershipType": "WSU Student/WSU Tech Student",
       "homeCity": "Okmulgee",
       "homeState": "OK"
+    },
+    {
+      "id": "a_595cc71e249ab0",
+      "displayName": "Karlisa Brewer",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Derby",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_f0b4ee1e5756cf",
+      "displayName": "Carolyn Hytche",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Wichita",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_953061a1ef0255",
+      "displayName": "Keenen Smith",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Wichita",
+      "homeState": "MS"
+    },
+    {
+      "id": "a_84010c76e0ebe7",
+      "displayName": "ERIC KRUG",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Burns",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_efee27ed814d24",
+      "displayName": "Kymm McCleary",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Park City",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_c37ea5381e45d5",
+      "displayName": "Deb Southworth",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Wichita",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_b1bc28d0501779",
+      "displayName": "Austin Metcalf",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Park City",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_4a0b0d2722817b",
+      "displayName": "Jimmy Lewis-Swain",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Derby",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_5622f03d95d824",
+      "displayName": "Qiang Yan",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Wichita",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_a6941894cded5a",
+      "displayName": "Jan Todd",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Wichita",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_30384051bd21ad",
+      "displayName": "Jackie Foltz",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Wichita",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_bbe9e2fe0bb092",
+      "displayName": "Flavia Jackson",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Wichita",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_74949b3153b6a7",
+      "displayName": "Shyne Lowe",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Wichita",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_1bb223ab163a18",
+      "displayName": "Syniah Evans",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Wichita",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_2ff740c70924ea",
+      "displayName": "Fernando Banuelas",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Kansas City",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_8745fffdb4683a",
+      "displayName": "Krista Wilson",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Wichita",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_9dab0324c48a68",
+      "displayName": "Ana Banuelas",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Kansas City",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_85457f437b668f",
+      "displayName": "Atreyu Walter",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Wichita",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_c71e77251a8fee",
+      "displayName": "Madeline Vang",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Kansas City",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_da3d91b4ee6829",
+      "displayName": "Tristan Wong",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Wichita",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_93b176f8c9feec",
+      "displayName": "Julissa Romero-Lopez",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Wichita",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_2342fce54e86a7",
+      "displayName": "Daniel Limones",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Wichita",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_826635aa91ead7",
+      "displayName": "Zion Baccus",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Newton",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_f5ad1ef2ffda60",
+      "displayName": "Amy Meador",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Derby",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_3c97e2586a803f",
+      "displayName": "Carl Kimbrugh",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Park City",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_afab30bf8f0403",
+      "displayName": "Stephan Arnold",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Wichita",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_276201a16513e5",
+      "displayName": "DJ Jones",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Derby",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_c6a6f758a364f4",
+      "displayName": "Alexander Barnett",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Wichita",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_147dd539ecb67d",
+      "displayName": "Kamika Hicks",
+      "membershipType": "Membership Assistance",
+      "homeCity": "Wichita",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_b9457194cd3df1",
+      "displayName": "Aidan Corey",
+      "membershipType": "WSU Student/WSU Tech Student",
+      "homeCity": "Wichita",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_bd2876a4c9d359",
+      "displayName": "Musaab Zaman",
+      "membershipType": "WSU Student/WSU Tech Student",
+      "homeCity": "Garland",
+      "homeState": "TX"
+    },
+    {
+      "id": "a_a9c0c56d070c9a",
+      "displayName": "Arianna Espino",
+      "membershipType": "WSU Student/WSU Tech Student",
+      "homeCity": "Overland Park",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_b8b01056568604",
+      "displayName": "Kayla Masso",
+      "membershipType": "WSU Student/WSU Tech Student",
+      "homeCity": "Woodstock",
+      "homeState": "IL"
+    },
+    {
+      "id": "a_e4dc64e0c12c06",
+      "displayName": "Kalana Pitakatuwana Hewavidanage",
+      "membershipType": "WSU Student/WSU Tech Student",
+      "homeCity": "Wichita",
+      "homeState": "KS"
+    },
+    {
+      "id": "a_38f97daf373b95",
+      "displayName": "Isabelle Kelling",
+      "membershipType": "WSU Student/WSU Tech Student",
+      "homeCity": "Lenexa",
+      "homeState": "KS"
     }
   ],
   "combinedVisitFrequency": [

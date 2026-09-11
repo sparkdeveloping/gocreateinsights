@@ -1,4 +1,4 @@
-# GoCreate Insights — v5.3 data and reporting audit
+# GoCreate Insights — v5.4 data and reporting audit
 
 ## Purpose
 
@@ -12,22 +12,22 @@ The dashboard keeps provenance visible so staff can answer leadership questions 
 
 ## Latest enrichment workbook
 
-This audit reflects the Sep. 11, 2026 newest supplied workbook (`gocreate_membership_details(4).xlsx` welded into the project under the stable source name `data/source/gocreate_membership_details.xlsx`). The uploaded `(4)` workbook is byte-for-byte identical to the preceding `(2)` and `(3)` workbooks (SHA-256 `2f1c19ce3d275d8628fcab79e94dd391be19c4f2eeebce86f7c9021c9330b98f`), so a correct regeneration leaves the analytical counts unchanged.
+This audit reflects the Sep. 11, 2026 newest supplied workbook (`gocreate_membership_details(5).xlsx` welded into the project under the stable source name `data/source/gocreate_membership_details.xlsx`). Unlike the previous duplicate refreshes, this workbook is materially larger and has SHA-256 `1df915a3c04456e3c37b58e38d2f2a12ac5b155d67e17558537c90f88ae965b1`; the prior workbook hash was `2f1c19ce3d275d8628fcab79e94dd391be19c4f2eeebce86f7c9021c9330b98f`.
 
 The current detail workbook contains:
 
-- 857 application rows,
-- 1,714 emergency-contact rows,
-- 40,630 RawControls rows,
-- 807 application rows matched to the master source,
-- 795 distinct enriched master members,
-- 50 application-only people.
+- 2,125 application rows,
+- 4,248 emergency-contact rows,
+- 100,941 RawControls rows,
+- 2,040 application rows matched to the master source,
+- 2,002 distinct enriched master members,
+- 85 application-only people.
 
 ### Membership Assistance
 
-The workbook contains 52 Membership Assistance application rows across 51 people. Assistance submissions run from 2024-01-31 through 2025-04-07. Fifty Assistance applications have five captured questionnaire responses, producing 250 raw responses; two additional Assistance application rows do not contain captured questionnaire responses.
+The workbook contains 84 Membership Assistance application rows across 83 people. Assistance submissions run from 2024-01-23 through 2026-08-05. Eighty-two Assistance applications have five captured questionnaire responses, producing 410 raw responses; two additional Assistance application rows do not contain captured questionnaire responses.
 
-This explains the apparent “zero” in the Sep. 2025-current Koch report: there are genuinely **0 Assistance submissions in that selected date range**, not a failed import. v5 shows the selected-range value and the all-time context together, e.g. `0 in range · 52 all-time`, and provides a direct transition to all-time Assistance records.
+The previous “0” in the Sep. 2025-current Koch report was correct for the older workbook, but it is no longer the current source truth. The refreshed workbook contains **5 Assistance submissions from 2025-09-01 through 2026-09-11**, so the same report range should now show `5 in range · 84 all-time`.
 
 Questionnaire text is used server-side during data preparation to derive aggregate-safe reason/reference categories. The raw free text is not sent in the client analytics payload.
 
@@ -42,7 +42,7 @@ Reference classification is deliberately conservative.
 - **Quilter/reduced-rate reference:** explicit quilting/textile/sewing or reduced/discount/scholarship-type language in the reportable application/questionnaire fields.
 - **Age demographics:** age bands derived from birthdate; exact birthdates remain private.
 
-The all-time current workbook yields 9 business-reference applications, 16 nonprofit/organization-reference applications, and 8 reduced-rate/quilter reference applications.
+The all-time current workbook yields 12 business-reference applications, 28 nonprofit/organization-reference applications, and 15 reduced-rate/quilter reference applications. For the default Sep. 1, 2025 → Sep. 11, 2026 reporting window, the current source yields 0 business-reference, 3 nonprofit/organization-reference, and 2 reduced-rate/quilter reference applications.
 
 ## Date-range contract
 
