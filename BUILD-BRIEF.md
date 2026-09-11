@@ -1,4 +1,4 @@
-# GoCreate Insights v5 — implementation brief
+# GoCreate Insights v5.1 — implementation brief
 
 Build a strictly light-mode, single-page operational intelligence application for GoCreate using Next.js App Router, React, TypeScript, Tailwind CSS, Framer Motion and Recharts. It must feel like a precise staff reporting tool rather than a generic AI dashboard. Use the supplied official GoCreate assets and restrained blue/yellow/ink colors.
 
@@ -30,9 +30,9 @@ Date semantics:
 
 ## Membership Assistance
 
-Membership Assistance is a pathway within membership/application reporting, not a separate database. Denote it in Membership, Applications, Members, member detail and Koch Report. Current source truth: 50 Assistance application rows across 49 people, 250 questionnaire responses, submitted 2024-01-31 through 2025-04-07.
+Membership Assistance is a pathway within membership/application reporting, not a separate database. Denote it in Membership, Applications, Members, member detail and Koch Report. Current source truth: 52 Assistance application rows across 51 people, with 250 questionnaire responses across 50 applications, submitted 2024-01-31 through 2025-04-07.
 
-When the selected range is Sep. 2025-current, showing zero is correct but a bare zero is not sufficient. Display `0 in range · 50 all-time`, explain the latest Assistance date, and make the notice clickable to reveal all-time Assistance records.
+When the selected range is Sep. 2025-current, showing zero is correct but a bare zero is not sufficient. Display `0 in range · 52 all-time`, explain the latest Assistance date, and make the notice clickable to reveal all-time Assistance records.
 
 Questionnaire-derived reason/business/nonprofit/reduced-rate categories may be used for reporting, but raw free text must stay private.
 

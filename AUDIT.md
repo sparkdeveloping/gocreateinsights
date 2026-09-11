@@ -1,4 +1,4 @@
-# GoCreate Insights — v5 data and reporting audit
+# GoCreate Insights — v5.1 data and reporting audit
 
 ## Purpose
 
@@ -12,20 +12,22 @@ The dashboard keeps provenance visible so staff can answer leadership questions 
 
 ## Latest enrichment workbook
 
+This audit reflects the Sep. 11, 2026 refreshed workbook (`gocreate_membership_details(2).xlsx` welded into the project under the stable source name `data/source/gocreate_membership_details.xlsx`).
+
 The current detail workbook contains:
 
-- 408 application rows,
-- 816 emergency-contact rows,
-- 19,406 RawControls rows,
-- 359 application rows matched to the master source,
-- 352 distinct enriched master members,
-- 49 application-only people.
+- 857 application rows,
+- 1,714 emergency-contact rows,
+- 40,630 RawControls rows,
+- 807 application rows matched to the master source,
+- 795 distinct enriched master members,
+- 50 application-only people.
 
 ### Membership Assistance
 
-The workbook contains 50 Membership Assistance application rows across 49 people. Assistance submissions run from 2024-01-31 through 2025-04-07. Each of the 50 Assistance applications has five captured questionnaire responses, producing 250 raw responses.
+The workbook contains 52 Membership Assistance application rows across 51 people. Assistance submissions run from 2024-01-31 through 2025-04-07. Fifty Assistance applications have five captured questionnaire responses, producing 250 raw responses; two additional Assistance application rows do not contain captured questionnaire responses.
 
-This explains the apparent “zero” in the Sep. 2025-current Koch report: there are genuinely **0 Assistance submissions in that selected date range**, not a failed import. v5 shows the selected-range value and the all-time context together, e.g. `0 in range · 50 all-time`, and provides a direct transition to all-time Assistance records.
+This explains the apparent “zero” in the Sep. 2025-current Koch report: there are genuinely **0 Assistance submissions in that selected date range**, not a failed import. v5 shows the selected-range value and the all-time context together, e.g. `0 in range · 52 all-time`, and provides a direct transition to all-time Assistance records.
 
 Questionnaire text is used server-side during data preparation to derive aggregate-safe reason/reference categories. The raw free text is not sent in the client analytics payload.
 
@@ -40,7 +42,7 @@ Reference classification is deliberately conservative.
 - **Quilter/reduced-rate reference:** explicit quilting/textile/sewing or reduced/discount/scholarship-type language in the reportable application/questionnaire fields.
 - **Age demographics:** age bands derived from birthdate; exact birthdates remain private.
 
-The all-time current workbook yields 9 business-reference applications, 15 nonprofit/organization-reference applications, and 7 reduced-rate/quilter reference applications.
+The all-time current workbook yields 9 business-reference applications, 16 nonprofit/organization-reference applications, and 8 reduced-rate/quilter reference applications.
 
 ## Date-range contract
 

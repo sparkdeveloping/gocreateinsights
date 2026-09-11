@@ -1,12 +1,14 @@
-# GoCreate Insights v5
+# GoCreate Insights v5.1
 
-GoCreate Insights v5 is a strictly light-mode, single-page Next.js operational intelligence application for GoCreate. It combines the master membership export, the latest membership-detail workbook, and the historical paper sign-in archive into one source-aware analytics system without pretending that unlike data sources have the same precision.
+GoCreate Insights v5.1 is a strictly light-mode, single-page Next.js operational intelligence application for GoCreate. It combines the master membership export, the latest membership-detail workbook, and the historical paper sign-in archive into one source-aware analytics system without pretending that unlike data sources have the same precision.
 
 ## What v5 adds
 
-- **Latest detail database merged:** `data/source/gocreate_membership_details.xlsx` is the supplied current workbook with 408 application rows, 816 emergency-contact rows and 19,406 raw control rows.
-- **Membership Assistance is first-class reporting data:** 50 assistance application rows across 49 people are available all-time. All 50 have five captured questionnaire responses (250 responses total), enabling reason, small-business, nonprofit/organization and quilting/reduced-rate analytics without exposing raw questionnaire text to the client.
-- **Honest date behavior:** the default Koch reporting window is Sep. 1, 2025 → data-as-of. There are no Membership Assistance submissions in that window because the latest assistance submission in this workbook is Apr. 7, 2025. The interface therefore shows **0 in range · 50 all-time** and provides a one-click jump to all-time Assistance records.
+**Latest data refresh (Sep. 11, 2026):** the enrichment workbook has been replaced with the newest supplied database. The refreshed source more than doubles application coverage while preserving the existing attendance reconciliation and UI behavior.
+
+- **Latest detail database merged:** `data/source/gocreate_membership_details.xlsx` is the supplied current workbook with 857 application rows, 1,714 emergency-contact rows and 40,630 raw control rows.
+- **Membership Assistance is first-class reporting data:** 52 assistance application rows across 51 people are available all-time. 50 applications have five captured questionnaire responses (250 responses total), enabling reason, small-business, nonprofit/organization and quilting/reduced-rate analytics without exposing raw questionnaire text to the client.
+- **Honest date behavior:** the default Koch reporting window is Sep. 1, 2025 → data-as-of. There are no Membership Assistance submissions in that window because the latest assistance submission in this workbook is Apr. 7, 2025. The interface therefore shows **0 in range · 52 all-time** and provides a one-click jump to all-time Assistance records.
 - **Historical paper attendance welded into Engagement:** manual sign-ins are kept as a separate source and conservatively reconciled with the master member list. High-confidence matches count as member visits, clear nonmatches count as guest sign-ins, uncertain matches stay in a review queue, and unreadable rows remain unresolved.
 - **Source-aware combined activity:** tracker totals and matched manual member visits are shown separately plus a conservative observed-minimum figure. Possible exact duplicates can be subtracted when identifiable.
 - **Global reporting range:** All time, Sep 2025 → now, current-year YTD, Last 90 days, and exact From/To controls.
@@ -26,18 +28,18 @@ Generated with data-as-of **2026-09-11** from:
 Current totals:
 
 - 2,383 master member records
-- 2,432 known people after application-only records are included
-- 408 application rows
-- 816 emergency-contact rows
-- 359/408 application rows matched to the master source (88.0%)
-- 352 distinct master members enriched by application detail
-- 49 application-only people
-- 50 Membership Assistance application rows across 49 people
-- 250 Membership Assistance questionnaire responses across 50 applications
+- 2,433 known people after application-only records are included
+- 857 application rows
+- 1,714 emergency-contact rows
+- 807/857 application rows matched to the master source (94.2%)
+- 795 distinct master members enriched by application detail
+- 50 application-only people
+- 52 Membership Assistance application rows across 51 people
+- 250 Membership Assistance questionnaire responses across 50 applications; two additional Assistance rows do not contain captured questionnaire responses
 - Assistance submission range: 2024-01-31 through 2025-04-07
 - 9 all-time small-business reference applications
-- 15 all-time nonprofit/organization reference applications
-- 7 all-time quilting/reduced-rate reference applications
+- 16 all-time nonprofit/organization reference applications
+- 8 all-time quilting/reduced-rate reference applications
 
 ### Assistance reason categories (all time)
 
@@ -73,7 +75,7 @@ The tracker export is an **aggregate per-member source**, not a complete event l
 
 ## Leadership / Koch range
 
-The Koch Report defaults to **2025-09-01 → data-as-of** when entered from All time. In the current workbook there are 146 application rows in that period and **0 Membership Assistance rows** because all current Assistance records predate Sep. 2025. The screen still shows the all-time Assistance context and can switch to all-time records in one click.
+The Koch Report defaults to **2025-09-01 → data-as-of** when entered from All time. In the current workbook there are 147 application rows in that period and **0 Membership Assistance rows** because all current Assistance records predate Sep. 2025. The screen still shows the all-time Assistance context and can switch to all-time records in one click.
 
 Business/nonprofit/quilter signals are also date-scoped. If a selected period contains none, the report shows the all-time count where useful instead of implying the category never existed.
 
